@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `empresa_dados` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `empresa` text,\n  `cep` varchar(10),\n  `endereco` text,\n  `numero` varchar(10),\n  `bairro` text,\n  `cidade` text,\n  `estado` varchar(50),\n  `cnpj_cpf` varchar(20),\n  `telefone` varchar(20),\n  `celular` varchar(20),\n  `email` varchar(320),\n  `nome` text,\n  `logo_url` text,\n  `atualizado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 5TMdM9oSN1dsoYb.root --database TEopnpqVFcFcEzDuX7X4dq --execute CREATE TABLE IF NOT EXISTS `empresa_dados` (\n  `id` int AUTO_INCREMENT PRIMARY KEY,\n  `empresa` text,\n  `cep` varchar(10),\n  `endereco` text,\n  `numero` varchar(10),\n  `bairro` text,\n  `cidade` text,\n  `estado` varchar(50),\n  `cnpj_cpf` varchar(20),\n  `telefone` varchar(20),\n  `celular` varchar(20),\n  `email` varchar(320),\n  `nome` text,\n  `logo_url` text,\n  `atualizado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 403
+}

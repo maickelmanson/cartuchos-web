@@ -1,6 +1,6 @@
 import { eq, desc, like, or, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, cartuchodCadastro, clientes, pedidos, pedidoCartuchos, InsertCartuchodCadastro, InsertCliente, InsertPedido, InsertPedidoCartucho, remanOrders, remanOrderItems, remanOrderUnits, InsertRemanOrder, InsertRemanOrderItem, InsertRemanOrderUnit } from "../drizzle/schema";
+import { InsertUser, users, cartuchodCadastro, clientes, pedidos, pedidoCartuchos, InsertCartuchodCadastro, InsertCliente, InsertPedido, InsertPedidoCartucho, remanOrders, remanOrderItems, remanOrderUnits, InsertRemanOrder, InsertRemanOrderItem, InsertRemanOrderUnit, empresaDados, InsertEmpresaDados } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -86,6 +86,27 @@ export async function getUserByOpenId(openId: string) {
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
 
   return result.length > 0 ? result[0] : undefined;
+}
+
+// ============================================================
+// Dados da Empresa
+// ============================================================
+export async function obterDadosEmpresa() {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(empresaDados).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function salvarDadosEmpresa(data: Partial<InsertEmpresaDados>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const existing = await db.select().from(empresaDados).limit(1);
+  if (existing.length > 0) {
+    return db.update(empresaDados).set(data).where(eq(empresaDados.id, existing[0].id));
+  } else {
+    return db.insert(empresaDados).values(data as InsertEmpresaDados);
+  }
 }
 
 // ============================================================
@@ -298,9 +319,12 @@ export async function buscaAvancada(tipo: string, termo: string) {
   const db = await getDb();
   if (!db) return { pedidos: [], cartuchos: [] };
   
-  // Case-insensitive search
-  const termoLower = termo.toLowerCase();
-  const likeTermoPattern = `%${termoLower}%`;
+  // Case-insensitive + accent-insensitive search
+  // Remove acentos do termo de busca para comparação
+  const termoNorm = termo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const likeTermoPattern = `%${termoNorm}%`;
+  // Função auxiliar para busca sem acento no MySQL (usando COLLATE)
+  const unaccent = (col: any) => sql`CONVERT(${col} USING utf8mb4) COLLATE utf8mb4_general_ci`;
 
   if (tipo === "codigo") {
     const cartuchos = await db.select({
@@ -317,7 +341,7 @@ export async function buscaAvancada(tipo: string, termo: string) {
       .leftJoin(cartuchodCadastro, eq(pedidoCartuchos.cartuchodId, cartuchodCadastro.id))
       .leftJoin(pedidos, eq(pedidoCartuchos.pedidoId, pedidos.id))
       .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
-      .where(like(sql`LOWER(${pedidoCartuchos.codigo})`, likeTermoPattern))
+      .where(like(unaccent(pedidoCartuchos.codigo), likeTermoPattern))
       .orderBy(desc(pedidoCartuchos.dataInclusao));
     return { pedidos: [], cartuchos };
   }
@@ -334,7 +358,7 @@ export async function buscaAvancada(tipo: string, termo: string) {
     })
       .from(pedidos)
       .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
-      .where(like(sql`LOWER(${clientes.nome})`, likeTermoPattern))
+      .where(like(unaccent(clientes.nome), likeTermoPattern))
       .orderBy(desc(pedidos.id));
     return { pedidos: pedidosList, cartuchos: [] };
   }
@@ -352,7 +376,7 @@ export async function buscaAvancada(tipo: string, termo: string) {
     })
       .from(pedidos)
       .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
-      .where(like(sql`LOWER(${clientes.telefone})`, likeTermoPattern))
+      .where(like(unaccent(clientes.telefone), likeTermoPattern))
       .orderBy(desc(pedidos.id));
     return { pedidos: pedidosList, cartuchos: [] };
   }

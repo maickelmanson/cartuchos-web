@@ -14,6 +14,7 @@ import {
   listarRemanOrderItems, criarRemanOrderItem, atualizarRemanOrderItem, deletarRemanOrderItem,
   listarRemanOrderUnits, criarRemanOrderUnit, atualizarRemanOrderUnit, deletarRemanOrderUnit,
   obterRelatorioRemanOrder,
+  obterDadosEmpresa, salvarDadosEmpresa,
 } from "./db";
 import { getDb } from "./db";
 import { clientes } from "../drizzle/schema";
@@ -30,6 +31,36 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+  }),
+
+  // ============================================================
+  // Dados da Empresa
+  // ============================================================
+  empresa: router({
+    obter: protectedProcedure.query(async () => {
+      return obterDadosEmpresa();
+    }),
+
+    salvar: protectedProcedure
+      .input(z.object({
+        empresa: z.string().optional(),
+        cep: z.string().optional(),
+        endereco: z.string().optional(),
+        numero: z.string().optional(),
+        bairro: z.string().optional(),
+        cidade: z.string().optional(),
+        estado: z.string().optional(),
+        cnpjCpf: z.string().optional(),
+        telefone: z.string().optional(),
+        celular: z.string().optional(),
+        email: z.string().optional(),
+        nome: z.string().optional(),
+        logoUrl: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        await salvarDadosEmpresa(input);
+        return obterDadosEmpresa();
+      }),
   }),
 
   // ============================================================
@@ -175,6 +206,15 @@ export const appRouter = router({
       .input(z.number())
       .mutation(async ({ input }) => {
         return finalizarPedido(input);
+      }),
+
+    reabrir: protectedProcedure
+      .input(z.number())
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        const { pedidos: pedidosTable } = await import("../drizzle/schema");
+        return db.update(pedidosTable).set({ status: "aberto", dataFinalizacao: null }).where(eq(pedidosTable.id, input));
       }),
 
     deletar: protectedProcedure
@@ -333,6 +373,16 @@ export const appRouter = router({
       .input(z.number())
       .mutation(async ({ input }) => {
         return deletarRemanOrder(input);
+      }),
+
+    reabrir: protectedProcedure
+      .input(z.number())
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        const { remanOrders: remanOrdersTable } = await import("../drizzle/schema");
+        await db.update(remanOrdersTable).set({ status: "aberto" }).where(eq(remanOrdersTable.id, input));
+        return buscarRemanOrder(input);
       }),
 
     relatorio: protectedProcedure

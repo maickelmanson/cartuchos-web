@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowLeft, Plus, Trash2, Pencil, CheckCircle, AlertCircle } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Pencil, CheckCircle, AlertCircle, Printer, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
 interface Props {
@@ -256,6 +256,7 @@ export default function RemanPedidoDetalhe({ params }: Props) {
   const atualizarPedidoMutation = trpc.remanOrders.atualizar.useMutation();
   const deletarItemMutation = trpc.remanOrderItems.deletar.useMutation();
   const deletarUnidadeMutation = trpc.remanOrderUnits.deletar.useMutation();
+  const reabrirPedidoMutation = trpc.remanOrders.reabrir.useMutation();
 
   const pedido = pedidoQuery.data;
   const itens = itensQuery.data || [];
@@ -342,12 +343,44 @@ export default function RemanPedidoDetalhe({ params }: Props) {
   return (
     <div className="space-y-6 h-full overflow-y-auto overflow-x-hidden pr-4">
       {/* Navegação */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="sm" onClick={() => setLocation("/reman/pedidos")}>
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Voltar
-        </Button>
-        <h1 className="text-2xl font-bold">Pedido {pedido.orderNumber}</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" onClick={() => setLocation("/reman/pedidos")}>
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Voltar
+          </Button>
+          <h1 className="text-2xl font-bold">Pedido {pedido.orderNumber}</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          {pedido.status === "finalizado" && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                if (!confirm("Deseja reabrir este pedido para edição?")) return;
+                try {
+                  await reabrirPedidoMutation.mutateAsync(id);
+                  toast.success("Pedido reaberto para edição!");
+                  pedidoQuery.refetch();
+                } catch (error: any) {
+                  toast.error(error.message || "Erro ao reabrir pedido.");
+                }
+              }}
+              disabled={reabrirPedidoMutation.isPending}
+            >
+              <RotateCcw className="h-4 w-4 mr-1" />
+              Editar Pedido
+            </Button>
+          )}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setLocation(`/reman/pedidos/${id}/imprimir`)}
+          >
+            <Printer className="h-4 w-4 mr-1" />
+            Imprimir
+          </Button>
+        </div>
       </div>
 
       {/* ============================================================ */}

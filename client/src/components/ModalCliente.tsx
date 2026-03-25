@@ -60,12 +60,12 @@ export default function ModalCliente({ cliente, onSalvar, onFechar }: Props) {
 
   return (
     <Dialog open={true} onOpenChange={onFechar}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{cliente ? "Editar Cliente" : "Novo Cliente"}</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 pb-2">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <label className="text-sm font-medium">Nome *</label>

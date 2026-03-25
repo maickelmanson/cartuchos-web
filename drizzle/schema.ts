@@ -91,6 +91,28 @@ export const pedidoCartuchosRelations = relations(pedidoCartuchos, ({ one }) => 
   }),
 }));
 
+// Tabela de Dados da Empresa
+export const empresaDados = mysqlTable("empresa_dados", {
+  id: int("id").autoincrement().primaryKey(),
+  empresa: text("empresa"),
+  cep: varchar("cep", { length: 10 }),
+  endereco: text("endereco"),
+  numero: varchar("numero", { length: 10 }),
+  bairro: text("bairro"),
+  cidade: text("cidade"),
+  estado: varchar("estado", { length: 50 }),
+  cnpjCpf: varchar("cnpj_cpf", { length: 20 }),
+  telefone: varchar("telefone", { length: 20 }),
+  celular: varchar("celular", { length: 20 }),
+  email: varchar("email", { length: 320 }),
+  nome: text("nome"),
+  logoUrl: text("logo_url"),
+  atualizadoEm: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmpresaDados = typeof empresaDados.$inferSelect;
+export type InsertEmpresaDados = typeof empresaDados.$inferInsert;
+
 // Tabelas do Módulo de Remanufatura
 
 export const remanOrders = mysqlTable("reman_orders", {

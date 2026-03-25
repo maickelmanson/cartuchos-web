@@ -52,7 +52,7 @@
 ## Pendente
 - [ ] Página de Busca Avançada
 - [ ] Editar unidade física (atualmente só adiciona/remove)
-- [ ] Botão de impressão/PDF do pedido de remanufatura
+- [x] Botão de impressão/PDF do pedido de remanufatura
 - [ ] Dashboard de remanufatura com estatísticas
 - [x] Testes unitários (vitest) - 5 testes passando
 
@@ -75,3 +75,15 @@
 - [x] Atualizar RemanPedidoDetalhe.tsx para usar cartuchos_cadastro
 - [x] Remover router cartridgeModels, RemanModelos.tsx e CartuchosCadastro.tsx
 - [x] Testes atualizados - 5 passando
+
+## Melhorias Solicitadas (Vídeo Esboço)
+- [x] Dashboard: Dados da Empresa (empresa, CEP, endereço, nº, bairro, cidade, estado, CNPJ/CPF, telefone, celular/WhatsApp, email, nome, logo)
+- [x] Dashboard: Botões salvar/fechar e editável
+- [x] Impressão do Pedido Reman: Cabeçalho com logo + dados empresa
+- [x] Impressão do Pedido Reman: Tabela Produtos (agrupados por modelo, qtd, valor, total) - só funcionando
+- [x] Impressão do Pedido Reman: Tabela Cartuchos com Problema (modelo01, código, defeito)
+- [x] Impressão do Pedido Reman: Tabela Cartuchos Funcionando (modelo01, código, peso de saída)
+- [x] Botão Editar em pedido finalizado (reabrir para edição)
+- [x] Scroll de deslizamento em todo o sistema (modais com scroll para ver botões)
+- [x] Todos os campos digitados em LETRAS MAIÚSCULAS (uppercase)
+- [x] Busca sem diferenciar acentuação (normalizar acentos)

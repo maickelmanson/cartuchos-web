@@ -120,6 +120,30 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Todos os campos de input em MAIÚSCULAS */
+  input[type="text"],
+  input[type="email"],
+  input[type="search"],
+  input[type="tel"],
+  input:not([type]),
+  textarea {
+    text-transform: uppercase;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    text-transform: none;
+  }
+
+  /* Scroll suave em modais e dialogs */
+  [role="dialog"] {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  [role="dialog"] > div {
+    max-height: 85vh;
+    overflow-y: auto;
+  }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [type="button"]:not(:disabled),
