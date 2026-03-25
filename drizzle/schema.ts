@@ -1,17 +1,8 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, varchar, timestamp, decimal, tinyint } from "drizzle-orm/mysql-core";
+import { relations } from "drizzle-orm";
 
-/**
- * Core user table backing auth flow.
- * Extend this file with additional tables as your product grows.
- * Columns use camelCase to match both database fields and generated types.
- */
 export const users = mysqlTable("users", {
-  /**
-   * Surrogate primary key. Auto-incremented numeric value managed by the database.
-   * Use this for relations between tables.
-   */
   id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: varchar("openId", { length: 64 }).notNull().unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }),
@@ -25,4 +16,176 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+export const cartuchodCadastro = mysqlTable("cartuchos_cadastro", {
+  id: int("id").autoincrement().primaryKey(),
+  modelo01: text("modelo_01").notNull(),
+  modelo02: text("modelo_02").notNull(),
+  criadoEm: timestamp("criado_em").defaultNow().notNull(),
+});
+
+export type CartuchodCadastro = typeof cartuchodCadastro.$inferSelect;
+export type InsertCartuchodCadastro = typeof cartuchodCadastro.$inferInsert;
+
+export const clientes = mysqlTable("clientes", {
+  id: int("id").autoincrement().primaryKey(),
+  nome: text("nome").notNull(),
+  telefone: varchar("telefone", { length: 20 }),
+  endereco: text("endereco"),
+  cpf: varchar("cpf", { length: 14 }),
+  cnpj: varchar("cnpj", { length: 18 }),
+  inscricaoEstadual: varchar("inscricao_estadual", { length: 20 }),
+  commercialProfile: mysqlEnum("commercial_profile", ["CLIENTE_FINAL", "REVENDA"]).default("CLIENTE_FINAL").notNull(),
+  observacoes: text("observacoes"),
+  criadoEm: timestamp("criado_em").defaultNow().notNull(),
+});
+
+export type Cliente = typeof clientes.$inferSelect;
+export type InsertCliente = typeof clientes.$inferInsert;
+
+export const pedidos = mysqlTable("pedidos", {
+  id: int("id").autoincrement().primaryKey(),
+  numero: varchar("numero", { length: 10 }).notNull().unique(),
+  clienteId: int("cliente_id").notNull(),
+  status: mysqlEnum("status", ["aberto", "finalizado"]).default("aberto").notNull(),
+  dataCriacao: timestamp("data_criacao").defaultNow().notNull(),
+  dataFinalizacao: timestamp("data_finalizacao"),
+});
+
+export type Pedido = typeof pedidos.$inferSelect;
+export type InsertPedido = typeof pedidos.$inferInsert;
+
+export const pedidoCartuchos = mysqlTable("pedido_cartuchos", {
+  id: int("id").autoincrement().primaryKey(),
+  pedidoId: int("pedido_id").notNull(),
+  cartuchodId: int("cartucho_id"),
+  codigo: varchar("codigo", { length: 100 }),
+  pesoCheagada: varchar("peso_chegada", { length: 20 }),
+  pesoSaida: varchar("peso_saida", { length: 20 }),
+  protegido: tinyint("protegido").default(0).notNull(),
+  status: mysqlEnum("status", ["em_espera", "em_andamento", "processo", "funcionando", "circuito_queimado", "defeito_cabeca"]).default("em_espera").notNull(),
+  observacoes: text("observacoes"),
+  dataInclusao: timestamp("data_inclusao").defaultNow().notNull(),
+});
+
+export type PedidoCartucho = typeof pedidoCartuchos.$inferSelect;
+export type InsertPedidoCartucho = typeof pedidoCartuchos.$inferInsert;
+
+export const pedidosRelations = relations(pedidos, ({ many, one }) => ({
+  cliente: one(clientes, {
+    fields: [pedidos.clienteId],
+    references: [clientes.id],
+  }),
+  cartuchos: many(pedidoCartuchos),
+}));
+
+export const pedidoCartuchosRelations = relations(pedidoCartuchos, ({ one }) => ({
+  pedido: one(pedidos, {
+    fields: [pedidoCartuchos.pedidoId],
+    references: [pedidos.id],
+  }),
+  cartucho: one(cartuchodCadastro, {
+    fields: [pedidoCartuchos.cartuchodId],
+    references: [cartuchodCadastro.id],
+  }),
+}));
+
+// Tabelas do Módulo de Remanufatura
+export const cartridgeModels = mysqlTable("cartridge_models", {
+  id: int("id").autoincrement().primaryKey(),
+  brand: varchar("brand", { length: 100 }).notNull(),
+  modelCode: varchar("model_code", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  color: varchar("color", { length: 50 }),
+  active: tinyint("active").default(1).notNull(),
+  priceFinalCustomer: decimal("price_final_customer", { precision: 10, scale: 2 }).notNull(),
+  priceReseller: decimal("price_reseller", { precision: 10, scale: 2 }).notNull(),
+  costPrice: decimal("cost_price", { precision: 10, scale: 2 }),
+  notes: text("notes"),
+  criadoEm: timestamp("criado_em").defaultNow().notNull(),
+  atualizadoEm: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CartridgeModel = typeof cartridgeModels.$inferSelect;
+export type InsertCartridgeModel = typeof cartridgeModels.$inferInsert;
+
+export const remanOrders = mysqlTable("reman_orders", {
+  id: int("id").autoincrement().primaryKey(),
+  orderNumber: varchar("order_number", { length: 20 }).notNull().unique(),
+  clienteId: int("cliente_id").notNull(),
+  commercialProfileSnapshot: varchar("commercial_profile_snapshot", { length: 20 }).notNull(),
+  status: mysqlEnum("status", ["aberto", "em_processamento", "finalizado", "cancelado"]).default("aberto").notNull(),
+  subtotal: decimal("subtotal", { precision: 12, scale: 2 }).default("0").notNull(),
+  discount: decimal("discount", { precision: 12, scale: 2 }).default("0").notNull(),
+  total: decimal("total", { precision: 12, scale: 2 }).default("0").notNull(),
+  notes: text("notes"),
+  criadoEm: timestamp("criado_em").defaultNow().notNull(),
+  atualizadoEm: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RemanOrder = typeof remanOrders.$inferSelect;
+export type InsertRemanOrder = typeof remanOrders.$inferInsert;
+
+export const remanOrderItems = mysqlTable("reman_order_items", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("order_id").notNull(),
+  cartridgeModelId: int("cartridge_model_id").notNull(),
+  descriptionSnapshot: text("description_snapshot"),
+  modelCodeSnapshot: varchar("model_code_snapshot", { length: 50 }),
+  quantity: int("quantity").notNull(),
+  unitPrice: decimal("unit_price", { precision: 10, scale: 2 }).notNull(),
+  priceSource: mysqlEnum("price_source", ["CLIENTE_FINAL", "REVENDA"]).notNull(),
+  lineTotal: decimal("line_total", { precision: 12, scale: 2 }).notNull(),
+  criadoEm: timestamp("criado_em").defaultNow().notNull(),
+  atualizadoEm: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RemanOrderItem = typeof remanOrderItems.$inferSelect;
+export type InsertRemanOrderItem = typeof remanOrderItems.$inferInsert;
+
+export const remanOrderUnits = mysqlTable("reman_order_units", {
+  id: int("id").autoincrement().primaryKey(),
+  orderItemId: int("order_item_id").notNull(),
+  cartridgeModelId: int("cartridge_model_id").notNull(),
+  unitCode: varchar("unit_code", { length: 100 }).notNull(),
+  status: mysqlEnum("status", ["FUNCIONANDO", "COM_PROBLEMA"]).notNull(),
+  defectType: varchar("defect_type", { length: 100 }),
+  outputWeight: decimal("output_weight", { precision: 8, scale: 2 }),
+  notes: text("notes"),
+  criadoEm: timestamp("criado_em").defaultNow().notNull(),
+  atualizadoEm: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RemanOrderUnit = typeof remanOrderUnits.$inferSelect;
+export type InsertRemanOrderUnit = typeof remanOrderUnits.$inferInsert;
+
+// Relações do Módulo de Remanufatura
+export const remanOrdersRelations = relations(remanOrders, ({ many, one }) => ({
+  cliente: one(clientes, {
+    fields: [remanOrders.clienteId],
+    references: [clientes.id],
+  }),
+  items: many(remanOrderItems),
+}));
+
+export const remanOrderItemsRelations = relations(remanOrderItems, ({ many, one }) => ({
+  order: one(remanOrders, {
+    fields: [remanOrderItems.orderId],
+    references: [remanOrders.id],
+  }),
+  model: one(cartridgeModels, {
+    fields: [remanOrderItems.cartridgeModelId],
+    references: [cartridgeModels.id],
+  }),
+  units: many(remanOrderUnits),
+}));
+
+export const remanOrderUnitsRelations = relations(remanOrderUnits, ({ one }) => ({
+  item: one(remanOrderItems, {
+    fields: [remanOrderUnits.orderItemId],
+    references: [remanOrderItems.id],
+  }),
+  model: one(cartridgeModels, {
+    fields: [remanOrderUnits.cartridgeModelId],
+    references: [cartridgeModels.id],
+  }),
+}));

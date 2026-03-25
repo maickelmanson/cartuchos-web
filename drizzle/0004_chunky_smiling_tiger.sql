@@ -1,0 +1,1 @@
+ALTER TABLE `pedido_cartuchos` MODIFY COLUMN `status` enum('em_espera','em_andamento','processo','funcionando','circuito_queimado','defeito_cabeca') NOT NULL DEFAULT 'em_espera';

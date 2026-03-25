@@ -1,0 +1,1 @@
+ALTER TABLE `pedido_cartuchos` ADD `status` enum('em_andamento','processo','pronto') DEFAULT 'em_andamento' NOT NULL;
