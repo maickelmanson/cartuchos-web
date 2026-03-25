@@ -58,3 +58,11 @@
 
 ## Bugs
 - [x] Erro ao criar modelo de cartucho - campos de preço como string vazia causam falha no INSERT
+
+## Unificação Modelo Cartucho
+- [x] Unificar tabelas cartuchos_cadastro e cartridge_models em uma só
+- [x] Campos: modelo01, modelo02, preço cliente final, preço revenda
+- [x] Formatação automática de moeda BRL (vírgula) nos campos de preço
+- [x] Nova página unificada "Modelo Cartucho"
+- [x] Atualizar menu sidebar (remover Cartuchos e Reman - Modelos, adicionar Modelo Cartucho)
+- [ ] Atualizar referências no módulo de remanufatura (pendente - reman ainda usa cartridge_models)

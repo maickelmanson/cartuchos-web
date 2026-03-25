@@ -20,6 +20,8 @@ export const cartuchodCadastro = mysqlTable("cartuchos_cadastro", {
   id: int("id").autoincrement().primaryKey(),
   modelo01: text("modelo_01").notNull(),
   modelo02: text("modelo_02").notNull(),
+  priceFinalCustomer: decimal("price_final_customer", { precision: 10, scale: 2 }),
+  priceReseller: decimal("price_reseller", { precision: 10, scale: 2 }),
   criadoEm: timestamp("criado_em").defaultNow().notNull(),
 });
 

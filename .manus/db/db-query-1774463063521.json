@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE cartuchos_cadastro ADD COLUMN price_final_customer DECIMAL(10,2) DEFAULT NULL; ALTER TABLE cartuchos_cadastro ADD COLUMN price_reseller DECIMAL(10,2) DEFAULT NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 5TMdM9oSN1dsoYb.root --database TEopnpqVFcFcEzDuX7X4dq --execute ALTER TABLE cartuchos_cadastro ADD COLUMN price_final_customer DECIMAL(10,2) DEFAULT NULL; ALTER TABLE cartuchos_cadastro ADD COLUMN price_reseller DECIMAL(10,2) DEFAULT NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 834
+}

@@ -44,11 +44,15 @@ export const appRouter = router({
       .input(z.object({
         modelo01: z.string().min(1),
         modelo02: z.string().min(1),
+        priceFinalCustomer: z.string().optional(),
+        priceReseller: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         return criarCartucho({
           modelo01: input.modelo01,
           modelo02: input.modelo02,
+          priceFinalCustomer: input.priceFinalCustomer && input.priceFinalCustomer.trim() !== '' ? input.priceFinalCustomer : null,
+          priceReseller: input.priceReseller && input.priceReseller.trim() !== '' ? input.priceReseller : null,
         });
       }),
 
@@ -57,11 +61,15 @@ export const appRouter = router({
         id: z.number(),
         modelo01: z.string().min(1),
         modelo02: z.string().min(1),
+        priceFinalCustomer: z.string().optional(),
+        priceReseller: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         return atualizarCartucho(input.id, {
           modelo01: input.modelo01,
           modelo02: input.modelo02,
+          priceFinalCustomer: input.priceFinalCustomer && input.priceFinalCustomer.trim() !== '' ? input.priceFinalCustomer : null,
+          priceReseller: input.priceReseller && input.priceReseller.trim() !== '' ? input.priceReseller : null,
         });
       }),
 

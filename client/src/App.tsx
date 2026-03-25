@@ -10,8 +10,7 @@ import Clientes from "./pages/Clientes";
 import ClienteDetalhe from "./pages/ClienteDetalhe";
 import Pedidos from "./pages/Pedidos";
 import PedidoDetalhe from "./pages/PedidoDetalhe";
-import CartuchosCadastro from "./pages/CartuchosCadastro";
-import RemanModelos from "./pages/RemanModelos";
+import ModeloCartucho from "./pages/ModeloCartucho";
 import RemanPedidos from "./pages/RemanPedidos";
 import RemanPedidoDetalhe from "./pages/RemanPedidoDetalhe";
 
@@ -24,8 +23,7 @@ function Router() {
         <Route path={"/clientes/:id"} component={ClienteDetalhe} />
         <Route path={"/pedidos"} component={Pedidos} />
         <Route path={"/pedidos/:id"} component={PedidoDetalhe} />
-        <Route path={"/cartuchos"} component={CartuchosCadastro} />
-        <Route path={"/reman/modelos"} component={RemanModelos} />
+        <Route path={"/modelos"} component={ModeloCartucho} />
         <Route path={"/reman/pedidos"} component={RemanPedidos} />
         <Route path={"/reman/pedidos/:id"} component={RemanPedidoDetalhe} />
         <Route path={"/404"} component={NotFound} />
