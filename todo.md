@@ -55,3 +55,6 @@
 - [ ] Botão de impressão/PDF do pedido de remanufatura
 - [ ] Dashboard de remanufatura com estatísticas
 - [x] Testes unitários (vitest) - 5 testes passando
+
+## Bugs
+- [x] Erro ao criar modelo de cartucho - campos de preço como string vazia causam falha no INSERT

@@ -276,12 +276,12 @@ export const appRouter = router({
         return criarModeloCartucho({
           brand: input.brand,
           modelCode: input.modelCode,
-          description: input.description,
-          color: input.color,
+          description: input.description || null,
+          color: input.color || null,
           priceFinalCustomer: input.priceFinalCustomer,
           priceReseller: input.priceReseller,
-          costPrice: input.costPrice,
-          notes: input.notes,
+          costPrice: input.costPrice && input.costPrice.trim() !== '' ? input.costPrice : null,
+          notes: input.notes || null,
           active: 1,
         });
       }),
@@ -300,8 +300,14 @@ export const appRouter = router({
         active: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        const { id, ...data } = input;
-        return atualizarModeloCartucho(id, data);
+        const { id, ...rest } = input;
+        return atualizarModeloCartucho(id, {
+          ...rest,
+          description: rest.description || null,
+          color: rest.color || null,
+          costPrice: rest.costPrice && rest.costPrice.trim() !== '' ? rest.costPrice : null,
+          notes: rest.notes || null,
+        });
       }),
 
     deletar: protectedProcedure
