@@ -5,19 +5,19 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import {
   listarCartuchos, criarCartucho, atualizarCartucho, deletarCartucho,
+  buscarCartuchoPorId,
   listarClientes, buscarCliente, criarCliente, atualizarCliente, deletarCliente,
   listarPedidos, buscarPedido, listarPedidosPorCliente, obterProximoNumeroPedido, criarPedido, finalizarPedido, deletarPedido,
   listarCartuchosDoPedido, adicionarCartucho, atualizarCartuchodoPedido, removerCartuchodoPedido,
   buscaAvancada,
-  listarModelosCartucho, buscarModeloCartucho, criarModeloCartucho, atualizarModeloCartucho, deletarModeloCartucho,
   obterProximoNumeroRemanOrder, listarRemanOrders, buscarRemanOrder, criarRemanOrder, atualizarRemanOrder, deletarRemanOrder,
   listarRemanOrderItems, criarRemanOrderItem, atualizarRemanOrderItem, deletarRemanOrderItem,
   listarRemanOrderUnits, criarRemanOrderUnit, atualizarRemanOrderUnit, deletarRemanOrderUnit,
   obterRelatorioRemanOrder,
 } from "./db";
 import { getDb } from "./db";
-import { clientes, remanOrders, remanOrderItems, cartridgeModels } from "../drizzle/schema";
-import { eq, sum } from "drizzle-orm";
+import { clientes } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export const appRouter = router({
   system: systemRouter,
@@ -33,12 +33,18 @@ export const appRouter = router({
   }),
 
   // ============================================================
-  // Cartuchos Cadastro
+  // Cartuchos Cadastro (tabela unificada)
   // ============================================================
   cartuchos: router({
     listar: protectedProcedure.query(async () => {
       return listarCartuchos();
     }),
+
+    buscar: protectedProcedure
+      .input(z.number())
+      .query(async ({ input }) => {
+        return buscarCartuchoPorId(input);
+      }),
 
     criar: protectedProcedure
       .input(z.object({
@@ -256,76 +262,6 @@ export const appRouter = router({
   }),
 
   // ============================================================
-  // Módulo de Remanufatura - Modelos de Cartucho
-  // ============================================================
-  cartridgeModels: router({
-    listar: protectedProcedure.query(async () => {
-      return listarModelosCartucho();
-    }),
-
-    buscar: protectedProcedure
-      .input(z.number())
-      .query(async ({ input }) => {
-        return buscarModeloCartucho(input);
-      }),
-
-    criar: protectedProcedure
-      .input(z.object({
-        brand: z.string().min(1),
-        modelCode: z.string().min(1),
-        description: z.string().optional(),
-        color: z.string().optional(),
-        priceFinalCustomer: z.string().min(1),
-        priceReseller: z.string().min(1),
-        costPrice: z.string().optional(),
-        notes: z.string().optional(),
-      }))
-      .mutation(async ({ input }) => {
-        return criarModeloCartucho({
-          brand: input.brand,
-          modelCode: input.modelCode,
-          description: input.description || null,
-          color: input.color || null,
-          priceFinalCustomer: input.priceFinalCustomer,
-          priceReseller: input.priceReseller,
-          costPrice: input.costPrice && input.costPrice.trim() !== '' ? input.costPrice : null,
-          notes: input.notes || null,
-          active: 1,
-        });
-      }),
-
-    atualizar: protectedProcedure
-      .input(z.object({
-        id: z.number(),
-        brand: z.string().min(1),
-        modelCode: z.string().min(1),
-        description: z.string().optional(),
-        color: z.string().optional(),
-        priceFinalCustomer: z.string().min(1),
-        priceReseller: z.string().min(1),
-        costPrice: z.string().optional(),
-        notes: z.string().optional(),
-        active: z.number().optional(),
-      }))
-      .mutation(async ({ input }) => {
-        const { id, ...rest } = input;
-        return atualizarModeloCartucho(id, {
-          ...rest,
-          description: rest.description || null,
-          color: rest.color || null,
-          costPrice: rest.costPrice && rest.costPrice.trim() !== '' ? rest.costPrice : null,
-          notes: rest.notes || null,
-        });
-      }),
-
-    deletar: protectedProcedure
-      .input(z.number())
-      .mutation(async ({ input }) => {
-        return deletarModeloCartucho(input);
-      }),
-  }),
-
-  // ============================================================
   // Módulo de Remanufatura - Pedidos Reman
   // ============================================================
   remanOrders: router({
@@ -419,7 +355,7 @@ export const appRouter = router({
     criar: protectedProcedure
       .input(z.object({
         orderId: z.number(),
-        cartridgeModelId: z.number(),
+        cartuchoId: z.number(),
         quantity: z.number().min(1),
       }))
       .mutation(async ({ input }) => {
@@ -430,23 +366,23 @@ export const appRouter = router({
         const order = await buscarRemanOrder(input.orderId);
         if (!order) throw new Error("Pedido não encontrado");
 
-        // Buscar o modelo de cartucho
-        const modelo = await buscarModeloCartucho(input.cartridgeModelId);
+        // Buscar o modelo de cartucho na tabela unificada
+        const modelo = await buscarCartuchoPorId(input.cartuchoId);
         if (!modelo) throw new Error("Modelo de cartucho não encontrado");
 
         // Determinar preço baseado no perfil comercial
         const priceSource = order.commercialProfileSnapshot === "REVENDA" ? "REVENDA" : "CLIENTE_FINAL";
         const unitPrice = priceSource === "REVENDA"
-          ? modelo.priceReseller
-          : modelo.priceFinalCustomer;
+          ? (modelo.priceReseller || "0")
+          : (modelo.priceFinalCustomer || "0");
 
         const lineTotal = (parseFloat(unitPrice) * input.quantity).toFixed(2);
 
         await criarRemanOrderItem({
           orderId: input.orderId,
-          cartridgeModelId: input.cartridgeModelId,
-          descriptionSnapshot: modelo.description || modelo.modelCode,
-          modelCodeSnapshot: modelo.modelCode,
+          cartuchoId: input.cartuchoId,
+          descriptionSnapshot: modelo.modelo01,
+          modelCodeSnapshot: modelo.modelo02,
           quantity: input.quantity,
           unitPrice,
           priceSource,
@@ -515,7 +451,7 @@ export const appRouter = router({
     criar: protectedProcedure
       .input(z.object({
         orderItemId: z.number(),
-        cartridgeModelId: z.number(),
+        cartuchoId: z.number(),
         unitCode: z.string().min(1),
         status: z.enum(["FUNCIONANDO", "COM_PROBLEMA"]),
         defectType: z.string().optional(),
@@ -533,7 +469,7 @@ export const appRouter = router({
 
         return criarRemanOrderUnit({
           orderItemId: input.orderItemId,
-          cartridgeModelId: input.cartridgeModelId,
+          cartuchoId: input.cartuchoId,
           unitCode: input.unitCode,
           status: input.status,
           defectType: input.defectType,

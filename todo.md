@@ -65,4 +65,13 @@
 - [x] Formatação automática de moeda BRL (vírgula) nos campos de preço
 - [x] Nova página unificada "Modelo Cartucho"
 - [x] Atualizar menu sidebar (remover Cartuchos e Reman - Modelos, adicionar Modelo Cartucho)
-- [ ] Atualizar referências no módulo de remanufatura (pendente - reman ainda usa cartridge_models)
+- [x] Atualizar referências no módulo de remanufatura
+
+## Migração Reman - Pedidos para tabela unificada
+- [x] Atualizar FKs das tabelas reman_order_items e reman_order_units para apontar para cartuchos_cadastro
+- [x] Atualizar db.ts: funções de reman para usar cartuchos_cadastro
+- [x] Atualizar routers.ts: procedures de reman para usar cartuchos_cadastro
+- [x] RemanPedidos.tsx já estava OK
+- [x] Atualizar RemanPedidoDetalhe.tsx para usar cartuchos_cadastro
+- [x] Remover router cartridgeModels, RemanModelos.tsx e CartuchosCadastro.tsx
+- [x] Testes atualizados - 5 passando

@@ -41,7 +41,7 @@ function ModalAdicionarItem({ orderId, onSalvo, onFechar }: { orderId: number; o
   const [cartridgeModelId, setCartridgeModelId] = useState("");
   const [quantity, setQuantity] = useState("1");
 
-  const modelosQuery = trpc.cartridgeModels.listar.useQuery();
+  const modelosQuery = trpc.cartuchos.listar.useQuery();
   const criarMutation = trpc.remanOrderItems.criar.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,7 +53,7 @@ function ModalAdicionarItem({ orderId, onSalvo, onFechar }: { orderId: number; o
     try {
       await criarMutation.mutateAsync({
         orderId,
-        cartridgeModelId: parseInt(cartridgeModelId),
+        cartuchoId: parseInt(cartridgeModelId),
         quantity: parseInt(quantity),
       });
       toast.success("Item adicionado ao pedido!");
@@ -80,9 +80,9 @@ function ModalAdicionarItem({ orderId, onSalvo, onFechar }: { orderId: number; o
               required
             >
               <option value="">Selecione um modelo...</option>
-              {(modelosQuery.data || []).map(m => (
+              {(modelosQuery.data || []).map((m: any) => (
                 <option key={m.id} value={m.id}>
-                  {m.brand} — {m.modelCode} {m.description ? `(${m.description})` : ""}
+                  {m.modelo01} — {m.modelo02}
                 </option>
               ))}
             </select>
@@ -146,7 +146,7 @@ function ModalAdicionarUnidade({ item, onSalvo, onFechar }: { item: any; onSalvo
     try {
       await criarMutation.mutateAsync({
         orderItemId: item.id,
-        cartridgeModelId: item.cartridgeModelId,
+        cartuchoId: item.cartuchoId,
         unitCode: form.unitCode,
         status: form.status,
         defectType: form.defectType || undefined,
@@ -598,7 +598,7 @@ export default function RemanPedidoDetalhe({ params }: Props) {
                   {relatorio.funcionando.map(u => (
                     <div key={u.id} className="flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/20 rounded px-3 py-2 text-sm">
                       <span className="font-mono">{u.unitCode}</span>
-                      <span className="text-muted-foreground">{u.modelCode}</span>
+                      <span className="text-muted-foreground">{u.modelo02}</span>
                       <span className="text-emerald-700 font-medium">{u.outputWeight ? `${u.outputWeight} kg` : "-"}</span>
                     </div>
                   ))}
@@ -618,7 +618,7 @@ export default function RemanPedidoDetalhe({ params }: Props) {
                   {relatorio.comProblema.map(u => (
                     <div key={u.id} className="flex items-center justify-between bg-red-50 dark:bg-red-950/20 rounded px-3 py-2 text-sm">
                       <span className="font-mono">{u.unitCode}</span>
-                      <span className="text-muted-foreground">{u.modelCode}</span>
+                      <span className="text-muted-foreground">{u.modelo02}</span>
                       <span className="text-red-700 font-medium">{u.defectType || "-"}</span>
                     </div>
                   ))}

@@ -1,6 +1,6 @@
 import { eq, desc, like, or, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, cartuchodCadastro, clientes, pedidos, pedidoCartuchos, InsertCartuchodCadastro, InsertCliente, InsertPedido, InsertPedidoCartucho, cartridgeModels, remanOrders, remanOrderItems, remanOrderUnits, InsertCartridgeModel, InsertRemanOrder, InsertRemanOrderItem, InsertRemanOrderUnit } from "../drizzle/schema";
+import { InsertUser, users, cartuchodCadastro, clientes, pedidos, pedidoCartuchos, InsertCartuchodCadastro, InsertCliente, InsertPedido, InsertPedidoCartucho, remanOrders, remanOrderItems, remanOrderUnits, InsertRemanOrder, InsertRemanOrderItem, InsertRemanOrderUnit } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -456,38 +456,13 @@ export async function buscaAvancada(tipo: string, termo: string) {
 }
 
 // ============================================================
-// Cartridge Models (Remanufacturing)
+// Buscar Cartucho por ID (para uso no módulo Reman)
 // ============================================================
-export async function listarModelosCartucho() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(cartridgeModels).where(eq(cartridgeModels.active, 1)).orderBy(cartridgeModels.brand, cartridgeModels.modelCode);
-}
-
-export async function buscarModeloCartucho(id: number) {
+export async function buscarCartuchoPorId(id: number) {
   const db = await getDb();
   if (!db) return null;
-  const result = await db.select().from(cartridgeModels).where(eq(cartridgeModels.id, id)).limit(1);
+  const result = await db.select().from(cartuchodCadastro).where(eq(cartuchodCadastro.id, id)).limit(1);
   return result.length > 0 ? result[0] : null;
-}
-
-export async function criarModeloCartucho(data: InsertCartridgeModel) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.insert(cartridgeModels).values(data);
-  return result;
-}
-
-export async function atualizarModeloCartucho(id: number, data: Partial<InsertCartridgeModel>) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  return db.update(cartridgeModels).set(data).where(eq(cartridgeModels.id, id));
-}
-
-export async function deletarModeloCartucho(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  return db.delete(cartridgeModels).where(eq(cartridgeModels.id, id));
 }
 
 // ============================================================
@@ -581,7 +556,7 @@ export async function listarRemanOrderItems(orderId: number) {
   return db.select({
     id: remanOrderItems.id,
     orderId: remanOrderItems.orderId,
-    cartridgeModelId: remanOrderItems.cartridgeModelId,
+    cartuchoId: remanOrderItems.cartuchoId,
     descriptionSnapshot: remanOrderItems.descriptionSnapshot,
     modelCodeSnapshot: remanOrderItems.modelCodeSnapshot,
     quantity: remanOrderItems.quantity,
@@ -656,10 +631,10 @@ export async function obterRelatorioRemanOrder(orderId: number) {
     defectType: remanOrderUnits.defectType,
     outputWeight: remanOrderUnits.outputWeight,
     notes: remanOrderUnits.notes,
-    modelCode: cartridgeModels.modelCode,
+    modelo02: cartuchodCadastro.modelo02,
   })
     .from(remanOrderUnits)
-    .leftJoin(cartridgeModels, eq(remanOrderUnits.cartridgeModelId, cartridgeModels.id))
+    .leftJoin(cartuchodCadastro, eq(remanOrderUnits.cartuchoId, cartuchodCadastro.id))
     .leftJoin(remanOrderItems, eq(remanOrderUnits.orderItemId, remanOrderItems.id))
     .where(eq(remanOrderItems.orderId, orderId));
 

@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE reman_order_items CHANGE COLUMN cartridge_model_id cartucho_id INT NOT NULL; ALTER TABLE reman_order_units CHANGE COLUMN cartridge_model_id cartucho_id INT NOT NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 5TMdM9oSN1dsoYb.root --database TEopnpqVFcFcEzDuX7X4dq --execute ALTER TABLE reman_order_items CHANGE COLUMN cartridge_model_id cartucho_id INT NOT NULL; ALTER TABLE reman_order_units CHANGE COLUMN cartridge_model_id cartucho_id INT NOT NULL;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 620
+}

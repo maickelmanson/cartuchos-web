@@ -135,12 +135,8 @@ describe("router structure", () => {
     // Busca avançada
     expect(routerKeys).toContain("busca.avancada");
     
-    // Módulo de Remanufatura - Modelos
-    expect(routerKeys).toContain("cartridgeModels.listar");
-    expect(routerKeys).toContain("cartridgeModels.buscar");
-    expect(routerKeys).toContain("cartridgeModels.criar");
-    expect(routerKeys).toContain("cartridgeModels.atualizar");
-    expect(routerKeys).toContain("cartridgeModels.deletar");
+    // Cartuchos (tabela unificada - inclui buscar para uso no reman)
+    expect(routerKeys).toContain("cartuchos.buscar");
     
     // Módulo de Remanufatura - Pedidos
     expect(routerKeys).toContain("remanOrders.listar");

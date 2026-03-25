@@ -92,23 +92,6 @@ export const pedidoCartuchosRelations = relations(pedidoCartuchos, ({ one }) => 
 }));
 
 // Tabelas do Módulo de Remanufatura
-export const cartridgeModels = mysqlTable("cartridge_models", {
-  id: int("id").autoincrement().primaryKey(),
-  brand: varchar("brand", { length: 100 }).notNull(),
-  modelCode: varchar("model_code", { length: 50 }).notNull().unique(),
-  description: text("description"),
-  color: varchar("color", { length: 50 }),
-  active: tinyint("active").default(1).notNull(),
-  priceFinalCustomer: decimal("price_final_customer", { precision: 10, scale: 2 }).notNull(),
-  priceReseller: decimal("price_reseller", { precision: 10, scale: 2 }).notNull(),
-  costPrice: decimal("cost_price", { precision: 10, scale: 2 }),
-  notes: text("notes"),
-  criadoEm: timestamp("criado_em").defaultNow().notNull(),
-  atualizadoEm: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
-});
-
-export type CartridgeModel = typeof cartridgeModels.$inferSelect;
-export type InsertCartridgeModel = typeof cartridgeModels.$inferInsert;
 
 export const remanOrders = mysqlTable("reman_orders", {
   id: int("id").autoincrement().primaryKey(),
@@ -130,7 +113,7 @@ export type InsertRemanOrder = typeof remanOrders.$inferInsert;
 export const remanOrderItems = mysqlTable("reman_order_items", {
   id: int("id").autoincrement().primaryKey(),
   orderId: int("order_id").notNull(),
-  cartridgeModelId: int("cartridge_model_id").notNull(),
+  cartuchoId: int("cartucho_id").notNull(),
   descriptionSnapshot: text("description_snapshot"),
   modelCodeSnapshot: varchar("model_code_snapshot", { length: 50 }),
   quantity: int("quantity").notNull(),
@@ -147,7 +130,7 @@ export type InsertRemanOrderItem = typeof remanOrderItems.$inferInsert;
 export const remanOrderUnits = mysqlTable("reman_order_units", {
   id: int("id").autoincrement().primaryKey(),
   orderItemId: int("order_item_id").notNull(),
-  cartridgeModelId: int("cartridge_model_id").notNull(),
+  cartuchoId: int("cartucho_id").notNull(),
   unitCode: varchar("unit_code", { length: 100 }).notNull(),
   status: mysqlEnum("status", ["FUNCIONANDO", "COM_PROBLEMA"]).notNull(),
   defectType: varchar("defect_type", { length: 100 }),
@@ -174,9 +157,9 @@ export const remanOrderItemsRelations = relations(remanOrderItems, ({ many, one 
     fields: [remanOrderItems.orderId],
     references: [remanOrders.id],
   }),
-  model: one(cartridgeModels, {
-    fields: [remanOrderItems.cartridgeModelId],
-    references: [cartridgeModels.id],
+  modelo: one(cartuchodCadastro, {
+    fields: [remanOrderItems.cartuchoId],
+    references: [cartuchodCadastro.id],
   }),
   units: many(remanOrderUnits),
 }));
@@ -186,8 +169,8 @@ export const remanOrderUnitsRelations = relations(remanOrderUnits, ({ one }) => 
     fields: [remanOrderUnits.orderItemId],
     references: [remanOrderItems.id],
   }),
-  model: one(cartridgeModels, {
-    fields: [remanOrderUnits.cartridgeModelId],
-    references: [cartridgeModels.id],
+  modelo: one(cartuchodCadastro, {
+    fields: [remanOrderUnits.cartuchoId],
+    references: [cartuchodCadastro.id],
   }),
 }));
