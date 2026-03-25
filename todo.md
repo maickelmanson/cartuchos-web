@@ -87,3 +87,6 @@
 - [x] Scroll de deslizamento em todo o sistema (modais com scroll para ver botões)
 - [x] Todos os campos digitados em LETRAS MAIÚSCULAS (uppercase)
 - [x] Busca sem diferenciar acentuação (normalizar acentos)
+
+## Bugs Reportados
+- [x] Dashboard não abre - corrigido: DashboardLayout agora envolve todas as rotas no App.tsx

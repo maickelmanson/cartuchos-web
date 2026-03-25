@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -92,17 +91,14 @@ export default function DadosEmpresa() {
 
   if (isLoading) {
     return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="animate-spin h-8 w-8 text-muted-foreground" />
-        </div>
-      </DashboardLayout>
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="animate-spin h-8 w-8 text-muted-foreground" />
+      </div>
     );
   }
 
   return (
-    <DashboardLayout>
-      <div className="p-4 md:p-6 max-w-4xl mx-auto">
+    <div className="p-4 md:p-6 max-w-4xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
           <Building2 className="h-7 w-7 text-primary" />
           <h1 className="text-2xl font-bold">Dados da Empresa</h1>
@@ -271,7 +267,6 @@ export default function DadosEmpresa() {
             </div>
           </CardContent>
         </Card>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

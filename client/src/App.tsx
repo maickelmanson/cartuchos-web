@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import DashboardLayout from "./components/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
 import ClienteDetalhe from "./pages/ClienteDetalhe";
@@ -15,23 +16,33 @@ import RemanPedidoDetalhe from "./pages/RemanPedidoDetalhe";
 import RemanPedidoImpressao from "./pages/RemanPedidoImpressao";
 import DadosEmpresa from "./pages/DadosEmpresa";
 
+function DashboardRoutes() {
+  return (
+    <DashboardLayout>
+      <Switch>
+        <Route path={"/"} component={Dashboard} />
+        <Route path={"/empresa"} component={DadosEmpresa} />
+        <Route path={"/clientes"} component={Clientes} />
+        <Route path={"/clientes/:id"} component={ClienteDetalhe} />
+        <Route path={"/pedidos"} component={Pedidos} />
+        <Route path={"/pedidos/:id"} component={PedidoDetalhe} />
+        <Route path={"/modelos"} component={ModeloCartucho} />
+        <Route path={"/reman/pedidos"} component={RemanPedidos} />
+        <Route path={"/reman/pedidos/:id"} component={RemanPedidoDetalhe} />
+        <Route path={"/404"} component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    </DashboardLayout>
+  );
+}
+
 function Router() {
   return (
     <Switch>
       {/* Página de impressão - sem DashboardLayout */}
       <Route path={"/reman/pedidos/:id/imprimir"} component={RemanPedidoImpressao} />
-      {/* Todas as outras rotas */}
-      <Route path={"/"} component={Dashboard} />
-      <Route path={"/empresa"} component={DadosEmpresa} />
-      <Route path={"/clientes"} component={Clientes} />
-      <Route path={"/clientes/:id"} component={ClienteDetalhe} />
-      <Route path={"/pedidos"} component={Pedidos} />
-      <Route path={"/pedidos/:id"} component={PedidoDetalhe} />
-      <Route path={"/modelos"} component={ModeloCartucho} />
-      <Route path={"/reman/pedidos"} component={RemanPedidos} />
-      <Route path={"/reman/pedidos/:id"} component={RemanPedidoDetalhe} />
-      <Route path={"/404"} component={NotFound} />
-      <Route component={NotFound} />
+      {/* Todas as outras rotas com DashboardLayout */}
+      <Route component={DashboardRoutes} />
     </Switch>
   );
 }
