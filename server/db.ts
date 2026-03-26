@@ -317,7 +317,7 @@ export async function removerCartuchodoPedido(id: number) {
 // ============================================================
 export async function buscaAvancada(tipo: string, termo: string) {
   const db = await getDb();
-  if (!db) return { pedidos: [], cartuchos: [] };
+  if (!db) return { pedidos: [], cartuchos: [], clientes: [] };
   
   // Case-insensitive + accent-insensitive search
   // Remove acentos do termo de busca para comparação
@@ -343,78 +343,67 @@ export async function buscaAvancada(tipo: string, termo: string) {
       .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
       .where(like(unaccent(pedidoCartuchos.codigo), likeTermoPattern))
       .orderBy(desc(pedidoCartuchos.dataInclusao));
-    return { pedidos: [], cartuchos };
+    return { pedidos: [], cartuchos, clientes: [] };
   }
 
   if (tipo === "cliente") {
-    const pedidosList = await db.select({
-      id: pedidos.id,
-      numero: pedidos.numero,
-      clienteId: pedidos.clienteId,
-      clienteNome: clientes.nome,
-      status: pedidos.status,
-      dataCriacao: pedidos.dataCriacao,
-      dataFinalizacao: pedidos.dataFinalizacao,
+    const clientesList = await db.select({
+      id: clientes.id,
+      nome: clientes.nome,
+      telefone: clientes.telefone,
+      cpf: clientes.cpf,
+      cnpj: clientes.cnpj,
+      commercialProfile: clientes.commercialProfile,
     })
-      .from(pedidos)
-      .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
+      .from(clientes)
       .where(like(unaccent(clientes.nome), likeTermoPattern))
-      .orderBy(desc(pedidos.id));
-    return { pedidos: pedidosList, cartuchos: [] };
+      .orderBy(clientes.nome);
+    return { pedidos: [], cartuchos: [], clientes: clientesList };
   }
 
   if (tipo === "telefone") {
-    const pedidosList = await db.select({
-      id: pedidos.id,
-      numero: pedidos.numero,
-      clienteId: pedidos.clienteId,
-      clienteNome: clientes.nome,
+    const clientesList = await db.select({
+      id: clientes.id,
+      nome: clientes.nome,
       telefone: clientes.telefone,
-      status: pedidos.status,
-      dataCriacao: pedidos.dataCriacao,
-      dataFinalizacao: pedidos.dataFinalizacao,
+      cpf: clientes.cpf,
+      cnpj: clientes.cnpj,
+      commercialProfile: clientes.commercialProfile,
     })
-      .from(pedidos)
-      .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
+      .from(clientes)
       .where(like(unaccent(clientes.telefone), likeTermoPattern))
-      .orderBy(desc(pedidos.id));
-    return { pedidos: pedidosList, cartuchos: [] };
+      .orderBy(clientes.nome);
+    return { pedidos: [], cartuchos: [], clientes: clientesList };
   }
 
   if (tipo === "cpf") {
-    const pedidosList = await db.select({
-      id: pedidos.id,
-      numero: pedidos.numero,
-      clienteId: pedidos.clienteId,
-      clienteNome: clientes.nome,
+    const clientesList = await db.select({
+      id: clientes.id,
+      nome: clientes.nome,
+      telefone: clientes.telefone,
       cpf: clientes.cpf,
-      status: pedidos.status,
-      dataCriacao: pedidos.dataCriacao,
-      dataFinalizacao: pedidos.dataFinalizacao,
+      cnpj: clientes.cnpj,
+      commercialProfile: clientes.commercialProfile,
     })
-      .from(pedidos)
-      .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
+      .from(clientes)
       .where(like(clientes.cpf, likeTermoPattern))
-      .orderBy(desc(pedidos.id));
-    return { pedidos: pedidosList, cartuchos: [] };
+      .orderBy(clientes.nome);
+    return { pedidos: [], cartuchos: [], clientes: clientesList };
   }
 
   if (tipo === "cnpj") {
-    const pedidosList = await db.select({
-      id: pedidos.id,
-      numero: pedidos.numero,
-      clienteId: pedidos.clienteId,
-      clienteNome: clientes.nome,
+    const clientesList = await db.select({
+      id: clientes.id,
+      nome: clientes.nome,
+      telefone: clientes.telefone,
+      cpf: clientes.cpf,
       cnpj: clientes.cnpj,
-      status: pedidos.status,
-      dataCriacao: pedidos.dataCriacao,
-      dataFinalizacao: pedidos.dataFinalizacao,
+      commercialProfile: clientes.commercialProfile,
     })
-      .from(pedidos)
-      .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
+      .from(clientes)
       .where(like(clientes.cnpj, likeTermoPattern))
-      .orderBy(desc(pedidos.id));
-    return { pedidos: pedidosList, cartuchos: [] };
+      .orderBy(clientes.nome);
+    return { pedidos: [], cartuchos: [], clientes: clientesList };
   }
 
   if (tipo === "pedido") {
@@ -431,7 +420,7 @@ export async function buscaAvancada(tipo: string, termo: string) {
       .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
       .where(like(pedidos.numero, likeTermoPattern))
       .orderBy(desc(pedidos.id));
-    return { pedidos: pedidosList, cartuchos: [] };
+    return { pedidos: pedidosList, cartuchos: [], clientes: [] };
   }
 
   // Busca geral
@@ -476,7 +465,25 @@ export async function buscaAvancada(tipo: string, termo: string) {
     ))
     .orderBy(desc(pedidoCartuchos.dataInclusao));
 
-  return { pedidos: pedidosList, cartuchos: cartuchosList };
+  // Busca geral: também buscar clientes diretamente
+  const clientesGeralList = await db.select({
+    id: clientes.id,
+    nome: clientes.nome,
+    telefone: clientes.telefone,
+    cpf: clientes.cpf,
+    cnpj: clientes.cnpj,
+    commercialProfile: clientes.commercialProfile,
+  })
+    .from(clientes)
+    .where(or(
+      like(unaccent(clientes.nome), likeTermoPattern),
+      like(clientes.telefone, likeTermoPattern),
+      like(clientes.cpf, likeTermoPattern),
+      like(clientes.cnpj, likeTermoPattern)
+    ))
+    .orderBy(clientes.nome);
+
+  return { pedidos: pedidosList, cartuchos: cartuchosList, clientes: clientesGeralList };
 }
 
 // ============================================================

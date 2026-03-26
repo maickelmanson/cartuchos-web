@@ -50,7 +50,7 @@
 - [x] Corrigir Props de RemanPedidoDetalhe para wouter params
 
 ## Pendente
-- [ ] Página de Busca Avançada
+- [x] Página de Busca Avançada
 - [ ] Editar unidade física (atualmente só adiciona/remove)
 - [x] Botão de impressão/PDF do pedido de remanufatura
 - [ ] Dashboard de remanufatura com estatísticas
@@ -106,3 +106,17 @@
 ## Bugs Reportados
 - [x] RemanPedidoDetalhe: "Rendered more hooks than during the previous render" - corrigido: hook extraido para sub-componente ItemUnidades
 - [x] RemanPedidoImpressao: "Rendered more hooks than during the previous render" - corrigido: useRef e useState movidos para antes dos returns condicionais
+
+## Edição de Pedidos Finalizados
+- [x] Botão "Editar Pedido" funcional em pedidos com status FINALIZADO
+- [x] Permitir adicionar/remover cartuchos em pedido reaberto
+- [x] Permitir editar desconto e observações do pedido
+- [x] Recalcular total ao editar itens
+
+## Busca Avançada
+- [x] Página BuscaAvancada.tsx com campo de busca unificado
+- [x] Buscar por: código do cartucho, nome do cliente, telefone, CPF/CNPJ, número do pedido
+- [x] Exibir resultados agrupados por tipo (clientes, pedidos, cartuchos)
+- [x] Navegar para o detalhe ao clicar no resultado
+- [x] Adicionar item "Busca" no menu lateral
+- [x] Adicionar rota /busca no App.tsx

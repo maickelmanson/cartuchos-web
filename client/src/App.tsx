@@ -15,6 +15,7 @@ import RemanPedidos from "./pages/RemanPedidos";
 import RemanPedidoDetalhe from "./pages/RemanPedidoDetalhe";
 import RemanPedidoImpressao from "./pages/RemanPedidoImpressao";
 import DadosEmpresa from "./pages/DadosEmpresa";
+import BuscaAvancada from "./pages/BuscaAvancada";
 
 function DashboardRoutes() {
   return (
@@ -27,6 +28,7 @@ function DashboardRoutes() {
         <Route path={"/pedidos"} component={Pedidos} />
         <Route path={"/pedidos/:id"} component={PedidoDetalhe} />
         <Route path={"/modelos"} component={ModeloCartucho} />
+        <Route path={"/busca"} component={BuscaAvancada} />
         <Route path={"/reman/pedidos"} component={RemanPedidos} />
         <Route path={"/reman/pedidos/:id"} component={RemanPedidoDetalhe} />
         <Route path={"/404"} component={NotFound} />
