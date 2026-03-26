@@ -27,6 +27,10 @@ export default function RemanPedidoImpressao() {
   const { data: relatorio, isLoading: loadingRelatorio } = trpc.remanOrders.relatorio.useQuery(orderId, { enabled: orderId > 0 });
   const { data: empresa } = trpc.empresa.obter.useQuery();
 
+  // Todos os hooks DEVEM vir antes de qualquer return condicional (Regras dos Hooks)
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [exportingPdf, setExportingPdf] = useState(false);
+
   const isLoading = loadingOrder || loadingItems || loadingRelatorio;
 
   if (isLoading) {
@@ -54,9 +58,6 @@ export default function RemanPedidoImpressao() {
       valorUnit: parseFloat(item.unitPrice || "0"),
       total: parseFloat(item.lineTotal || "0"),
     }));
-
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [exportingPdf, setExportingPdf] = useState(false);
 
   const handlePrint = () => {
     window.print();

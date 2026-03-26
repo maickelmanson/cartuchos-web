@@ -105,3 +105,4 @@
 
 ## Bugs Reportados
 - [x] RemanPedidoDetalhe: "Rendered more hooks than during the previous render" - corrigido: hook extraido para sub-componente ItemUnidades
+- [x] RemanPedidoImpressao: "Rendered more hooks than during the previous render" - corrigido: useRef e useState movidos para antes dos returns condicionais
