@@ -52,12 +52,18 @@ export default function PedidoDetalhe({ params }: Props) {
   const atualizarMutation = trpc.pedidoCartuchos.atualizar.useMutation();
 
   const handleFinalizarPedido = async () => {
-    if (!confirm("Deseja finalizar este pedido?")) return;
+    if (!confirm("Deseja finalizar este pedido? Um pedido de remanufatura será gerado automaticamente.")) return;
     try {
-      await finalizarMutation.mutateAsync(id);
-      pedidoQuery.refetch();
+      const result = await finalizarMutation.mutateAsync(id);
+      // Redirecionar para a página de impressão do pedido reman gerado
+      if (result && result.remanOrderId) {
+        setLocation(`/reman/pedidos/${result.remanOrderId}/imprimir`);
+      } else {
+        pedidoQuery.refetch();
+      }
     } catch (error) {
       console.error("Erro ao finalizar pedido:", error);
+      alert("Erro ao finalizar o pedido. Tente novamente.");
     }
   };
 

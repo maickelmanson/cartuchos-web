@@ -15,6 +15,7 @@ import {
   listarRemanOrderUnits, criarRemanOrderUnit, atualizarRemanOrderUnit, deletarRemanOrderUnit,
   obterRelatorioRemanOrder,
   obterDadosEmpresa, salvarDadosEmpresa,
+  gerarRemanAPartirDoPedido,
 } from "./db";
 import { getDb } from "./db";
 import { clientes } from "../drizzle/schema";
@@ -205,7 +206,11 @@ export const appRouter = router({
     finalizar: protectedProcedure
       .input(z.number())
       .mutation(async ({ input }) => {
-        return finalizarPedido(input);
+        // 1. Finalizar o pedido normal
+        await finalizarPedido(input);
+        // 2. Gerar automaticamente o pedido de remanufatura
+        const result = await gerarRemanAPartirDoPedido(input);
+        return { success: true, remanOrderId: result.remanOrderId, orderNumber: result.orderNumber };
       }),
 
     reabrir: protectedProcedure

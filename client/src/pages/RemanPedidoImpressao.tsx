@@ -1,12 +1,19 @@
 import { useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { Printer, ArrowLeft, Loader2 } from "lucide-react";
+import { Printer, ArrowLeft, Loader2, FileDown } from "lucide-react";
 import { useLocation } from "wouter";
 
 function formatBRL(value: string | number | null | undefined): string {
   const num = typeof value === "string" ? parseFloat(value) : (value || 0);
   return num.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+function formatPeso(value: string | null | undefined): string {
+  if (!value) return "-";
+  const num = parseFloat(value);
+  if (isNaN(num)) return "-";
+  return num.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 export default function RemanPedidoImpressao() {
@@ -37,34 +44,22 @@ export default function RemanPedidoImpressao() {
     );
   }
 
-  // Agrupar itens funcionando por modelo para a tabela de Produtos
-  const produtosAgrupados: Record<string, { modelo: string; quantidade: number; valorUnit: number; total: number }> = {};
-  if (items) {
-    for (const item of items) {
-      const key = item.cartuchoId?.toString() || item.descriptionSnapshot || "unknown";
-      if (!produtosAgrupados[key]) {
-        produtosAgrupados[key] = {
-          modelo: `${item.descriptionSnapshot || ""} REMANUFATURADO`,
-          quantidade: 0,
-          valorUnit: parseFloat(item.unitPrice || "0"),
-          total: 0,
-        };
-      }
-      // Contar apenas os funcionando
-      const funcionandoCount = relatorio?.funcionando?.filter(
-        (u: any) => {
-          // Encontrar unidades deste item
-          return true; // Contamos pela quantidade do item por enquanto
-        }
-      ).length || 0;
-      produtosAgrupados[key].quantidade = item.quantity;
-      produtosAgrupados[key].total = parseFloat(item.lineTotal || "0");
-    }
-  }
+  // Agrupar produtos: apenas itens com quantidade > 0 (funcionando)
+  const produtosAgrupados = (items || [])
+    .filter(item => item.quantity > 0)
+    .map(item => ({
+      modelo: item.descriptionSnapshot || "SEM MODELO",
+      quantidade: item.quantity,
+      valorUnit: parseFloat(item.unitPrice || "0"),
+      total: parseFloat(item.lineTotal || "0"),
+    }));
 
   const handlePrint = () => {
     window.print();
   };
+
+  // Extrair bairro e cidade do endereço do cliente (pode vir como campo único)
+  const clienteEndereco = order.clienteEndereco || "";
 
   return (
     <div className="min-h-screen bg-white">
@@ -76,14 +71,15 @@ export default function RemanPedidoImpressao() {
         </Button>
         <Button size="sm" onClick={handlePrint}>
           <Printer className="h-4 w-4 mr-2" />
-          Imprimir
+          Imprimir / PDF
         </Button>
       </div>
 
       {/* Conteúdo para impressão */}
-      <div className="max-w-[210mm] mx-auto p-8 print:p-6 print:max-w-none">
-        {/* Cabeçalho: Logo + Dados da Empresa */}
-        <div className="flex items-start gap-6 mb-8 border-b pb-6">
+      <div className="max-w-[210mm] mx-auto p-8 print:p-6 print:max-w-none text-black">
+
+        {/* ===== CABEÇALHO: DADOS DA EMPRESA ===== */}
+        <div className="flex items-start gap-6 mb-6 border-b-2 border-black pb-4">
           {empresa?.logoUrl && (
             <div className="flex-shrink-0">
               <img
@@ -93,96 +89,108 @@ export default function RemanPedidoImpressao() {
               />
             </div>
           )}
-          <div className="flex-1">
+          <div className="flex-1 text-center">
             <h1 className="text-xl font-bold uppercase">{empresa?.empresa || "EMPRESA"}</h1>
-            <div className="text-sm text-gray-600 mt-1 space-y-0.5">
+            <div className="text-sm mt-1 space-y-0.5">
               {empresa?.endereco && (
                 <p>{empresa.endereco}{empresa.numero ? `, ${empresa.numero}` : ""}{empresa.bairro ? ` - ${empresa.bairro}` : ""}</p>
               )}
               {(empresa?.cidade || empresa?.estado) && (
-                <p>{empresa.cidade}{empresa.estado ? ` - ${empresa.estado}` : ""}{empresa.cep ? ` | CEP: ${empresa.cep}` : ""}</p>
+                <p>{empresa.cidade}{empresa.estado ? ` - ${empresa.estado}` : ""}</p>
               )}
-              {empresa?.cnpjCpf && <p>CNPJ/CPF: {empresa.cnpjCpf}</p>}
-              <div className="flex gap-4 flex-wrap">
-                {empresa?.telefone && <span>Tel: {empresa.telefone}</span>}
-                {empresa?.celular && <span>Cel: {empresa.celular}</span>}
-                {empresa?.email && <span>Email: {empresa.email}</span>}
-              </div>
+              {empresa?.celular && <p>WhatsApp: {empresa.celular}</p>}
+              {empresa?.cnpjCpf && <p>CNPJ: {empresa.cnpjCpf}</p>}
             </div>
           </div>
         </div>
 
-        {/* Número do Pedido */}
-        <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase">Pedido {order.orderNumber}</h2>
-          <p className="text-sm text-gray-600">
-            Cliente: <strong>{order.clienteNome}</strong>
-            {" | "}Perfil: <strong>{order.commercialProfileSnapshot === "REVENDA" ? "Revenda" : "Cliente Final"}</strong>
-            {" | "}Data: <strong>{new Date(order.criadoEm).toLocaleDateString("pt-BR")}</strong>
-          </p>
+        {/* ===== PEDIDO + DATA ===== */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold">Pedido {order.orderNumber}</h2>
+          <p className="text-sm">Data do Pedido: <strong>{new Date(order.criadoEm).toLocaleDateString("pt-BR")}</strong></p>
         </div>
 
-        {/* Tabela de Produtos (itens agrupados) */}
-        <div className="mb-8">
-          <h3 className="text-base font-bold uppercase mb-2 bg-gray-100 px-3 py-1">Produtos</h3>
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b-2 border-gray-300">
-                <th className="text-left py-2 px-2">Modelo</th>
-                <th className="text-center py-2 px-2 w-20">Qtd</th>
-                <th className="text-right py-2 px-2 w-28">Valor</th>
-                <th className="text-right py-2 px-2 w-32">Total</th>
-              </tr>
-            </thead>
+        {/* ===== DADOS DO CLIENTE ===== */}
+        <div className="mb-6 border border-black">
+          <div className="bg-gray-200 px-3 py-1 text-center font-bold text-sm border-b border-black">
+            Dados do Cliente
+          </div>
+          <table className="w-full text-sm">
             <tbody>
-              {Object.values(produtosAgrupados).map((prod, idx) => (
-                <tr key={idx} className="border-b border-gray-200">
-                  <td className="py-2 px-2 uppercase">{prod.modelo}</td>
-                  <td className="py-2 px-2 text-center">{prod.quantidade}</td>
-                  <td className="py-2 px-2 text-right">{formatBRL(prod.valorUnit)}</td>
-                  <td className="py-2 px-2 text-right font-semibold">{formatBRL(prod.total)}</td>
-                </tr>
-              ))}
+              <tr className="border-b border-gray-300">
+                <td className="px-3 py-1 font-semibold w-40 bg-gray-50 border-r border-gray-300">Nome/Razão Social</td>
+                <td className="px-3 py-1 uppercase">{order.clienteNome || "-"}</td>
+              </tr>
+              <tr className="border-b border-gray-300">
+                <td className="px-3 py-1 font-semibold bg-gray-50 border-r border-gray-300">Endereço</td>
+                <td className="px-3 py-1 uppercase">{clienteEndereco || "-"}</td>
+              </tr>
+              <tr className="border-b border-gray-300">
+                <td className="px-3 py-1 font-semibold bg-gray-50 border-r border-gray-300">Telefone</td>
+                <td className="px-3 py-1">{order.clienteTelefone || "-"}</td>
+              </tr>
             </tbody>
-            <tfoot>
-              <tr className="border-t-2 border-gray-400">
-                <td colSpan={3} className="py-2 px-2 text-right font-bold">Subtotal:</td>
-                <td className="py-2 px-2 text-right font-bold">{formatBRL(order.subtotal)}</td>
-              </tr>
-              {parseFloat(order.discount || "0") > 0 && (
-                <tr>
-                  <td colSpan={3} className="py-1 px-2 text-right text-red-600">Desconto:</td>
-                  <td className="py-1 px-2 text-right text-red-600">- {formatBRL(order.discount)}</td>
-                </tr>
-              )}
-              <tr className="bg-gray-100">
-                <td colSpan={3} className="py-2 px-2 text-right font-bold text-lg">TOTAL:</td>
-                <td className="py-2 px-2 text-right font-bold text-lg">{formatBRL(order.total)}</td>
-              </tr>
-            </tfoot>
           </table>
         </div>
 
-        {/* Cartuchos com Problema */}
-        {relatorio?.comProblema && relatorio.comProblema.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-base font-bold uppercase mb-2 bg-red-50 text-red-800 px-3 py-1">
-              Cartuchos com Problema
-            </h3>
-            <table className="w-full text-sm border-collapse">
+        {/* ===== TABELA DE PRODUTOS ===== */}
+        <div className="mb-6">
+          <table className="w-full text-sm border-collapse border border-black">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="text-left py-2 px-3 border border-black">Produto</th>
+                <th className="text-center py-2 px-3 border border-black w-16">Qtd.</th>
+                <th className="text-right py-2 px-3 border border-black w-28">Preço</th>
+                <th className="text-right py-2 px-3 border border-black w-32">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {produtosAgrupados.map((prod, idx) => (
+                <tr key={idx}>
+                  <td className="py-2 px-3 border border-black uppercase">{prod.modelo}</td>
+                  <td className="py-2 px-3 border border-black text-center">{prod.quantidade}</td>
+                  <td className="py-2 px-3 border border-black text-right">{formatBRL(prod.valorUnit)}</td>
+                  <td className="py-2 px-3 border border-black text-right font-semibold">{formatBRL(prod.total)}</td>
+                </tr>
+              ))}
+              {produtosAgrupados.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="py-2 px-3 border border-black text-center text-gray-500">
+                    Nenhum produto funcionando
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+          <div className="flex justify-end gap-6 mt-2 text-sm">
+            {parseFloat(order.discount || "0") > 0 && (
+              <span>Desconto: <strong className="text-red-600">{formatBRL(order.discount)}</strong></span>
+            )}
+            <span>R$ Total: <strong className="text-lg">{formatBRL(order.total)}</strong></span>
+          </div>
+        </div>
+
+        {/* ===== CARTUCHOS FUNCIONANDO ===== */}
+        {relatorio?.funcionando && relatorio.funcionando.length > 0 && (
+          <div className="mb-6">
+            <table className="w-full text-sm border-collapse border border-black">
               <thead>
-                <tr className="border-b-2 border-gray-300">
-                  <th className="text-left py-2 px-2">Modelo 01</th>
-                  <th className="text-left py-2 px-2">Código</th>
-                  <th className="text-left py-2 px-2">Defeito</th>
+                <tr className="bg-green-100">
+                  <th className="text-left py-2 px-3 border border-black">Modelo 02</th>
+                  <th colSpan={2} className="text-center py-2 px-3 border border-black">Cartuchos Funcionando</th>
+                </tr>
+                <tr className="bg-green-50">
+                  <th className="text-left py-2 px-3 border border-black"></th>
+                  <th className="text-left py-2 px-3 border border-black">Código</th>
+                  <th className="text-right py-2 px-3 border border-black w-32">Peso de Saída</th>
                 </tr>
               </thead>
               <tbody>
-                {relatorio.comProblema.map((unit: any) => (
-                  <tr key={unit.id} className="border-b border-gray-200">
-                    <td className="py-2 px-2 uppercase">{unit.modelo02 || "-"}</td>
-                    <td className="py-2 px-2 uppercase">{unit.unitCode}</td>
-                    <td className="py-2 px-2 uppercase">{unit.defectType || "-"}</td>
+                {relatorio.funcionando.map((unit: any) => (
+                  <tr key={unit.id}>
+                    <td className="py-1.5 px-3 border border-black uppercase">{unit.modelo02 || "-"}</td>
+                    <td className="py-1.5 px-3 border border-black uppercase">{unit.unitCode}</td>
+                    <td className="py-1.5 px-3 border border-black text-right">{formatPeso(unit.outputWeight)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -190,28 +198,27 @@ export default function RemanPedidoImpressao() {
           </div>
         )}
 
-        {/* Cartuchos Funcionando */}
-        {relatorio?.funcionando && relatorio.funcionando.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-base font-bold uppercase mb-2 bg-green-50 text-green-800 px-3 py-1">
-              Cartuchos Funcionando
-            </h3>
-            <table className="w-full text-sm border-collapse">
+        {/* ===== CARTUCHOS COM PROBLEMA ===== */}
+        {relatorio?.comProblema && relatorio.comProblema.length > 0 && (
+          <div className="mb-6">
+            <table className="w-full text-sm border-collapse border border-black">
               <thead>
-                <tr className="border-b-2 border-gray-300">
-                  <th className="text-left py-2 px-2">Modelo 01</th>
-                  <th className="text-left py-2 px-2">Código</th>
-                  <th className="text-right py-2 px-2 w-32">Peso de Saída</th>
+                <tr className="bg-red-100">
+                  <th className="text-left py-2 px-3 border border-black">Modelo 02</th>
+                  <th colSpan={2} className="text-center py-2 px-3 border border-black">Cartucho(s) com Problema</th>
+                </tr>
+                <tr className="bg-red-50">
+                  <th className="text-left py-2 px-3 border border-black"></th>
+                  <th className="text-left py-2 px-3 border border-black">Código</th>
+                  <th className="text-left py-2 px-3 border border-black">Defeito</th>
                 </tr>
               </thead>
               <tbody>
-                {relatorio.funcionando.map((unit: any) => (
-                  <tr key={unit.id} className="border-b border-gray-200">
-                    <td className="py-2 px-2 uppercase">{unit.modelo02 || "-"}</td>
-                    <td className="py-2 px-2 uppercase">{unit.unitCode}</td>
-                    <td className="py-2 px-2 text-right">
-                      {unit.outputWeight ? parseFloat(unit.outputWeight).toLocaleString("pt-BR", { minimumFractionDigits: 2 }) : "-"}
-                    </td>
+                {relatorio.comProblema.map((unit: any) => (
+                  <tr key={unit.id}>
+                    <td className="py-1.5 px-3 border border-black uppercase">{unit.modelo02 || "-"}</td>
+                    <td className="py-1.5 px-3 border border-black uppercase">{unit.unitCode}</td>
+                    <td className="py-1.5 px-3 border border-black uppercase">{unit.defectType || "-"}</td>
                   </tr>
                 ))}
               </tbody>
@@ -220,7 +227,7 @@ export default function RemanPedidoImpressao() {
         )}
 
         {/* Rodapé */}
-        <div className="mt-12 pt-4 border-t text-center text-xs text-gray-400 print:mt-8">
+        <div className="mt-12 pt-4 border-t border-gray-300 text-center text-xs text-gray-400 print:mt-8">
           <p>Documento gerado em {new Date().toLocaleDateString("pt-BR")} às {new Date().toLocaleTimeString("pt-BR")}</p>
         </div>
       </div>
@@ -228,7 +235,7 @@ export default function RemanPedidoImpressao() {
       {/* Estilos de impressão */}
       <style>{`
         @media print {
-          body { margin: 0; padding: 0; }
+          body { margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .print\\:hidden { display: none !important; }
           @page { margin: 10mm; size: A4; }
         }

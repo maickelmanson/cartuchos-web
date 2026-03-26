@@ -90,3 +90,12 @@
 
 ## Bugs Reportados
 - [x] Dashboard não abre - corrigido: DashboardLayout agora envolve todas as rotas no App.tsx
+
+## Fluxo Finalização → Reman → Impressão/PDF
+- [x] Backend: procedure gerarRemanAPartirDoPedido - cria pedido reman ao finalizar pedido normal
+- [x] Backend: agrupar cartuchos funcionando por modelo (produtos com qtd, preço, total)
+- [x] Backend: listar cartuchos funcionando individualmente (modelo02, código, peso de saída)
+- [x] Backend: listar cartuchos com defeito (modelo02, código, tipo defeito)
+- [x] Frontend: ao finalizar pedido, redireciona para página de impressão do reman
+- [x] Frontend: página de impressão conforme esboço (dados empresa, cliente, produtos, funcionando, com problema)
+- [x] Frontend: botão Imprimir/PDF na página de impressão

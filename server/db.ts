@@ -529,6 +529,8 @@ export async function buscarRemanOrder(id: number) {
     orderNumber: remanOrders.orderNumber,
     clienteId: remanOrders.clienteId,
     clienteNome: clientes.nome,
+    clienteEndereco: clientes.endereco,
+    clienteTelefone: clientes.telefone,
     commercialProfileSnapshot: remanOrders.commercialProfileSnapshot,
     status: remanOrders.status,
     subtotal: remanOrders.subtotal,
@@ -666,4 +668,218 @@ export async function obterRelatorioRemanOrder(orderId: number) {
   const comProblema = units.filter(u => u.status === "COM_PROBLEMA");
 
   return { funcionando, comProblema };
+}
+
+// ============================================================
+// Gerar Pedido Reman a partir do Pedido Normal Finalizado
+// ============================================================
+export async function gerarRemanAPartirDoPedido(pedidoId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // 1. Buscar o pedido normal e o cliente
+  const [pedido] = await db.select({
+    id: pedidos.id,
+    numero: pedidos.numero,
+    clienteId: pedidos.clienteId,
+  }).from(pedidos).where(eq(pedidos.id, pedidoId)).limit(1);
+  if (!pedido) throw new Error("Pedido não encontrado");
+
+  const [cliente] = await db.select().from(clientes).where(eq(clientes.id, pedido.clienteId)).limit(1);
+  if (!cliente) throw new Error("Cliente não encontrado");
+
+  // 2. Buscar todos os cartuchos do pedido com dados do modelo
+  const cartuchosDoPedido = await db.select({
+    id: pedidoCartuchos.id,
+    cartuchodId: pedidoCartuchos.cartuchodId,
+    codigo: pedidoCartuchos.codigo,
+    pesoSaida: pedidoCartuchos.pesoSaida,
+    status: pedidoCartuchos.status,
+    modelo01: cartuchodCadastro.modelo01,
+    modelo02: cartuchodCadastro.modelo02,
+    priceFinalCustomer: cartuchodCadastro.priceFinalCustomer,
+    priceReseller: cartuchodCadastro.priceReseller,
+  })
+    .from(pedidoCartuchos)
+    .leftJoin(cartuchodCadastro, eq(pedidoCartuchos.cartuchodId, cartuchodCadastro.id))
+    .where(eq(pedidoCartuchos.pedidoId, pedidoId));
+
+  // 3. Separar funcionando vs com defeito
+  const funcionando = cartuchosDoPedido.filter(c => c.status === "funcionando");
+  const comDefeito = cartuchosDoPedido.filter(c => c.status === "circuito_queimado" || c.status === "defeito_cabeca");
+
+  // 4. Gerar número do pedido reman
+  const orderNumber = await obterProximoNumeroRemanOrder();
+
+  // 5. Determinar perfil comercial e preço
+  const profile = cliente.commercialProfile || "CLIENTE_FINAL";
+
+  // 6. Criar o pedido reman
+  await db.insert(remanOrders).values({
+    orderNumber,
+    clienteId: pedido.clienteId,
+    commercialProfileSnapshot: profile,
+    status: "finalizado",
+    subtotal: "0",
+    discount: "0",
+    total: "0",
+    notes: `Gerado automaticamente a partir do Pedido #${pedido.numero}`,
+  });
+
+  // Buscar o pedido reman criado
+  const [remanOrder] = await db.select().from(remanOrders).where(eq(remanOrders.orderNumber, orderNumber)).limit(1);
+  if (!remanOrder) throw new Error("Erro ao criar pedido de remanufatura");
+
+  // 7. Agrupar cartuchos funcionando por modelo (cartuchodId)
+  const modeloMap = new Map<number, {
+    cartuchodId: number;
+    modelo01: string | null;
+    modelo02: string | null;
+    priceFinalCustomer: string | null;
+    priceReseller: string | null;
+    quantidade: number;
+    codigos: { codigo: string | null; pesoSaida: string | null }[];
+  }>();
+
+  for (const c of funcionando) {
+    const key = c.cartuchodId || 0;
+    if (!modeloMap.has(key)) {
+      modeloMap.set(key, {
+        cartuchodId: key,
+        modelo01: c.modelo01,
+        modelo02: c.modelo02,
+        priceFinalCustomer: c.priceFinalCustomer,
+        priceReseller: c.priceReseller,
+        quantidade: 0,
+        codigos: [],
+      });
+    }
+    const entry = modeloMap.get(key)!;
+    entry.quantidade++;
+    entry.codigos.push({ codigo: c.codigo, pesoSaida: c.pesoSaida });
+  }
+
+  // 8. Criar reman_order_items (um por modelo agrupado) e reman_order_units (um por cartucho)
+  let subtotal = 0;
+
+  for (const [, grupo] of Array.from(modeloMap)) {
+    const unitPrice = profile === "REVENDA"
+      ? parseFloat(grupo.priceReseller || "0")
+      : parseFloat(grupo.priceFinalCustomer || "0");
+    const lineTotal = unitPrice * grupo.quantidade;
+    subtotal += lineTotal;
+
+    // Criar o item (linha de produto)
+    await db.insert(remanOrderItems).values({
+      orderId: remanOrder.id,
+      cartuchoId: grupo.cartuchodId,
+      descriptionSnapshot: grupo.modelo02 || grupo.modelo01 || "SEM MODELO",
+      modelCodeSnapshot: grupo.modelo01 || "",
+      quantity: grupo.quantidade,
+      unitPrice: String(unitPrice),
+      priceSource: profile as "CLIENTE_FINAL" | "REVENDA",
+      lineTotal: String(lineTotal),
+    });
+
+    // Buscar o item recém-criado para pegar o ID
+    const [novoItem] = await db.select({ id: remanOrderItems.id })
+      .from(remanOrderItems)
+      .where(and(
+        eq(remanOrderItems.orderId, remanOrder.id),
+        eq(remanOrderItems.cartuchoId, grupo.cartuchodId)
+      ))
+      .orderBy(desc(remanOrderItems.id))
+      .limit(1);
+
+    // Criar unidades individuais (cartuchos funcionando)
+    for (const cod of grupo.codigos) {
+      await db.insert(remanOrderUnits).values({
+        orderItemId: novoItem.id,
+        cartuchoId: grupo.cartuchodId,
+        unitCode: cod.codigo || "SEM-CODIGO",
+        status: "FUNCIONANDO",
+        outputWeight: cod.pesoSaida || null,
+      });
+    }
+  }
+
+  // 9. Criar unidades para cartuchos com defeito
+  // Precisamos de um item "genérico" para cada modelo com defeito
+  const defeitoModeloMap = new Map<number, {
+    cartuchodId: number;
+    modelo01: string | null;
+    modelo02: string | null;
+    codigos: { codigo: string | null; status: string }[];
+  }>();
+
+  for (const c of comDefeito) {
+    const key = c.cartuchodId || 0;
+    if (!defeitoModeloMap.has(key)) {
+      defeitoModeloMap.set(key, {
+        cartuchodId: key,
+        modelo01: c.modelo01,
+        modelo02: c.modelo02,
+        codigos: [],
+      });
+    }
+    const entry = defeitoModeloMap.get(key)!;
+    entry.codigos.push({ codigo: c.codigo, status: c.status });
+  }
+
+  for (const [, grupo] of Array.from(defeitoModeloMap)) {
+    // Verificar se já existe um item para esse modelo (do agrupamento funcionando)
+    let [existingItem] = await db.select({ id: remanOrderItems.id })
+      .from(remanOrderItems)
+      .where(and(
+        eq(remanOrderItems.orderId, remanOrder.id),
+        eq(remanOrderItems.cartuchoId, grupo.cartuchodId)
+      ))
+      .limit(1);
+
+    let itemId: number;
+    if (existingItem) {
+      itemId = existingItem.id;
+    } else {
+      // Criar item com quantidade 0 e preço 0 (não conta como produto, só para vincular unidades)
+      await db.insert(remanOrderItems).values({
+        orderId: remanOrder.id,
+        cartuchoId: grupo.cartuchodId,
+        descriptionSnapshot: grupo.modelo02 || grupo.modelo01 || "SEM MODELO",
+        modelCodeSnapshot: grupo.modelo01 || "",
+        quantity: 0,
+        unitPrice: "0",
+        priceSource: profile as "CLIENTE_FINAL" | "REVENDA",
+        lineTotal: "0",
+      });
+      const [novoItem] = await db.select({ id: remanOrderItems.id })
+        .from(remanOrderItems)
+        .where(and(
+          eq(remanOrderItems.orderId, remanOrder.id),
+          eq(remanOrderItems.cartuchoId, grupo.cartuchodId)
+        ))
+        .orderBy(desc(remanOrderItems.id))
+        .limit(1);
+      itemId = novoItem.id;
+    }
+
+    // Criar unidades com defeito
+    for (const cod of grupo.codigos) {
+      const defectType = cod.status === "circuito_queimado" ? "CIRCUITO QUEIMADO" : "DEFEITO NA CABEÇA";
+      await db.insert(remanOrderUnits).values({
+        orderItemId: itemId,
+        cartuchoId: grupo.cartuchodId,
+        unitCode: cod.codigo || "SEM-CODIGO",
+        status: "COM_PROBLEMA",
+        defectType,
+      });
+    }
+  }
+
+  // 10. Atualizar totais do pedido reman
+  await db.update(remanOrders).set({
+    subtotal: String(subtotal),
+    total: String(subtotal),
+  }).where(eq(remanOrders.id, remanOrder.id));
+
+  return { remanOrderId: remanOrder.id, orderNumber };
 }
