@@ -226,7 +226,7 @@ export default function RemanPedidoImpressao() {
               <tbody>
                 {relatorio.funcionando.map((unit: any) => (
                   <tr key={unit.id}>
-                    <td className="py-1.5 px-3 border border-black uppercase">{unit.modelo01 || "-"}</td>
+                    <td className="py-1.5 px-3 border border-black uppercase">{unit.modelo02 || "-"}</td>
                     <td className="py-1.5 px-3 border border-black uppercase">{unit.unitCode}</td>
                     <td className="py-1.5 px-3 border border-black text-right">{formatPeso(unit.outputWeight)}</td>
                   </tr>
@@ -254,7 +254,7 @@ export default function RemanPedidoImpressao() {
               <tbody>
                 {relatorio.comProblema.map((unit: any) => (
                   <tr key={unit.id}>
-                    <td className="py-1.5 px-3 border border-black uppercase">{unit.modelo01 || "-"}</td>
+                    <td className="py-1.5 px-3 border border-black uppercase">{unit.modelo02 || "-"}</td>
                     <td className="py-1.5 px-3 border border-black uppercase">{unit.unitCode}</td>
                     <td className="py-1.5 px-3 border border-black uppercase">{unit.defectType || "-"}</td>
                   </tr>
