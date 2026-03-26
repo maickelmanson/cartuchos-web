@@ -99,3 +99,6 @@
 - [x] Frontend: ao finalizar pedido, redireciona para página de impressão do reman
 - [x] Frontend: página de impressão conforme esboço (dados empresa, cliente, produtos, funcionando, com problema)
 - [x] Frontend: botão Imprimir/PDF na página de impressão
+
+## Exportação PDF
+- [x] Botão "Exportar PDF" na página de impressão do pedido reman (html2pdf.js, nome automático com número do pedido e data)

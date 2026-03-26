@@ -3,6 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Printer, ArrowLeft, Loader2, FileDown } from "lucide-react";
 import { useLocation } from "wouter";
+import { useRef, useState } from "react";
 
 function formatBRL(value: string | number | null | undefined): string {
   const num = typeof value === "string" ? parseFloat(value) : (value || 0);
@@ -54,8 +55,36 @@ export default function RemanPedidoImpressao() {
       total: parseFloat(item.lineTotal || "0"),
     }));
 
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [exportingPdf, setExportingPdf] = useState(false);
+
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleExportPdf = async () => {
+    if (!contentRef.current || !order) return;
+    setExportingPdf(true);
+    try {
+      // Importação dinâmica para não aumentar o bundle inicial
+      const html2pdf = (await import("html2pdf.js")).default;
+      const filename = `Pedido-${order.orderNumber}-${new Date().toLocaleDateString("pt-BR").replace(/\//g, "-")}.pdf`;
+      await html2pdf()
+        .set({
+          margin: [10, 10, 10, 10],
+          filename,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        })
+        .from(contentRef.current)
+        .save();
+    } catch (err) {
+      console.error("Erro ao exportar PDF:", err);
+      alert("Erro ao gerar o PDF. Tente usar o botão Imprimir e salvar como PDF.");
+    } finally {
+      setExportingPdf(false);
+    }
   };
 
   // Extrair bairro e cidade do endereço do cliente (pode vir como campo único)
@@ -69,14 +98,22 @@ export default function RemanPedidoImpressao() {
           <ArrowLeft className="h-4 w-4 mr-2" />
           Voltar ao Pedido
         </Button>
-        <Button size="sm" onClick={handlePrint}>
+        <Button variant="outline" size="sm" onClick={handlePrint}>
           <Printer className="h-4 w-4 mr-2" />
-          Imprimir / PDF
+          Imprimir
+        </Button>
+        <Button size="sm" onClick={handleExportPdf} disabled={exportingPdf}>
+          {exportingPdf ? (
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          ) : (
+            <FileDown className="h-4 w-4 mr-2" />
+          )}
+          {exportingPdf ? "Gerando PDF..." : "Exportar PDF"}
         </Button>
       </div>
 
       {/* Conteúdo para impressão */}
-      <div className="max-w-[210mm] mx-auto p-8 print:p-6 print:max-w-none text-black">
+      <div ref={contentRef} className="max-w-[210mm] mx-auto p-8 print:p-6 print:max-w-none text-black">
 
         {/* ===== CABEÇALHO: DADOS DA EMPRESA ===== */}
         <div className="flex items-start gap-6 mb-6 border-b-2 border-black pb-4">
