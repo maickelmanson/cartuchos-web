@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "description": "Configuração de inicialização automática do Manus para o projeto Cartuchos Web",
+  "onProjectLoad": {
+    "openManagementUI": true,
+    "defaultPanels": [
+      "preview",
+      "dashboard",
+      "settings"
+    ],
+    "autoActions": [
+      {
+        "type": "message",
+        "content": "Projeto Cartuchos Web carregado! Management UI aberto automaticamente com Preview, Dashboard e Settings."
+      }
+    ]
+  },
+  "projectInfo": {
+    "name": "Cartuchos Web",
+    "description": "Sistema de Controle de Cartuchos Remanufaturados",
+    "type": "webdev",
+    "features": ["db", "server", "user"],
+    "mainBranch": "main"
+  }
+}
