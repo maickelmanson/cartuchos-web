@@ -102,3 +102,6 @@
 
 ## Exportação PDF
 - [x] Botão "Exportar PDF" na página de impressão do pedido reman (html2pdf.js, nome automático com número do pedido e data)
+
+## Bugs Reportados
+- [x] RemanPedidoDetalhe: "Rendered more hooks than during the previous render" - corrigido: hook extraido para sub-componente ItemUnidades

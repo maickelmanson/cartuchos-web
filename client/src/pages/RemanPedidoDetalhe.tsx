@@ -238,6 +238,88 @@ function ModalAdicionarUnidade({ item, onSalvo, onFechar }: { item: any; onSalvo
 }
 
 // ============================================================
+// Sub-componente: Unidades de um item (hook no nível correto)
+// ============================================================
+function ItemUnidades({ item, onDeletarUnidade, onAbrirModal }: {
+  item: any;
+  onDeletarUnidade: (unitId: number) => void;
+  onAbrirModal: (item: any) => void;
+}) {
+  const unidadesQuery = trpc.remanOrderUnits.listar.useQuery(item.id);
+  const unidades = unidadesQuery.data || [];
+
+  return (
+    <div className="border rounded-lg p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <span className="font-mono font-medium">{item.modelCodeSnapshot}</span>
+          {item.descriptionSnapshot && (
+            <span className="text-sm text-muted-foreground ml-2">— {item.descriptionSnapshot}</span>
+          )}
+          <span className="text-xs text-muted-foreground ml-2">({unidades.length}/{item.quantity} unidades)</span>
+        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => onAbrirModal(item)}
+          disabled={unidades.length >= item.quantity}
+        >
+          <Plus className="h-3 w-3 mr-1" />
+          Adicionar Unidade
+        </Button>
+      </div>
+      {unidades.length === 0 ? (
+        <p className="text-sm text-muted-foreground">Nenhuma unidade cadastrada.</p>
+      ) : (
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b bg-muted/50">
+              <th className="px-3 py-2 text-left">Código</th>
+              <th className="px-3 py-2 text-left">Status</th>
+              <th className="px-3 py-2 text-left">Defeito / Peso Saída</th>
+              <th className="px-3 py-2 text-left">Observações</th>
+              <th className="px-3 py-2 text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {unidades.map((u: any) => (
+              <tr key={u.id} className={`border-b ${u.status === "COM_PROBLEMA" ? "bg-red-50 dark:bg-red-950/20" : "bg-emerald-50 dark:bg-emerald-950/20"}`}>
+                <td className="px-3 py-2 font-mono">{u.unitCode}</td>
+                <td className="px-3 py-2">
+                  <span className={`text-xs px-2 py-1 rounded flex items-center gap-1 w-fit ${u.status === "FUNCIONANDO" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}`}>
+                    {u.status === "FUNCIONANDO" ? <CheckCircle className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
+                    {u.status === "FUNCIONANDO" ? "Funcionando" : "Com Problema"}
+                  </span>
+                </td>
+                <td className="px-3 py-2">
+                  {u.status === "FUNCIONANDO" ? (
+                    <span className="text-emerald-700">{u.outputWeight ? `${u.outputWeight} kg` : "-"}</span>
+                  ) : (
+                    <span className="text-red-700">{u.defectType || "-"}</span>
+                  )}
+                </td>
+                <td className="px-3 py-2 text-muted-foreground">{u.notes || "-"}</td>
+                <td className="px-3 py-2">
+                  <div className="flex justify-end">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onDeletarUnidade(u.id)}
+                    >
+                      <Trash2 className="h-3 w-3 text-destructive" />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+
+// ============================================================
 // Componente Principal
 // ============================================================
 export default function RemanPedidoDetalhe({ params }: Props) {
@@ -262,17 +344,10 @@ export default function RemanPedidoDetalhe({ params }: Props) {
   const itens = itensQuery.data || [];
   const relatorio = relatorioQuery.data;
 
-  // Unidades por item
-  const unidadesQueries = itens.map(item => ({
-    itemId: item.id,
-    query: trpc.remanOrderUnits.listar.useQuery(item.id),
-  }));
-
   const refetchAll = () => {
     pedidoQuery.refetch();
     itensQuery.refetch();
     relatorioQuery.refetch();
-    unidadesQueries.forEach(uq => uq.query.refetch());
   };
 
   const handleSalvarDesconto = async () => {
@@ -534,79 +609,14 @@ export default function RemanPedidoDetalhe({ params }: Props) {
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Unidades Físicas</h2>
           <div className="space-y-6">
-            {itens.map(item => {
-              const uq = unidadesQueries.find(uq => uq.itemId === item.id);
-              const unidades = uq?.query.data || [];
-              return (
-                <div key={item.id} className="border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <span className="font-mono font-medium">{item.modelCodeSnapshot}</span>
-                      {item.descriptionSnapshot && (
-                        <span className="text-sm text-muted-foreground ml-2">— {item.descriptionSnapshot}</span>
-                      )}
-                      <span className="text-xs text-muted-foreground ml-2">({unidades.length}/{item.quantity} unidades)</span>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setModalUnidade(item)}
-                      disabled={unidades.length >= item.quantity}
-                    >
-                      <Plus className="h-3 w-3 mr-1" />
-                      Adicionar Unidade
-                    </Button>
-                  </div>
-                  {unidades.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Nenhuma unidade cadastrada.</p>
-                  ) : (
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b bg-muted/50">
-                          <th className="px-3 py-2 text-left">Código</th>
-                          <th className="px-3 py-2 text-left">Status</th>
-                          <th className="px-3 py-2 text-left">Defeito / Peso Saída</th>
-                          <th className="px-3 py-2 text-left">Observações</th>
-                          <th className="px-3 py-2 text-right">Ações</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {unidades.map(u => (
-                          <tr key={u.id} className={`border-b ${u.status === "COM_PROBLEMA" ? "bg-red-50 dark:bg-red-950/20" : "bg-emerald-50 dark:bg-emerald-950/20"}`}>
-                            <td className="px-3 py-2 font-mono">{u.unitCode}</td>
-                            <td className="px-3 py-2">
-                              <span className={`text-xs px-2 py-1 rounded flex items-center gap-1 w-fit ${u.status === "FUNCIONANDO" ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"}`}>
-                                {u.status === "FUNCIONANDO" ? <CheckCircle className="h-3 w-3" /> : <AlertCircle className="h-3 w-3" />}
-                                {u.status === "FUNCIONANDO" ? "Funcionando" : "Com Problema"}
-                              </span>
-                            </td>
-                            <td className="px-3 py-2">
-                              {u.status === "FUNCIONANDO" ? (
-                                <span className="text-emerald-700">{u.outputWeight ? `${u.outputWeight} kg` : "-"}</span>
-                              ) : (
-                                <span className="text-red-700">{u.defectType || "-"}</span>
-                              )}
-                            </td>
-                            <td className="px-3 py-2 text-muted-foreground">{u.notes || "-"}</td>
-                            <td className="px-3 py-2">
-                              <div className="flex justify-end">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleDeletarUnidade(u.id)}
-                                >
-                                  <Trash2 className="h-3 w-3 text-destructive" />
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  )}
-                </div>
-              );
-            })}
+            {itens.map(item => (
+              <ItemUnidades
+                key={item.id}
+                item={item}
+                onDeletarUnidade={handleDeletarUnidade}
+                onAbrirModal={setModalUnidade}
+              />
+            ))}
           </div>
         </Card>
       )}
