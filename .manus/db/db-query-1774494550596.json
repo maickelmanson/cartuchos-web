@@ -1,0 +1,40 @@
+{
+  "query": "SELECT id, description_snapshot, model_code_snapshot, quantity FROM reman_order_items LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 5TMdM9oSN1dsoYb.root --database TEopnpqVFcFcEzDuX7X4dq --execute SELECT id, description_snapshot, model_code_snapshot, quantity FROM reman_order_items LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "description_snapshot": "EPS 667 BK REMANUFATURADO COM 14ML DE TINTA",
+      "model_code_snapshot": "EPS 667 BK",
+      "quantity": "1"
+    },
+    {
+      "id": "30001",
+      "description_snapshot": "EPS 667 BK REMANUFATURADO COM 14ML DE TINTA",
+      "model_code_snapshot": "EPS 667 BK",
+      "quantity": "1"
+    },
+    {
+      "id": "30002",
+      "description_snapshot": "EPS 667 CL REMANUFATURADO COM 10ML DE TINTA",
+      "model_code_snapshot": "EPS 667 CL",
+      "quantity": "1"
+    },
+    {
+      "id": "30003",
+      "description_snapshot": "EPS 667 BK REMANUFATURADO COM 14ML DE TINTA",
+      "model_code_snapshot": "EPS 667 BK",
+      "quantity": "2"
+    },
+    {
+      "id": "30004",
+      "description_snapshot": "EPS 667 CL REMANUFATURADO COM 10ML DE TINTA",
+      "model_code_snapshot": "EPS 667 CL",
+      "quantity": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tdescription_snapshot\tmodel_code_snapshot\tquantity\n1\tEPS 667 BK REMANUFATURADO COM 14ML DE TINTA\tEPS 667 BK\t1\n30001\tEPS 667 BK REMANUFATURADO COM 14ML DE TINTA\tEPS 667 BK\t1\n30002\tEPS 667 CL REMANUFATURADO COM 10ML DE TINTA\tEPS 667 CL\t1\n30003\tEPS 667 BK REMANUFATURADO COM 14ML DE TINTA\tEPS 667 BK\t2\n30004\tEPS 667 CL REMANUFATURADO COM 10ML DE TINTA\tEPS 667 CL\t1\n",
+  "stderr": "",
+  "execution_time_ms": 421
+}

@@ -123,3 +123,4 @@
 
 ## Correção Impressão Reman
 - [x] Campo Produto na tabela de impressão deve exibir Modelo 01 (descrição completa) em vez de Modelo 02 (abreviado)
+- [x] Corrigir dados invertidos na tabela reman_order_items (description_snapshot e model_code_snapshot trocados)
