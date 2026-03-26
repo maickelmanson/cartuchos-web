@@ -120,3 +120,6 @@
 - [x] Navegar para o detalhe ao clicar no resultado
 - [x] Adicionar item "Busca" no menu lateral
 - [x] Adicionar rota /busca no App.tsx
+
+## Correção Impressão Reman
+- [x] Campo Produto na tabela de impressão deve exibir Modelo 01 (descrição completa) em vez de Modelo 02 (abreviado)

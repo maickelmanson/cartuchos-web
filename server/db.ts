@@ -664,6 +664,7 @@ export async function obterRelatorioRemanOrder(orderId: number) {
     defectType: remanOrderUnits.defectType,
     outputWeight: remanOrderUnits.outputWeight,
     notes: remanOrderUnits.notes,
+    modelo01: cartuchodCadastro.modelo01,
     modelo02: cartuchodCadastro.modelo02,
   })
     .from(remanOrderUnits)
