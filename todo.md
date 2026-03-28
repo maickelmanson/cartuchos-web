@@ -128,3 +128,15 @@
 ## Configuração Manus
 - [x] Arquivo .manus-init.json criado para abertura automática do Management UI
 - [x] README.md com instruções para futuras conversas
+
+## Configuração Electron (Desktop)
+- [x] Instalar dependências do Electron
+- [x] Criar arquivo main.js (processo principal)
+- [x] Configurar scripts de build e desenvolvimento
+- [x] Ajustar package.json para Electron
+- [ ] Criar ícones para Windows, macOS, Linux
+- [ ] Testar funcionamento em desenvolvimento
+- [ ] Criar instaladores para Windows, macOS, Linux
+- [ ] Migração para SQLite (banco de dados local)
+- [ ] Implementar sincronização de dados (opcional)
+- [ ] Configurar auto-update (opcional)
