@@ -1,4 +1,4 @@
-import { eq, desc, like, or, and, sql } from "drizzle-orm";
+import { eq, desc, like, or, and, sql, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, cartuchodCadastro, clientes, pedidos, pedidoCartuchos, InsertCartuchodCadastro, InsertCliente, InsertPedido, InsertPedidoCartucho, remanOrders, remanOrderItems, remanOrderUnits, InsertRemanOrder, InsertRemanOrderItem, InsertRemanOrderUnit, empresaDados, InsertEmpresaDados } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -696,6 +696,47 @@ export async function gerarRemanAPartirDoPedido(pedidoId: number) {
   const [cliente] = await db.select().from(clientes).where(eq(clientes.id, pedido.clienteId)).limit(1);
   if (!cliente) throw new Error("Cliente não encontrado");
 
+  // 2. Verificar se já existe um pedido reman para este pedido normal
+  // Procurar na nota do pedido reman que contém o número do pedido normal
+  const [existingRemanOrder] = await db.select()
+    .from(remanOrders)
+    .where(like(remanOrders.notes, `%Pedido #${pedido.numero}%`))
+    .limit(1);
+
+  // Se já existe, deletar itens e unidades antigos para recriá-los com dados atualizados
+  let remanOrder = existingRemanOrder;
+  if (remanOrder) {
+    // Deletar unidades antigas
+    await db.delete(remanOrderUnits).where(
+      inArray(remanOrderUnits.orderItemId,
+        db.select({ id: remanOrderItems.id })
+          .from(remanOrderItems)
+          .where(eq(remanOrderItems.orderId, remanOrder.id))
+      )
+    );
+    // Deletar itens antigos
+    await db.delete(remanOrderItems).where(eq(remanOrderItems.orderId, remanOrder.id));
+  } else {
+    // Criar novo pedido reman
+    const orderNumber = await obterProximoNumeroRemanOrder();
+    const profile = cliente.commercialProfile || "CLIENTE_FINAL";
+
+    await db.insert(remanOrders).values({
+      orderNumber,
+      clienteId: pedido.clienteId,
+      commercialProfileSnapshot: profile,
+      status: "finalizado",
+      subtotal: "0",
+      discount: "0",
+      total: "0",
+      notes: `Gerado automaticamente a partir do Pedido #${pedido.numero}`,
+    });
+
+    const [novoRemanOrder] = await db.select().from(remanOrders).where(eq(remanOrders.orderNumber, orderNumber)).limit(1);
+    if (!novoRemanOrder) throw new Error("Erro ao criar pedido de remanufatura");
+    remanOrder = novoRemanOrder;
+  }
+
   // 2. Buscar todos os cartuchos do pedido com dados do modelo
   const cartuchosDoPedido = await db.select({
     id: pedidoCartuchos.id,
@@ -716,27 +757,10 @@ export async function gerarRemanAPartirDoPedido(pedidoId: number) {
   const funcionando = cartuchosDoPedido.filter(c => c.status === "funcionando");
   const comDefeito = cartuchosDoPedido.filter(c => c.status === "circuito_queimado" || c.status === "defeito_cabeca");
 
-  // 4. Gerar número do pedido reman
-  const orderNumber = await obterProximoNumeroRemanOrder();
-
   // 5. Determinar perfil comercial e preço
   const profile = cliente.commercialProfile || "CLIENTE_FINAL";
 
-  // 6. Criar o pedido reman
-  await db.insert(remanOrders).values({
-    orderNumber,
-    clienteId: pedido.clienteId,
-    commercialProfileSnapshot: profile,
-    status: "finalizado",
-    subtotal: "0",
-    discount: "0",
-    total: "0",
-    notes: `Gerado automaticamente a partir do Pedido #${pedido.numero}`,
-  });
 
-  // Buscar o pedido reman criado
-  const [remanOrder] = await db.select().from(remanOrders).where(eq(remanOrders.orderNumber, orderNumber)).limit(1);
-  if (!remanOrder) throw new Error("Erro ao criar pedido de remanufatura");
 
   // 7. Agrupar cartuchos funcionando por modelo (cartuchodId)
   const modeloMap = new Map<number, {
@@ -889,5 +913,5 @@ export async function gerarRemanAPartirDoPedido(pedidoId: number) {
     total: String(subtotal),
   }).where(eq(remanOrders.id, remanOrder.id));
 
-  return { remanOrderId: remanOrder.id, orderNumber };
+  return { remanOrderId: remanOrder.id, orderNumber: remanOrder.orderNumber };
 }

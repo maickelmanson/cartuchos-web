@@ -140,3 +140,6 @@
 - [ ] Migração para SQLite (banco de dados local)
 - [ ] Implementar sincronização de dados (opcional)
 - [ ] Configurar auto-update (opcional)
+
+## Bugs Reportados (Corrigidos)
+- [x] Pedido reaberto gera novo número ao finalizar em vez de reutilizar o número original
