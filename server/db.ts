@@ -717,8 +717,9 @@ export async function gerarRemanAPartirDoPedido(pedidoId: number) {
     // Deletar itens antigos
     await db.delete(remanOrderItems).where(eq(remanOrderItems.orderId, remanOrder.id));
   } else {
-    // Criar novo pedido reman
-    const orderNumber = await obterProximoNumeroRemanOrder();
+    // Criar novo pedido reman usando o número do pedido como base
+    // Isso garante que PD001 sempre gera REM-PD001 (mesma numeração)
+    const orderNumber = `REM-${pedido.numero}`;
     const profile = cliente.commercialProfile || "CLIENTE_FINAL";
 
     await db.insert(remanOrders).values({

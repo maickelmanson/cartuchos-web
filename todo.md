@@ -143,3 +143,6 @@
 
 ## Bugs Reportados (Corrigidos)
 - [x] Pedido reaberto gera novo número ao finalizar em vez de reutilizar o número original
+
+## Bugs Reportados (Novos - Corrigidos)
+- [x] Reman order recebe novo número ao finalizar pedido reaberto (deveria usar o mesmo número do pedido)
