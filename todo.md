@@ -155,3 +155,10 @@
 
 ## Bugs Reportados (Corrigidos)
 - [x] NotFoundError ao adicionar cartuchos nos pedidos dos clientes
+
+## Bugs Reportados (Em Produção)
+- [ ] NotFoundError ao adicionar cartuchos na versão publicada (https://cartuchos-teopnpqv.manus.space/pedidos/180001)
+  - Erro: Failed to execute 'removeChild' on 'Node'
+  - Ocorre ao selecionar modelo de cartucho no modal de adicionar cartucho
+  - Versão local foi corrigida, mas publicada ainda tem o problema
+  - Aguardando crédito para publicar correção
