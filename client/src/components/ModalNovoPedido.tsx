@@ -19,6 +19,7 @@ interface Props {
 }
 
 interface CartuchodoFormulario {
+  id: string; // ID único para evitar problemas com keys do React
   cartuchodId: string;
   codigo: string;
   pesoCheagada: string;
@@ -53,6 +54,7 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
   const [clienteId, setClienteId] = useState<string>("");
   const [cartuchos, setCartuchos] = useState<CartuchodoFormulario[]>([]);
   const [novoCartucho, setNovoCartucho] = useState<CartuchodoFormulario>({
+    id: "",
     cartuchodId: "",
     codigo: "",
     pesoCheagada: "",
@@ -69,8 +71,14 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
       alert("Digite o código do cartucho.");
       return;
     }
-    setCartuchos([...cartuchos, novoCartucho]);
+    // Gerar ID único para o cartucho
+    const cartuchodComId = {
+      ...novoCartucho,
+      id: `cartucho-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    };
+    setCartuchos([...cartuchos, cartuchodComId]);
     setNovoCartucho({
+      id: "",
       cartuchodId: "",
       codigo: "",
       pesoCheagada: "",
@@ -80,8 +88,8 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
     });
   };
 
-  const handleRemoverCartucho = (index: number) => {
-    setCartuchos(cartuchos.filter((_, i) => i !== index));
+  const handleRemoverCartucho = (id: string) => {
+    setCartuchos(cartuchos.filter((c) => c.id !== id));
   };
 
   const handleChangePeso = (tipo: "chegada" | "saida", valor: string) => {
@@ -225,8 +233,8 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
             {cartuchos.length > 0 && (
               <div className="space-y-2 mb-4">
                 <p className="text-sm font-medium">Cartuchos Adicionados ({cartuchos.length})</p>
-                {cartuchos.map((c, idx) => (
-                  <div key={idx} className="flex items-center justify-between bg-muted p-2 rounded text-sm">
+                {cartuchos.map((c) => (
+                  <div key={c.id} className="flex items-center justify-between bg-muted p-2 rounded text-sm">
                     <div>
                       <span className="font-mono">{c.codigo}</span>
                       {c.pesoCheagada && <span className="ml-2">→ {c.pesoCheagada}kg</span>}
@@ -235,7 +243,7 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
                       type="button"
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleRemoverCartucho(idx)}
+                      onClick={() => handleRemoverCartucho(c.id)}
                     >
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>

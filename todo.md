@@ -152,3 +152,6 @@
 - [x] Script Node.js para validação e backup
 - [x] Documentação de migração
 - [ ] Executar migração em produção
+
+## Bugs Reportados (Corrigidos)
+- [x] NotFoundError ao adicionar cartuchos nos pedidos dos clientes
