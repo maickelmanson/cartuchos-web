@@ -146,3 +146,9 @@
 
 ## Bugs Reportados (Novos - Corrigidos)
 - [x] Reman order recebe novo número ao finalizar pedido reaberto (deveria usar o mesmo número do pedido)
+
+## Migração de Dados Históricos
+- [x] Script SQL para migração de reman orders antigos
+- [x] Script Node.js para validação e backup
+- [x] Documentação de migração
+- [ ] Executar migração em produção

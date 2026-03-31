@@ -1,0 +1,37 @@
+{
+  "query": "\n-- Analisar reman orders existentes\nSELECT \n  ro.id,\n  ro.order_number,\n  ro.notes,\n  ro.status,\n  ro.criado_em,\n  COUNT(roi.id) as item_count,\n  COUNT(rou.id) as unit_count\nFROM reman_orders ro\nLEFT JOIN reman_order_items roi ON ro.id = roi.order_id\nLEFT JOIN reman_order_units rou ON roi.id = rou.order_item_id\nGROUP BY ro.id\nORDER BY ro.id ASC\nLIMIT 50;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway05.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 5TMdM9oSN1dsoYb.root --database TEopnpqVFcFcEzDuX7X4dq --execute \n-- Analisar reman orders existentes\nSELECT \n  ro.id,\n  ro.order_number,\n  ro.notes,\n  ro.status,\n  ro.criado_em,\n  COUNT(roi.id) as item_count,\n  COUNT(rou.id) as unit_count\nFROM reman_orders ro\nLEFT JOIN reman_order_items roi ON ro.id = roi.order_id\nLEFT JOIN reman_order_units rou ON roi.id = rou.order_item_id\nGROUP BY ro.id\nORDER BY ro.id ASC\nLIMIT 50;\n",
+  "rows": [
+    {
+      "id": "150001",
+      "order_number": "REM-003",
+      "notes": "Gerado automaticamente a partir do Pedido #003",
+      "status": "finalizado",
+      "criado_em": "2026-03-30 15:25:04",
+      "item_count": "1",
+      "unit_count": "1"
+    },
+    {
+      "id": "150002",
+      "order_number": "REM-002",
+      "notes": "Gerado automaticamente a partir do Pedido #002",
+      "status": "finalizado",
+      "criado_em": "2026-03-30 15:30:13",
+      "item_count": "1",
+      "unit_count": "1"
+    },
+    {
+      "id": "180001",
+      "order_number": "REM-001",
+      "notes": "Gerado automaticamente a partir do Pedido #001",
+      "status": "finalizado",
+      "criado_em": "2026-03-30 15:51:11",
+      "item_count": "2",
+      "unit_count": "2"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\torder_number\tnotes\tstatus\tcriado_em\titem_count\tunit_count\n150001\tREM-003\tGerado automaticamente a partir do Pedido #003\tfinalizado\t2026-03-30 15:25:04\t1\t1\n150002\tREM-002\tGerado automaticamente a partir do Pedido #002\tfinalizado\t2026-03-30 15:30:13\t1\t1\n180001\tREM-001\tGerado automaticamente a partir do Pedido #001\tfinalizado\t2026-03-30 15:51:11\t2\t2\n",
+  "stderr": "",
+  "execution_time_ms": 55
+}
