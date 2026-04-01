@@ -165,3 +165,6 @@
 
 ## Bugs Reportados (Novos - ResizeObserver)
 - [x] ResizeObserver loop completed with undelivered notifications na página de clientes (/clientes)
+
+## Novas Funcionalidades (Ativo)
+- [x] Botão "Novo Pedido" na página de detalhe do cliente que abre modal com dados pré-preenchidos

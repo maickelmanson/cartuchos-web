@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, Plus, Edit } from "lucide-react";
 import ModalCliente from "@/components/ModalCliente";
+import ModalNovoPedido from "@/components/ModalNovoPedido";
 
 interface Props {
   params: { id: string };
@@ -14,15 +15,21 @@ export default function ClienteDetalhe({ params }: Props) {
   const id = Number(params.id);
   const [, setLocation] = useLocation();
   const [modalEditando, setModalEditando] = useState(false);
+  const [modalNovoPedidoAberto, setModalNovoPedidoAberto] = useState(false);
 
   const clienteQuery = trpc.clientes.buscar.useQuery(id);
   const pedidosQuery = trpc.pedidos.porCliente.useQuery(id);
   const criarPedidoMutation = trpc.pedidos.criar.useMutation();
   const atualizarMutation = trpc.clientes.atualizar.useMutation();
 
-  const handleNovoPedido = async () => {
+  const handleNovoPedido = () => {
+    setModalNovoPedidoAberto(true);
+  };
+
+  const handleSalvarPedido = async (clienteId: number, cartuchos?: any[]) => {
     try {
-      await criarPedidoMutation.mutateAsync({ clienteId: id });
+      const pedido = await criarPedidoMutation.mutateAsync({ clienteId });
+      setModalNovoPedidoAberto(false);
       pedidosQuery.refetch();
     } catch (error) {
       console.error("Erro ao criar pedido:", error);
@@ -50,7 +57,7 @@ export default function ClienteDetalhe({ params }: Props) {
   const cliente = clienteQuery.data;
 
   return (
-    <div className="space-y-6 h-full overflow-y-auto overflow-x-hidden pr-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" onClick={() => setLocation("/clientes")}>
@@ -173,6 +180,13 @@ export default function ClienteDetalhe({ params }: Props) {
           cliente={cliente}
           onSalvar={handleSalvarCliente}
           onFechar={() => setModalEditando(false)}
+        />
+      )}
+
+      {modalNovoPedidoAberto && (
+        <ModalNovoPedido
+          onSalvar={(clienteId, cartuchos) => handleSalvarPedido(clienteId || id, cartuchos)}
+          onFechar={() => setModalNovoPedidoAberto(false)}
         />
       )}
     </div>
