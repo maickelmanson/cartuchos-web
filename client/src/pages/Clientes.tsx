@@ -51,7 +51,7 @@ export default function Clientes() {
   };
 
   return (
-    <div className="space-y-6 h-full overflow-y-auto overflow-x-hidden pr-4">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Clientes</h1>
@@ -74,8 +74,8 @@ export default function Clientes() {
       </div>
 
       <Card>
-        <div className="overflow-x-auto max-w-full">
-          <table className="w-full min-w-max">
+        <div className="overflow-x-auto">
+          <table className="w-full">
             <thead>
               <tr className="border-b bg-muted">
                 <th className="px-4 py-3 text-left text-sm font-medium">Nome</th>

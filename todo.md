@@ -162,3 +162,6 @@
   - Ocorre ao selecionar modelo de cartucho no modal de adicionar cartucho
   - Versão local foi corrigida, mas publicada ainda tem o problema
   - Aguardando crédito para publicar correção
+
+## Bugs Reportados (Novos - ResizeObserver)
+- [x] ResizeObserver loop completed with undelivered notifications na página de clientes (/clientes)
