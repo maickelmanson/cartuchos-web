@@ -53,7 +53,7 @@ export default function RemanPedidoImpressao() {
   const produtosAgrupados = (items || [])
     .filter(item => item.quantity > 0)
     .map(item => ({
-      modelo: item.descriptionSnapshot || "SEM MODELO",
+      modelo: item.modelo01 || item.descriptionSnapshot || "SEM MODELO",
       quantidade: item.quantity,
       valorUnit: parseFloat(item.unitPrice || "0"),
       total: parseFloat(item.lineTotal || "0"),

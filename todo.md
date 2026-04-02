@@ -176,3 +176,7 @@
 - [x] Botão de backup manual no dashboard
 - [x] Endpoint backend para gerar backup sob demanda
 - [x] Download do arquivo SQL com backup
+
+## Bugs Reportados (Novos - Impressão e Cadastro)
+- [x] Impressão: Nome completo do cartucho não aparece na tabela "Produto" (exibe apenas Modelo 02)
+- [x] Cadastro: Campos de texto não convertem para MAIÚSCULAS automaticamente

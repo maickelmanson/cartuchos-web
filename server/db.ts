@@ -592,6 +592,8 @@ export async function listarRemanOrderItems(orderId: number) {
     cartuchoId: remanOrderItems.cartuchoId,
     descriptionSnapshot: remanOrderItems.descriptionSnapshot,
     modelCodeSnapshot: remanOrderItems.modelCodeSnapshot,
+    modelo01: remanOrderItems.descriptionSnapshot,
+    modelo02: remanOrderItems.modelCodeSnapshot,
     quantity: remanOrderItems.quantity,
     unitPrice: remanOrderItems.unitPrice,
     priceSource: remanOrderItems.priceSource,

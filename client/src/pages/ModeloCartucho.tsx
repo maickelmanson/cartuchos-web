@@ -265,7 +265,7 @@ export default function ModeloCartucho() {
                 <label className="text-sm font-medium">Modelo 01 *</label>
                 <Input
                   value={form.modelo01}
-                  onChange={(e) => setForm(f => ({ ...f, modelo01: e.target.value }))}
+                  onChange={(e) => setForm(f => ({ ...f, modelo01: e.target.value.toUpperCase() }))}
                   placeholder="Ex: Cartucho HP 664 Preto Remanufaturado"
                   required
                 />
@@ -275,7 +275,7 @@ export default function ModeloCartucho() {
                 <label className="text-sm font-medium">Modelo 02 *</label>
                 <Input
                   value={form.modelo02}
-                  onChange={(e) => setForm(f => ({ ...f, modelo02: e.target.value }))}
+                  onChange={(e) => setForm(f => ({ ...f, modelo02: e.target.value.toUpperCase() }))}
                   placeholder="Ex: HP 664 BK"
                   required
                 />
