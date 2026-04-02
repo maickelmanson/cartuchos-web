@@ -181,3 +181,4 @@
 - [x] Impressão: Nome completo do cartucho não aparece na tabela "Produto" (exibe apenas Modelo 02)
 - [x] Cadastro: Campos de texto não convertem para MAIÚSCULAS automaticamente
 - [x] Impressão Reman: Dados invertidos em 8 items (descriptionSnapshot e modelCodeSnapshot trocados) - Corrigido com script fix-reman-items.mjs
+- [x] Dashboard: Erro "Unexpected token '<', '<!doctype '... is not valid JSON" - Faltava importar useState no Dashboard.tsx
