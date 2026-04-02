@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ShoppingBag, Users, Package, Search } from "lucide-react";
+import { ShoppingBag, Users, Package, Search, Download, Loader2 } from "lucide-react";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const [tipoBusca, setTipoBusca] = useState("geral");
   const [termoBusca, setTermoBusca] = useState("");
   const [resultados, setResultados] = useState<any>(null);
+  const [backupLoading, setBackupLoading] = useState(false);
+  const backupMutation = trpc.system.gerarBackup.useMutation();
 
   const pedidosQuery = trpc.pedidos.listar.useQuery();
   const clientesQuery = trpc.clientes.listar.useQuery();
@@ -24,6 +26,28 @@ export default function Dashboard() {
   const handleBusca = () => {
     if (termoBusca.trim()) {
       setResultados(buscaQuery.data);
+    }
+  };
+
+  const handleBackup = async () => {
+    try {
+      setBackupLoading(true);
+      const response = await backupMutation.mutateAsync();
+
+      // Criar blob com o conteúdo SQL
+      const blob = new Blob([response.sql], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `database-backup-${new Date().toISOString().split('T')[0]}.sql`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Erro ao gerar backup:', error);
+    } finally {
+      setBackupLoading(false);
     }
   };
 
@@ -53,9 +77,29 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 h-full overflow-y-auto overflow-x-hidden pr-4">
-      <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Visão geral do sistema de cartuchos</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground">Visão geral do sistema de cartuchos</p>
+        </div>
+        <Button
+          onClick={handleBackup}
+          disabled={backupLoading}
+          className="gap-2"
+          variant="outline"
+        >
+          {backupLoading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Gerando...
+            </>
+          ) : (
+            <>
+              <Download className="h-4 w-4" />
+              Backup do Banco
+            </>
+          )}
+        </Button>
       </div>
 
       {/* Stats */}

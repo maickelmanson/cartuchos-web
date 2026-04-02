@@ -168,3 +168,11 @@
 
 ## Novas Funcionalidades (Ativo)
 - [x] Botão "Novo Pedido" na página de detalhe do cliente que abre modal com dados pré-preenchidos
+
+## Backup Automático
+- [x] Workflow de GitHub Actions para backup automático semanal
+- [x] Configurar credenciais de banco de dados no GitHub Secrets
+- [x] Testar execução do workflow
+- [x] Botão de backup manual no dashboard
+- [x] Endpoint backend para gerar backup sob demanda
+- [x] Download do arquivo SQL com backup
