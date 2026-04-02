@@ -32,13 +32,37 @@ function log(message, color = 'reset') {
 }
 
 async function getConnection() {
-  const connection = await mysql.createConnection({
+  // Parse DATABASE_URL if provided
+  if (process.env.DATABASE_URL) {
+    const url = new URL(process.env.DATABASE_URL);
+    const connectionConfig = {
+      host: url.hostname,
+      port: parseInt(url.port) || 3306,
+      user: url.username,
+      password: url.password,
+      database: url.pathname.slice(1),
+      ssl: {},
+      waitForConnections: true,
+      connectionLimit: 1,
+      queueLimit: 0,
+    };
+    return mysql.createConnection(connectionConfig);
+  }
+
+  // Fallback to individual env vars
+  const connectionConfig = {
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'cartuchos_web',
-  });
-  return connection;
+  };
+  
+  // Add SSL if needed
+  if (process.env.DB_SSL === 'true') {
+    connectionConfig.ssl = {};
+  }
+  
+  return mysql.createConnection(connectionConfig);
 }
 
 async function getTables(connection) {
