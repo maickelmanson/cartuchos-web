@@ -30,7 +30,12 @@ export default function ClienteDetalhe({ params }: Props) {
     try {
       const pedido = await criarPedidoMutation.mutateAsync({ clienteId });
       setModalNovoPedidoAberto(false);
-      pedidosQuery.refetch();
+      // Navegar para o pedido criado
+      if (pedido && pedido.id) {
+        setLocation(`/pedidos/${pedido.id}`);
+      } else {
+        pedidosQuery.refetch();
+      }
     } catch (error) {
       console.error("Erro ao criar pedido:", error);
     }
