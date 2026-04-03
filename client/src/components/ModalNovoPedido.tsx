@@ -148,23 +148,23 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
 
             {/* Formulário para novo cartucho */}
             <div className="bg-muted p-4 rounded-lg space-y-3 mb-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-sm font-medium">Modelo</label>
-                  <Select value={novoCartucho.cartuchodId} onValueChange={(v) => handleChangeCartucho("cartuchodId", v)}>
-                    <SelectTrigger className="h-8">
-                      <SelectValue placeholder="Selecione..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {cartuchosQuery.data?.map(c => (
-                        <SelectItem key={c.id} value={c.id.toString()}>
-                          {c.modelo02} - {c.modelo01}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div>
+                <label className="text-sm font-medium">Modelo</label>
+                <Select value={novoCartucho.cartuchodId} onValueChange={(v) => handleChangeCartucho("cartuchodId", v)}>
+                  <SelectTrigger className="h-8 w-full truncate">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent className="max-w-md">
+                    {cartuchosQuery.data?.map(c => (
+                      <SelectItem key={c.id} value={c.id.toString()}>
+                        {c.modelo02} - {c.modelo01}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-sm font-medium">Código</label>
                   <Input
@@ -184,7 +184,9 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
                     className="h-8"
                   />
                 </div>
+              </div>
 
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-sm font-medium">Peso Saída (kg)</label>
                   <Input

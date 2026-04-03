@@ -187,3 +187,5 @@
 ## Novas Features Solicitadas
 
 - [x] Novo Pedido: Abrir automaticamente em modal/janela após criação (em vez de apenas recarregar página)
+
+- [x] ModalNovoPedido: Descrição do cartucho tampando campo de Código (layout sobreposição) - Corrigido com layout em coluna cheia para Modelo
