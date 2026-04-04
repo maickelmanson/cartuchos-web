@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Plus, Edit, Trash2, Printer, RotateCcw, CheckCircle } from "lucide-react";
+import { ArrowLeft, Plus, Edit, Trash2, Printer, RotateCcw, CheckCircle, Copy } from "lucide-react";
 import { toast } from "sonner";
 import ModalCartucho from "@/components/ModalCartucho";
 
@@ -54,6 +54,7 @@ export default function PedidoDetalhe({ params }: Props) {
   const reabrirMutation = trpc.pedidos.reabrir.useMutation();
   const removerMutation = trpc.pedidoCartuchos.remover.useMutation();
   const atualizarMutation = trpc.pedidoCartuchos.atualizar.useMutation();
+  const duplicarMutation = trpc.pedidos.duplicar.useMutation();
 
   const handleFinalizarPedido = async () => {
     if (!confirm("Deseja finalizar este pedido? Um pedido de remanufatura será gerado automaticamente.")) return;
@@ -87,6 +88,17 @@ export default function PedidoDetalhe({ params }: Props) {
       toast.error("Erro ao reabrir o pedido. Tente novamente.");
     } finally {
       setReabrindo(false);
+    }
+  };
+
+  const handleDuplicarPedido = async () => {
+    try {
+      const novoPedido = await duplicarMutation.mutateAsync(id);
+      toast.success(`Pedido duplicado! Novo numero: ${novoPedido.numero}`);
+      setLocation(`/pedidos/${novoPedido.id}`);
+    } catch (error) {
+      console.error("Erro ao duplicar pedido:", error);
+      toast.error("Erro ao duplicar o pedido. Tente novamente.");
     }
   };
 
@@ -185,6 +197,11 @@ export default function PedidoDetalhe({ params }: Props) {
           <Button onClick={() => window.print()} variant="outline">
             <Printer className="h-4 w-4 mr-2" />
             Imprimir
+          </Button>
+
+          <Button onClick={handleDuplicarPedido} variant="outline" disabled={duplicarMutation.isPending}>
+            <Copy className="h-4 w-4 mr-2" />
+            {duplicarMutation.isPending ? "Duplicando..." : "Duplicar Pedido"}
           </Button>
 
           {isFinalizado ? (

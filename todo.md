@@ -189,3 +189,5 @@
 - [x] Novo Pedido: Abrir automaticamente em modal/janela após criação (em vez de apenas recarregar página)
 
 - [x] ModalNovoPedido: Descrição do cartucho tampando campo de Código (layout sobreposição) - Corrigido com layout em coluna cheia para Modelo
+
+- [x] Duplicacao de Pedido: Criar procedure backend + botao na UI para duplicar pedido com todos os itens

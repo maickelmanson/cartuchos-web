@@ -267,6 +267,59 @@ export async function deletarPedido(id: number) {
   return db.delete(pedidos).where(eq(pedidos.id, id));
 }
 
+export async function duplicarPedido(pedidoId: number, novoNumero: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // 1. Buscar o pedido original
+  const [pedidoOriginal] = await db.select().from(pedidos).where(eq(pedidos.id, pedidoId)).limit(1);
+  if (!pedidoOriginal) throw new Error("Pedido nao encontrado");
+  
+  // 2. Criar novo pedido com os mesmos dados (exceto ID e numero)
+  const novoPedidoData: InsertPedido = {
+    numero: novoNumero,
+    clienteId: pedidoOriginal.clienteId,
+    status: "aberto",
+    dataCriacao: new Date(),
+    dataFinalizacao: null,
+  };
+  
+  await db.insert(pedidos).values(novoPedidoData);
+  
+  // 3. Buscar o novo pedido criado
+  const [novoPedido] = await db.select().from(pedidos).where(eq(pedidos.numero, novoNumero)).limit(1);
+  if (!novoPedido) throw new Error("Falha ao criar novo pedido");
+  
+  // 4. Buscar todos os cartuchos do pedido original
+  const cartuchosOriginais = await db.select({
+    cartuchodId: pedidoCartuchos.cartuchodId,
+    codigo: pedidoCartuchos.codigo,
+    pesoCheagada: pedidoCartuchos.pesoCheagada,
+    pesoSaida: pedidoCartuchos.pesoSaida,
+    protegido: pedidoCartuchos.protegido,
+    observacoes: pedidoCartuchos.observacoes,
+  })
+    .from(pedidoCartuchos)
+    .where(eq(pedidoCartuchos.pedidoId, pedidoId));
+  
+  // 5. Adicionar os cartuchos ao novo pedido
+  for (const cartucho of cartuchosOriginais) {
+    await db.insert(pedidoCartuchos).values({
+      pedidoId: novoPedido.id,
+      cartuchodId: cartucho.cartuchodId,
+      codigo: cartucho.codigo,
+      pesoCheagada: cartucho.pesoCheagada,
+      pesoSaida: cartucho.pesoSaida,
+      protegido: cartucho.protegido,
+      status: "em_espera",
+      observacoes: cartucho.observacoes,
+      dataInclusao: new Date(),
+    });
+  }
+  
+  return novoPedido;
+}
+
 // ============================================================
 // Pedido Cartuchos
 // ============================================================

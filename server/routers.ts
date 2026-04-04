@@ -7,7 +7,7 @@ import {
   listarCartuchos, criarCartucho, atualizarCartucho, deletarCartucho,
   buscarCartuchoPorId,
   listarClientes, buscarCliente, criarCliente, atualizarCliente, deletarCliente,
-  listarPedidos, buscarPedido, listarPedidosPorCliente, obterProximoNumeroPedido, criarPedido, finalizarPedido, deletarPedido,
+  listarPedidos, buscarPedido, listarPedidosPorCliente, obterProximoNumeroPedido, criarPedido, finalizarPedido, deletarPedido, duplicarPedido,
   listarCartuchosDoPedido, adicionarCartucho, atualizarCartuchodoPedido, removerCartuchodoPedido,
   buscaAvancada,
   obterProximoNumeroRemanOrder, listarRemanOrders, buscarRemanOrder, criarRemanOrder, atualizarRemanOrder, deletarRemanOrder,
@@ -226,6 +226,13 @@ export const appRouter = router({
       .input(z.number())
       .mutation(async ({ input }) => {
         return deletarPedido(input);
+      }),
+
+    duplicar: protectedProcedure
+      .input(z.number())
+      .mutation(async ({ input }) => {
+        const numero = await obterProximoNumeroPedido();
+        return duplicarPedido(input, numero);
       }),
   }),
 
