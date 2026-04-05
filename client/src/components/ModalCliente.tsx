@@ -8,6 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { mascaraCPF, mascaraCNPJ, validarCPF, validarCNPJ } from "@/lib/cpfCnpjValidation";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 interface Props {
   cliente?: any;
@@ -44,8 +46,18 @@ export default function ModalCliente({ cliente, onSalvar, onFechar }: Props) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    // Maiúsculas para todos os campos exceto observações
-    const valorFormatado = name === "observacoes" ? value : value.toUpperCase();
+    let valorFormatado = value;
+    
+    // Aplicar máscara para CPF e CNPJ
+    if (name === "cpf") {
+      valorFormatado = mascaraCPF(value);
+    } else if (name === "cnpj") {
+      valorFormatado = mascaraCNPJ(value);
+    } else if (name !== "observacoes") {
+      // Maiúsculas para todos os campos exceto observações
+      valorFormatado = value.toUpperCase();
+    }
+    
     setForm(f => ({ ...f, [name]: valorFormatado }));
   };
 
@@ -55,8 +67,27 @@ export default function ModalCliente({ cliente, onSalvar, onFechar }: Props) {
       alert("O nome do cliente é obrigatório.");
       return;
     }
+    
+    // Validar CPF se preenchido
+    if (form.cpf.trim() && !validarCPF(form.cpf)) {
+      alert("CPF inválido. Verifique os dígitos verificadores.");
+      return;
+    }
+    
+    // Validar CNPJ se preenchido
+    if (form.cnpj.trim() && !validarCNPJ(form.cnpj)) {
+      alert("CNPJ inválido. Verifique os dígitos verificadores.");
+      return;
+    }
+    
     onSalvar(form);
   };
+  
+  // Função para verificar se CPF é válido
+  const isCPFValido = !form.cpf.trim() || validarCPF(form.cpf);
+  
+  // Função para verificar se CNPJ é válido
+  const isCNPJValido = !form.cnpj.trim() || validarCNPJ(form.cnpj);
 
   return (
     <Dialog open={true} onOpenChange={onFechar}>
@@ -102,23 +133,49 @@ export default function ModalCliente({ cliente, onSalvar, onFechar }: Props) {
             </div>
 
             <div>
-              <label className="text-sm font-medium">CPF</label>
+              <label className="text-sm font-medium flex items-center gap-2">
+                CPF
+                {form.cpf.trim() && (
+                  isCPFValido ? (
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                  )
+                )}
+              </label>
               <Input
                 name="cpf"
                 value={form.cpf}
                 onChange={handleChange}
-                placeholder="CPF"
+                placeholder="000.000.000-00"
+                className={form.cpf.trim() && !isCPFValido ? "border-red-500" : ""}
               />
+              {form.cpf.trim() && !isCPFValido && (
+                <p className="text-xs text-red-600 mt-1">CPF inválido</p>
+              )}
             </div>
 
             <div>
-              <label className="text-sm font-medium">CNPJ</label>
+              <label className="text-sm font-medium flex items-center gap-2">
+                CNPJ
+                {form.cnpj.trim() && (
+                  isCNPJValido ? (
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                  )
+                )}
+              </label>
               <Input
                 name="cnpj"
                 value={form.cnpj}
                 onChange={handleChange}
-                placeholder="CNPJ"
+                placeholder="00.000.000/0000-00"
+                className={form.cnpj.trim() && !isCNPJValido ? "border-red-500" : ""}
               />
+              {form.cnpj.trim() && !isCNPJValido && (
+                <p className="text-xs text-red-600 mt-1">CNPJ inválido</p>
+              )}
             </div>
 
             <div>

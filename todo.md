@@ -191,3 +191,5 @@
 - [x] ModalNovoPedido: Descrição do cartucho tampando campo de Código (layout sobreposição) - Corrigido com layout em coluna cheia para Modelo
 
 - [x] Duplicacao de Pedido: Criar procedure backend + botao na UI para duplicar pedido com todos os itens
+
+- [x] Validacao de CPF/CNPJ: Adicionar mascara e validacao de digitos verificadores no cadastro de clientes (13 testes passando)
