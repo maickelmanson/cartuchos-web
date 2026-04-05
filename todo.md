@@ -193,3 +193,5 @@
 - [x] Duplicacao de Pedido: Criar procedure backend + botao na UI para duplicar pedido com todos os itens
 
 - [x] Validacao de CPF/CNPJ: Adicionar mascara e validacao de digitos verificadores no cadastro de clientes (13 testes passando)
+
+- [x] Máscara de Telefone: Adicionar máscara automática para telefone (11) 99999-9999 no cadastro de clientes (19 testes passando)

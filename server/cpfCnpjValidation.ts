@@ -141,3 +141,45 @@ export function validarAutomatico(valor: string): boolean {
   
   return false;
 }
+
+/**
+ * Aplica máscara de telefone (11) 99999-9999 ou (11) 3333-3333
+ */
+export function mascaraTelefone(valor: string): string {
+  const limpo = removerFormatacao(valor);
+  if (limpo.length === 0) return '';
+  
+  // Telefone deve ter 10 ou 11 dígitos
+  const telefoneFormatado = limpo.slice(0, 11);
+  
+  if (telefoneFormatado.length <= 2) {
+    return `(${telefoneFormatado}`;
+  } else if (telefoneFormatado.length <= 6) {
+    return `(${telefoneFormatado.slice(0, 2)}) ${telefoneFormatado.slice(2)}`;
+  } else if (telefoneFormatado.length <= 10) {
+    // Telefone com 10 dígitos: (XX) XXXX-XXXX
+    return `(${telefoneFormatado.slice(0, 2)}) ${telefoneFormatado.slice(2, 6)}-${telefoneFormatado.slice(6)}`;
+  } else {
+    // Telefone com 11 dígitos: (XX) XXXXX-XXXX
+    return `(${telefoneFormatado.slice(0, 2)}) ${telefoneFormatado.slice(2, 7)}-${telefoneFormatado.slice(7)}`;
+  }
+}
+
+/**
+ * Valida telefone (deve ter 10 ou 11 dígitos)
+ */
+export function validarTelefone(telefone: string): boolean {
+  const limpo = removerFormatacao(telefone);
+  
+  // Telefone deve ter 10 ou 11 dígitos
+  if (limpo.length !== 10 && limpo.length !== 11) return false;
+  
+  // Rejeita telefones com todos os dígitos iguais
+  if (/^(\d)\1{9,10}$/.test(limpo)) return false;
+  
+  // Valida DDD (primeiros 2 dígitos devem ser entre 11 e 99)
+  const ddd = parseInt(limpo.slice(0, 2));
+  if (ddd < 11 || ddd > 99) return false;
+  
+  return true;
+}

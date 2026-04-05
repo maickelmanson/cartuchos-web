@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { mascaraCPF, mascaraCNPJ, validarCPF, validarCNPJ } from "@/lib/cpfCnpjValidation";
+import { mascaraCPF, mascaraCNPJ, validarCPF, validarCNPJ, mascaraTelefone, validarTelefone } from "@/lib/cpfCnpjValidation";
 import { AlertCircle, CheckCircle } from "lucide-react";
 
 interface Props {
@@ -48,11 +48,13 @@ export default function ModalCliente({ cliente, onSalvar, onFechar }: Props) {
     const { name, value } = e.target;
     let valorFormatado = value;
     
-    // Aplicar máscara para CPF e CNPJ
+    // Aplicar máscara para CPF, CNPJ e Telefone
     if (name === "cpf") {
       valorFormatado = mascaraCPF(value);
     } else if (name === "cnpj") {
       valorFormatado = mascaraCNPJ(value);
+    } else if (name === "telefone") {
+      valorFormatado = mascaraTelefone(value);
     } else if (name !== "observacoes") {
       // Maiúsculas para todos os campos exceto observações
       valorFormatado = value.toUpperCase();

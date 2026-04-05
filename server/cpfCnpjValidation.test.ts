@@ -5,6 +5,8 @@ import {
   mascaraCPF,
   mascaraCNPJ,
   removerFormatacao,
+  validarTelefone,
+  mascaraTelefone,
 } from "./cpfCnpjValidation";
 
 describe("CPF Validation", () => {
@@ -74,5 +76,41 @@ describe("Format Removal", () => {
 
   it("deve remover todos os caracteres não numéricos", () => {
     expect(removerFormatacao("123-456.789/00")).toBe("12345678900");
+  });
+});
+
+
+describe("Telefone Validation", () => {
+  it("deve validar telefone com 11 dígitos válido", () => {
+    expect(validarTelefone("11987654321")).toBe(true);
+    expect(validarTelefone("(11) 98765-4321")).toBe(true);
+  });
+
+  it("deve validar telefone com 10 dígitos válido", () => {
+    expect(validarTelefone("1133334444")).toBe(true);
+    expect(validarTelefone("(11) 3333-4444")).toBe(true);
+  });
+
+  it("deve rejeitar telefone com comprimento inválido", () => {
+    expect(validarTelefone("119876543")).toBe(false);
+    expect(validarTelefone("119876543210")).toBe(false);
+  });
+
+  it("deve rejeitar telefone com todos os dígitos iguais", () => {
+    expect(validarTelefone("11111111111")).toBe(false);
+    expect(validarTelefone("1111111111")).toBe(false);
+  });
+
+  it("deve rejeitar telefone com DDD inválido", () => {
+    expect(validarTelefone("01987654321")).toBe(false);
+    expect(validarTelefone("10987654321")).toBe(false);
+  });
+
+  it("deve aplicar máscara de telefone corretamente", () => {
+    expect(mascaraTelefone("11987654321")).toBe("(11) 98765-4321");
+    expect(mascaraTelefone("1133334444")).toBe("(11) 3333-4444");
+    expect(mascaraTelefone("(11) 98765-4321")).toBe("(11) 98765-4321");
+    expect(mascaraTelefone("11")).toBe("(11");
+    expect(mascaraTelefone("119876")).toBe("(11) 9876");
   });
 });
