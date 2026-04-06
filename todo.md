@@ -195,3 +195,28 @@
 - [x] Validacao de CPF/CNPJ: Adicionar mascara e validacao de digitos verificadores no cadastro de clientes (13 testes passando)
 
 - [x] Máscara de Telefone: Adicionar máscara automática para telefone (11) 99999-9999 no cadastro de clientes (19 testes passando)
+
+## Dashboard de Análise de Pedidos (Novo)
+- [ ] Criar página DashboardAnalise.tsx com gráficos
+- [ ] Gráfico: Pedidos por período (últimos 30 dias)
+- [ ] Gráfico: Clientes mais ativos (top 10)
+- [ ] Gráfico: Modelos mais solicitados (top 10)
+- [ ] Gráfico: Status dos pedidos (pizza)
+- [ ] Gráfico: Receita por período (últimos 30 dias)
+- [ ] Filtros: Data inicial, data final, cliente
+- [ ] Exportar dados em CSV/Excel
+- [ ] Adicionar rota no App.tsx
+- [ ] Adicionar item no menu sidebar
+
+## Dashboard de Análise de Pedidos (Completo)
+- [x] Criar página DashboardAnalise.tsx com gráficos
+- [x] Gráfico: Pedidos por período (últimos 30 dias)
+- [x] Gráfico: Clientes mais ativos (top 10)
+- [x] Gráfico: Modelos mais solicitados (top 10)
+- [x] Gráfico: Status dos pedidos (pizza)
+- [x] Gráfico: Receita por período (últimos 30 dias)
+- [x] Filtros: Data inicial, data final
+- [x] Exportar dados em CSV
+- [x] Adicionar rota no App.tsx
+- [x] Adicionar item no menu sidebar
+- [x] Procedures backend de análise (pedidosPorPeriodo, clientesMaisAtivos, modelosMaisSolicitados, statusPedidos, receitaPorPeriodo, resumoGeral)

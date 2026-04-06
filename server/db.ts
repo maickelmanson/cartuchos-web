@@ -1,4 +1,4 @@
-import { eq, desc, like, or, and, sql, inArray } from "drizzle-orm";
+import { eq, desc, like, or, and, sql, inArray, gte, lte, ne } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, cartuchodCadastro, clientes, pedidos, pedidoCartuchos, InsertCartuchodCadastro, InsertCliente, InsertPedido, InsertPedidoCartucho, remanOrders, remanOrderItems, remanOrderUnits, InsertRemanOrder, InsertRemanOrderItem, InsertRemanOrderUnit, empresaDados, InsertEmpresaDados } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -970,4 +970,120 @@ export async function gerarRemanAPartirDoPedido(pedidoId: number) {
   }).where(eq(remanOrders.id, remanOrder.id));
 
   return { remanOrderId: remanOrder.id, orderNumber: remanOrder.orderNumber };
+}
+
+
+// ============================================================
+// Análise de Dados - Dashboard
+// ============================================================
+
+export async function obterPedidosPorPeriodo(dataInicio: Date, dataFim: Date) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const resultado = await db.select({
+    data: sql<string>`DATE(${pedidos.dataCriacao})`,
+    total: sql<number>`COUNT(DISTINCT ${pedidos.id})`,
+  })
+    .from(pedidos)
+    .where(and(
+      gte(pedidos.dataCriacao, dataInicio),
+      lte(pedidos.dataCriacao, dataFim)
+    ))
+    .groupBy(sql`DATE(${pedidos.dataCriacao})`)
+    .orderBy(sql`DATE(${pedidos.dataCriacao})`);
+
+  return resultado;
+}
+
+export async function obterClientesMaisAtivos(limite: number = 10) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const resultado = await db.select({
+    clienteId: clientes.id,
+    nomeCliente: clientes.nome,
+    totalPedidos: sql<number>`COUNT(DISTINCT ${pedidos.id})`,
+  })
+    .from(clientes)
+    .leftJoin(pedidos, eq(clientes.id, pedidos.clienteId))
+    .groupBy(clientes.id, clientes.nome)
+    .orderBy(sql<number>`COUNT(DISTINCT ${pedidos.id}) DESC`)
+    .limit(limite);
+
+  return resultado;
+}
+
+export async function obterModelosMaisSolicitados(limite: number = 10) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const resultado = await db.select({
+    cartuchodId: cartuchodCadastro.id,
+    modelo01: cartuchodCadastro.modelo01,
+    modelo02: cartuchodCadastro.modelo02,
+    totalSolicitacoes: sql<number>`COUNT(${pedidoCartuchos.id})`,
+  })
+    .from(cartuchodCadastro)
+    .leftJoin(pedidoCartuchos, eq(cartuchodCadastro.id, pedidoCartuchos.cartuchodId))
+    .groupBy(cartuchodCadastro.id)
+    .orderBy(sql<number>`COUNT(${pedidoCartuchos.id}) DESC`)
+    .limit(limite);
+
+  return resultado;
+}
+
+export async function obterStatusPedidos() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const resultado = await db.select({
+    status: pedidos.status,
+    total: sql<number>`COUNT(*)`,
+  })
+    .from(pedidos)
+    .groupBy(pedidos.status);
+
+  return resultado;
+}
+
+export async function obterReceitaPorPeriodo(dataInicio: Date, dataFim: Date) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const resultado = await db.select({
+    data: sql<string>`DATE(${pedidos.dataCriacao})`,
+    totalPedidos: sql<number>`COUNT(DISTINCT ${pedidos.id})`,
+  })
+    .from(pedidos)
+    .where(and(
+      gte(pedidos.dataCriacao, dataInicio),
+      lte(pedidos.dataCriacao, dataFim),
+      eq(pedidos.status, "finalizado")
+    ))
+    .groupBy(sql<string>`DATE(${pedidos.dataCriacao})`)
+    .orderBy(sql<string>`DATE(${pedidos.dataCriacao})`);
+
+  return resultado;
+}
+
+export async function obterResumoGeral() {
+  const db = await getDb();
+  if (!db) return { totalPedidos: 0, totalClientes: 0, totalReceita: "0", pedidosPendentes: 0 };
+
+  const [totalPedidosResult] = await db.select({ total: sql<number>`COUNT(*)` }).from(pedidos);
+  const [totalClientesResult] = await db.select({ total: sql<number>`COUNT(*)` }).from(clientes);
+  const [pedidosFinalizadosResult] = await db.select({ 
+    total: sql<number>`COUNT(*)` 
+  }).from(pedidos).where(eq(pedidos.status, "finalizado"));
+  const [pedidosPendentesResult] = await db.select({ 
+    total: sql<number>`COUNT(*)` 
+  }).from(pedidos).where(ne(pedidos.status, "finalizado"));
+
+  return {
+    totalPedidos: totalPedidosResult?.total || 0,
+    totalClientes: totalClientesResult?.total || 0,
+    pedidosFinalizados: pedidosFinalizadosResult?.total || 0,
+    pedidosPendentes: pedidosPendentesResult?.total || 0,
+  };
 }

@@ -16,6 +16,7 @@ import {
   obterRelatorioRemanOrder,
   obterDadosEmpresa, salvarDadosEmpresa,
   gerarRemanAPartirDoPedido,
+  obterPedidosPorPeriodo, obterClientesMaisAtivos, obterModelosMaisSolicitados, obterStatusPedidos, obterReceitaPorPeriodo, obterResumoGeral,
 } from "./db";
 import { getDb } from "./db";
 import { clientes } from "../drizzle/schema";
@@ -567,6 +568,52 @@ export const appRouter = router({
       .input(z.number())
       .mutation(async ({ input }) => {
         return deletarRemanOrderUnit(input);
+      }),
+  }),
+
+  analise: router({
+    pedidosPorPeriodo: protectedProcedure
+      .input(z.object({
+        dataInicio: z.date(),
+        dataFim: z.date(),
+      }))
+      .query(async ({ input }) => {
+        return obterPedidosPorPeriodo(input.dataInicio, input.dataFim);
+      }),
+
+    clientesMaisAtivos: protectedProcedure
+      .input(z.object({
+        limite: z.number().default(10),
+      }))
+      .query(async ({ input }) => {
+        return obterClientesMaisAtivos(input.limite);
+      }),
+
+    modelosMaisSolicitados: protectedProcedure
+      .input(z.object({
+        limite: z.number().default(10),
+      }))
+      .query(async ({ input }) => {
+        return obterModelosMaisSolicitados(input.limite);
+      }),
+
+    statusPedidos: protectedProcedure
+      .query(async () => {
+        return obterStatusPedidos();
+      }),
+
+    receitaPorPeriodo: protectedProcedure
+      .input(z.object({
+        dataInicio: z.date(),
+        dataFim: z.date(),
+      }))
+      .query(async ({ input }) => {
+        return obterReceitaPorPeriodo(input.dataInicio, input.dataFim);
+      }),
+
+    resumoGeral: protectedProcedure
+      .query(async () => {
+        return obterResumoGeral();
       }),
   }),
 });
