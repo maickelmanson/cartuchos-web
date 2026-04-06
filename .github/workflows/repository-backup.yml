@@ -1,0 +1,134 @@
+name: Repository Backup
+
+on:
+  schedule:
+    # Executa diariamente às 02:00 UTC (23:00 BRT do dia anterior)
+    - cron: '0 2 * * *'
+  
+  # Permite execução manual via GitHub UI
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Create backup archive
+        run: |
+          # Criar diretório para backups
+          mkdir -p backups
+          
+          # Criar arquivo ZIP do repositório completo
+          zip -r -q backups/cartuchos-web-$(date +'%Y%m%d').zip . \
+            --exclude='node_modules/*' \
+            '.git/*' \
+            'dist/*' \
+            '.manus-logs/*' \
+            '.env*' \
+            '*.log'
+          
+          # Criar arquivo tar.gz comprimido
+          tar -czf backups/cartuchos-web-$(date +'%Y%m%d').tar.gz \
+            --exclude='node_modules' \
+            --exclude='.git' \
+            --exclude='dist' \
+            --exclude='.manus-logs' \
+            --exclude='.env*' \
+            --exclude='*.log' \
+            .
+          
+          # Listar arquivos criados
+          echo "📦 Backups criados:"
+          ls -lh backups/
+      
+      - name: Upload backups as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: repository-backups-$(date +'%Y%m%d')
+          path: backups/
+          retention-days: 90
+      
+      - name: Create release with backup
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: backup-$(date +'%Y%m%d')
+          release_name: Daily Backup - $(date +'%Y-%m-%d')
+          body: |
+            ## 📦 Daily Repository Backup
+            
+            **Date:** $(date +'%Y-%m-%d %H:%M:%S UTC')
+            
+            **Included:**
+            - ✅ Complete source code
+            - ✅ All configuration files
+            - ✅ Database schemas
+            - ✅ Documentation
+            - ✅ Scripts and workflows
+            
+            **Excluded:**
+            - ❌ node_modules (reinstall with npm/pnpm)
+            - ❌ .git history (use git clone for full history)
+            - ❌ dist/ (rebuild with npm run build)
+            - ❌ Environment files (.env)
+            - ❌ Log files
+            
+            **Download:** Available in artifacts or attached files
+            
+            **Restore Instructions:**
+            1. Extract the archive
+            2. Run `npm install` or `pnpm install`
+            3. Configure `.env` with your secrets
+            4. Run `npm run dev` to start
+          draft: false
+          prerelease: false
+      
+      - name: Upload ZIP to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./backups/cartuchos-web-$(date +'%Y%m%d').zip
+          asset_name: cartuchos-web-backup-$(date +'%Y%m%d').zip
+          asset_content_type: application/zip
+      
+      - name: Cleanup old artifacts
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listArtifactsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            
+            // Manter apenas os 30 últimos backups
+            const toDelete = artifacts.data.artifacts.slice(30);
+            
+            for (const artifact of toDelete) {
+              console.log(`Deletando artifact antigo: ${artifact.name}`);
+              await github.rest.actions.deleteArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: artifact.id,
+              });
+            }
+      
+      - name: Notify on success
+        run: |
+          echo "✅ Repository backup completed successfully!"
+          echo "📅 Backup date: $(date +'%Y-%m-%d %H:%M:%S UTC')"
+          echo "📦 Artifacts: Available in GitHub Actions"
+          echo "🔗 Releases: https://github.com/maickelmanson/cartuchos-web/releases"
+      
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Repository backup failed!"
+          echo "Check the workflow logs for details."
