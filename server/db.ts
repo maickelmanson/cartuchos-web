@@ -981,19 +981,24 @@ export async function obterPedidosPorPeriodo(dataInicio: Date, dataFim: Date) {
   const db = await getDb();
   if (!db) return [];
 
-  const resultado = await db.select({
-    data: sql<string>`DATE(${pedidos.dataCriacao})`,
-    total: sql<number>`COUNT(DISTINCT ${pedidos.id})`,
-  })
-    .from(pedidos)
-    .where(and(
-      gte(pedidos.dataCriacao, dataInicio),
-      lte(pedidos.dataCriacao, dataFim)
-    ))
-    .groupBy(sql`DATE(${pedidos.dataCriacao})`)
-    .orderBy(sql`DATE(${pedidos.dataCriacao})`);
+  try {
+    const resultado = await db.select({
+      data: sql<string>`DATE(${pedidos.dataCriacao})`,
+      total: sql<number>`COUNT(DISTINCT ${pedidos.id})`,
+    })
+      .from(pedidos)
+      .where(and(
+        gte(pedidos.dataCriacao, dataInicio),
+        lte(pedidos.dataCriacao, dataFim)
+      ))
+      .groupBy(sql`CAST(DATE(${pedidos.dataCriacao}) AS CHAR)`)
+      .orderBy(sql`DATE(${pedidos.dataCriacao})`);
 
-  return resultado;
+    return resultado as Array<{ data: string; total: number }>;
+  } catch (error) {
+    console.error('Erro ao obter pedidos por período:', error);
+    return [];
+  }
 }
 
 export async function obterClientesMaisAtivos(limite: number = 10) {
