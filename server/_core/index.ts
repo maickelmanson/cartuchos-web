@@ -30,54 +30,80 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
-  // Configure body parser with larger size limit for file uploads
-  app.use(express.json({ limit: "50mb" }));
-  app.use(express.urlencoded({ limit: "50mb", extended: true }));
-  // OAuth callback under /api/oauth/callback
-  registerOAuthRoutes(app);
-
-  // Upload de logo
+  
+  // Upload de logo - DEVE VIR ANTES DO BODY-PARSER
   app.post("/api/upload-logo", async (req, res) => {
     try {
+      // Usar import dinâmico para busboy
+      // @ts-ignore
+      const mod = await import("busboy");
+      const busboyFn = (mod as any).default ?? mod;
+      const bb = busboyFn({ headers: req.headers });
+      
       let fileBuffer: Buffer | null = null;
       let mimeType = "image/png";
+      let fileName = "logo";
+      const chunks: Buffer[] = [];
 
-      // Tentar ler do corpo da requisição (FormData)
-      const chunks: Uint8Array[] = [];
-      await new Promise((resolve, reject) => {
-        req.on("data", (chunk) => chunks.push(chunk));
-        req.on("end", resolve);
-        req.on("error", reject);
+      bb.on("file", (fieldname: string, file: any, info: any) => {
+        fileName = info.filename || "logo";
+        mimeType = info.mimeType || "image/png";
+        
+        file.on("data", (data: Buffer) => {
+          chunks.push(data);
+        });
       });
 
-      if (chunks.length === 0) {
-        return res.status(400).json({ error: "Nenhum arquivo enviado" });
-      }
+      bb.on("finish", async () => {
+        try {
+          if (chunks.length === 0) {
+            return res.status(400).json({ error: "Nenhum arquivo enviado" });
+          }
 
-      fileBuffer = Buffer.concat(chunks);
+          fileBuffer = Buffer.concat(chunks);
 
-      // Validar tamanho (máx 5MB)
-      if (fileBuffer.length > 5 * 1024 * 1024) {
-        return res.status(400).json({ error: "Arquivo muito grande. Máximo 5MB" });
-      }
+          // Validar tamanho (máx 5MB)
+          if (fileBuffer.length > 5 * 1024 * 1024) {
+            return res.status(400).json({ error: "Arquivo muito grande. Máximo 5MB" });
+          }
 
-      // Importar storagePut
-      const { storagePut } = await import("../storage");
+          // Importar storagePut
+          const { storagePut } = await import("../storage");
 
-      // Gerar nome único para o arquivo
-      const timestamp = Date.now();
-      const randomSuffix = Math.random().toString(36).substring(2, 8);
-      const fileKey = `logos/${timestamp}-${randomSuffix}.png`;
+          // Gerar nome único para o arquivo com extensão correta
+          const timestamp = Date.now();
+          const randomSuffix = Math.random().toString(36).substring(2, 8);
+          const ext = fileName.split(".").pop() || "png";
+          const fileKey = `logos/${timestamp}-${randomSuffix}.${ext}`;
 
-      // Fazer upload para S3
-      const { url } = await storagePut(fileKey, fileBuffer, mimeType);
+          // Fazer upload para S3
+          const { url } = await storagePut(fileKey, fileBuffer, mimeType);
 
-      res.json({ url });
+          res.json({ url });
+        } catch (error) {
+          console.error("Erro ao fazer upload:", error);
+          res.status(500).json({ error: "Erro ao fazer upload" });
+        }
+      });
+
+      bb.on("error", (error: any) => {
+        console.error("Erro no busboy:", error);
+        res.status(500).json({ error: "Erro ao processar arquivo" });
+      });
+
+      req.pipe(bb);
     } catch (error) {
       console.error("Erro ao fazer upload:", error);
       res.status(500).json({ error: "Erro ao fazer upload" });
     }
   });
+
+  // Configure body parser com limite maior para uploads
+  app.use(express.json({ limit: "50mb" }));
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  
+  // OAuth callback under /api/oauth/callback
+  registerOAuthRoutes(app);
 
   // tRPC API
   app.use(
