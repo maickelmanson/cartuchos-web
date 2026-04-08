@@ -228,3 +228,7 @@
 - [x] Comprimir com qualidade 80% (JPEG) ou 85% (PNG)
 - [x] Validar tamanho final máximo 500KB
 - [x] Exibir preview antes de salvar
+
+
+## Bugs Reportados (Novos - Finalização de Pedido)
+- [x] Erro ao finalizar pedido: parâmetros trocados em reman_order_items (cartucho_id recebendo texto ao invés de ID) - Corrigido: reordenados campos descriptionSnapshot e modelCodeSnapshot

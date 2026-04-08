@@ -861,8 +861,8 @@ export async function gerarRemanAPartirDoPedido(pedidoId: number) {
     await db.insert(remanOrderItems).values({
       orderId: remanOrder.id,
       cartuchoId: grupo.cartuchodId,
-      descriptionSnapshot: grupo.modelo02 || grupo.modelo01 || "SEM MODELO",
       modelCodeSnapshot: grupo.modelo01 || "",
+      descriptionSnapshot: grupo.modelo02 || grupo.modelo01 || "SEM MODELO",
       quantity: grupo.quantidade,
       unitPrice: String(unitPrice),
       priceSource: profile as "CLIENTE_FINAL" | "REVENDA",
@@ -932,8 +932,8 @@ export async function gerarRemanAPartirDoPedido(pedidoId: number) {
       await db.insert(remanOrderItems).values({
         orderId: remanOrder.id,
         cartuchoId: grupo.cartuchodId,
-        descriptionSnapshot: grupo.modelo02 || grupo.modelo01 || "SEM MODELO",
         modelCodeSnapshot: grupo.modelo01 || "",
+        descriptionSnapshot: grupo.modelo02 || grupo.modelo01 || "SEM MODELO",
         quantity: 0,
         unitPrice: "0",
         priceSource: profile as "CLIENTE_FINAL" | "REVENDA",
