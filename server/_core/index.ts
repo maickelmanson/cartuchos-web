@@ -67,8 +67,18 @@ async function startServer() {
             return res.status(400).json({ error: "Arquivo muito grande. Máximo 5MB" });
           }
 
-          // Importar storagePut
+          // Importar storagePut e otimização de imagem
           const { storagePut } = await import("../storage");
+          const { optimizeImage } = await import("./imageOptimization");
+
+          // Otimizar imagem
+          console.log("[Upload] Iniciando otimização de imagem...");
+          const optimizationResult = await optimizeImage(fileBuffer, mimeType, {
+            maxWidth: 800,
+            maxHeight: 800,
+            quality: 80,
+            maxSizeKB: 500,
+          });
 
           // Gerar nome único para o arquivo com extensão correta
           const timestamp = Date.now();
@@ -76,10 +86,20 @@ async function startServer() {
           const ext = fileName.split(".").pop() || "png";
           const fileKey = `logos/${timestamp}-${randomSuffix}.${ext}`;
 
-          // Fazer upload para S3
-          const { url } = await storagePut(fileKey, fileBuffer, mimeType);
+          // Fazer upload para S3 com imagem otimizada
+          const { url } = await storagePut(fileKey, optimizationResult.buffer, mimeType);
 
-          res.json({ url });
+          // Retornar informações de otimização
+          res.json({
+            url,
+            optimization: {
+              originalSize: fileBuffer.length,
+              optimizedSize: optimizationResult.sizeKB * 1024,
+              reduction: optimizationResult.reduction,
+              width: optimizationResult.width,
+              height: optimizationResult.height,
+            },
+          });
         } catch (error) {
           console.error("Erro ao fazer upload:", error);
           res.status(500).json({ error: "Erro ao fazer upload" });

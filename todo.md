@@ -220,3 +220,11 @@
 - [x] Adicionar rota no App.tsx
 - [x] Adicionar item no menu sidebar
 - [x] Procedures backend de análise (pedidosPorPeriodo, clientesMaisAtivos, modelosMaisSolicitados, statusPedidos, receitaPorPeriodo, resumoGeral)
+
+## Upload de Logo com Otimização
+- [x] Upload de arquivo JPG/PNG com validação
+- [x] Otimização de imagem com redimensionamento e compressão
+- [x] Redimensionar para máximo 800x800px
+- [x] Comprimir com qualidade 80% (JPEG) ou 85% (PNG)
+- [x] Validar tamanho final máximo 500KB
+- [x] Exibir preview antes de salvar
