@@ -18,6 +18,7 @@ import {
   gerarRemanAPartirDoPedido,
   obterPedidosPorPeriodo, obterClientesMaisAtivos, obterModelosMaisSolicitados, obterStatusPedidos, obterReceitaPorPeriodo, obterResumoGeral,
 } from "./db";
+import { obterResumoErros, obterEstatisticasErros, obterErrosNaoResolvidos, obterErrosRecentes, marcarErroResolvido } from "./errorLogs";
 import { getDb } from "./db";
 import { clientes } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -452,9 +453,6 @@ export const appRouter = router({
           lineTotal,
         });
 
-        // Recalcular subtotal e total do pedido
-        await recalcularTotaisRemanOrder(input.orderId);
-
         return listarRemanOrderItems(input.orderId);
       }),
 
@@ -483,9 +481,6 @@ export const appRouter = router({
           lineTotal,
         });
 
-        // Recalcular subtotal e total do pedido
-        await recalcularTotaisRemanOrder(input.orderId);
-
         return listarRemanOrderItems(input.orderId);
       }),
 
@@ -496,7 +491,6 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         await deletarRemanOrderItem(input.id);
-        await recalcularTotaisRemanOrder(input.orderId);
         return listarRemanOrderItems(input.orderId);
       }),
   }),
@@ -616,26 +610,41 @@ export const appRouter = router({
         return obterResumoGeral();
       }),
   }),
+
+  // ============================================================
+  // Rastreamento de Erros
+  // ============================================================
+  erros: router({
+    obterResumo: protectedProcedure
+      .query(async () => {
+        return obterResumoErros();
+      }),
+
+    obterEstatisticas: protectedProcedure
+      .query(async () => {
+        return obterEstatisticasErros();
+      }),
+
+    obterNaoResolvidos: protectedProcedure
+      .query(async () => {
+        return obterErrosNaoResolvidos();
+      }),
+
+    obterRecentes: protectedProcedure
+      .input(z.object({
+        limite: z.number().default(50),
+      }))
+      .query(async ({ input }) => {
+        return obterErrosRecentes(input.limite);
+      }),
+
+    marcarResolvido: protectedProcedure
+      .input(z.object({
+        erroId: z.number(),
+        notes: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        return marcarErroResolvido(input.erroId, ctx.user.id, input.notes);
+      }),
+  }),
 });
-
-// ============================================================
-// Helper: Recalcular totais do pedido reman
-// ============================================================
-async function recalcularTotaisRemanOrder(orderId: number) {
-  const db = await getDb();
-  if (!db) return;
-
-  const items = await listarRemanOrderItems(orderId);
-  const subtotal = items.reduce((acc, item) => acc + parseFloat(item.lineTotal || "0"), 0);
-
-  const order = await buscarRemanOrder(orderId);
-  const discount = parseFloat(order?.discount || "0");
-  const total = Math.max(0, subtotal - discount);
-
-  await atualizarRemanOrder(orderId, {
-    subtotal: subtotal.toFixed(2),
-    total: total.toFixed(2),
-  });
-}
-
-export type AppRouter = typeof appRouter;

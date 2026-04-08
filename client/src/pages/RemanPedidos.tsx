@@ -48,7 +48,7 @@ export default function RemanPedidos() {
   const criarMutation = trpc.remanOrders.criar.useMutation();
   const deletarMutation = trpc.remanOrders.deletar.useMutation();
 
-  const pedidosFiltrados = (pedidosQuery.data || []).filter(p =>
+  const pedidosFiltrados = (pedidosQuery.data || []).filter((p: any) =>
     p.orderNumber.toLowerCase().includes(filtro.toLowerCase()) ||
     (p.clienteNome || "").toLowerCase().includes(filtro.toLowerCase())
   );
@@ -136,7 +136,7 @@ export default function RemanPedidos() {
                   </td>
                 </tr>
               ) : (
-                pedidosFiltrados.map(p => (
+                pedidosFiltrados.map((p: any) => (
                   <tr
                     key={p.id}
                     className="border-b hover:bg-muted/50 cursor-pointer"
@@ -202,7 +202,7 @@ export default function RemanPedidos() {
                   required
                 >
                   <option value="">Selecione um cliente...</option>
-                  {(clientesQuery.data || []).map(c => (
+                  {(clientesQuery.data || []).map((c: any) => (
                     <option key={c.id} value={c.id}>
                       {c.nome} — {profileLabel(c.commercialProfile || "CLIENTE_FINAL")}
                     </option>

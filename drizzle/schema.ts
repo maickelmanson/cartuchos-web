@@ -1,5 +1,6 @@
-import { int, mysqlEnum, mysqlTable, text, varchar, timestamp, decimal, tinyint } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, varchar, timestamp, decimal, tinyint, boolean } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
+import { json } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -194,5 +195,33 @@ export const remanOrderUnitsRelations = relations(remanOrderUnits, ({ one }) => 
   modelo: one(cartuchodCadastro, {
     fields: [remanOrderUnits.cartuchoId],
     references: [cartuchodCadastro.id],
+  }),
+}));
+
+// ============================================================
+// Error Logs (Rastreamento de Erros)
+// ============================================================
+export const errorLogs = mysqlTable("error_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  errorType: varchar("error_type", { length: 100 }).notNull(), // ex: "FINALIZACAO_PEDIDO", "CRIAR_REMAN"
+  errorMessage: text("error_message").notNull(),
+  errorStack: text("error_stack"), // Stack trace completo
+  context: json("context"), // Contexto do erro (pedidoId, clienteId, etc)
+  severity: mysqlEnum("severity", ["baixa", "media", "alta", "critica"]).default("media").notNull(),
+  resolved: boolean("resolved").default(false).notNull(),
+  resolvedAt: timestamp("resolved_at"),
+  resolvedBy: int("resolved_by"), // userId que resolveu
+  notes: text("notes"), // Notas sobre a resolução
+  criadoEm: timestamp("criado_em").defaultNow().notNull(),
+  atualizadoEm: timestamp("atualizado_em").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ErrorLog = typeof errorLogs.$inferSelect;
+export type InsertErrorLog = typeof errorLogs.$inferInsert;
+
+export const errorLogsRelations = relations(errorLogs, ({ one }) => ({
+  resolvedByUser: one(users, {
+    fields: [errorLogs.resolvedBy],
+    references: [users.id],
   }),
 }));

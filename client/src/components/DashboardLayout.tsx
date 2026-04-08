@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, ClipboardList, Package, Search, ShoppingCart, Building2, BarChart3 } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, ClipboardList, Package, Search, ShoppingCart, Building2, BarChart3, AlertCircle } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -34,6 +34,7 @@ const menuItems = [
   { icon: ClipboardList, label: "Pedidos", path: "/pedidos" },
   { icon: Package, label: "Modelo Cartucho", path: "/modelos" },
   { icon: BarChart3, label: "Análise de Pedidos", path: "/analise" },
+  { icon: AlertCircle, label: "Painel de Erros", path: "/erros" },
   { icon: Search, label: "Busca", path: "/busca" },
   { icon: ShoppingCart, label: "Reman - Pedidos", path: "/reman/pedidos" },
 ];

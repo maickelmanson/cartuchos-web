@@ -232,3 +232,11 @@
 
 ## Bugs Reportados (Novos - Finalização de Pedido)
 - [x] Erro ao finalizar pedido: parâmetros trocados em reman_order_items (cartucho_id recebendo texto ao invés de ID) - Corrigido: reordenados campos descriptionSnapshot e modelCodeSnapshot
+
+
+## Painel de Rastreamento de Erros
+- [x] Criar tabela error_logs no banco de dados
+- [x] Adicionar funções de registro de erros no backend
+- [x] Criar página de painel de erros com gráficos
+- [x] Integrar rastreamento ao fluxo de finalização de pedidos
+- [x] Testar e validar funcionalidade
