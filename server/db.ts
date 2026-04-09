@@ -196,7 +196,12 @@ export async function listarPedidos() {
   })
     .from(pedidos)
     .leftJoin(clientes, eq(pedidos.clienteId, clientes.id))
-    .orderBy(desc(pedidos.id));
+    .orderBy(
+      // Pedidos abertos ("Aberto") aparecem primeiro
+      sql`CASE WHEN ${pedidos.status} = 'Aberto' THEN 0 ELSE 1 END`,
+      // Depois ordena por ID descendente (mais recentes primeiro)
+      desc(pedidos.id)
+    );
 }
 
 export async function buscarPedido(id: number) {
@@ -578,7 +583,12 @@ export async function listarRemanOrders() {
   })
     .from(remanOrders)
     .leftJoin(clientes, eq(remanOrders.clienteId, clientes.id))
-    .orderBy(desc(remanOrders.id));
+    .orderBy(
+      // Pedidos abertos ("Aberto") aparecem primeiro
+      sql`CASE WHEN ${remanOrders.status} = 'Aberto' THEN 0 ELSE 1 END`,
+      // Depois ordena por ID descendente (mais recentes primeiro)
+      desc(remanOrders.id)
+    );
 }
 
 export async function buscarRemanOrder(id: number) {
