@@ -261,3 +261,12 @@
 ### Melhorias no Fluxo de Impressão/PDF
 - [x] Corrigir exibição do nome completo do cartucho no PDF (atualmente sai abreviado) — Tabela modificada para exibir modelo01 (descrição completa)
 - [x] Garantir que descrição completa do produto apareça na impressão/PDF — Implementado com flex-col para mostrar código e descrição
+
+
+## Testes de Validação - Duplicidade de Clientes
+- [x] Teste: Validação de duplicidade de clientes (8 testes passando)
+- [x] Teste: Campo telefone2 existe na tabela
+- [x] Teste: Clientes com nomes diferentes podem ter mesmo telefone
+- [x] Teste: Validação baseada em NOME, não em telefone
+- [x] Migration: Campo telefone2 adicionado com sucesso ao banco
+- [x] Total de testes: 49 passando (7 arquivos de teste)
