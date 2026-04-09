@@ -175,6 +175,20 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         const { id, ...data } = input;
+        
+        // Validar duplicidade: verificar se novo nome ja existe em outro cliente
+        const db = await getDb();
+        if (db && data.nome) {
+          const existente = await db.select().from(clientes)
+            .where(eq(clientes.nome, data.nome))
+            .limit(1);
+          
+          // Se existe e o ID eh diferente, eh duplicado
+          if (existente.length > 0 && existente[0].id !== id) {
+            throw new Error(`Cliente com nome "${data.nome}" ja existe no sistema.`);
+          }
+        }
+        
         return atualizarCliente(id, data);
       }),
 

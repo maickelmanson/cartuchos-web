@@ -270,3 +270,11 @@
 - [x] Teste: Validação baseada em NOME, não em telefone
 - [x] Migration: Campo telefone2 adicionado com sucesso ao banco
 - [x] Total de testes: 49 passando (7 arquivos de teste)
+
+
+## Edição de Cliente (Nova Funcionalidade)
+- [x] Atualizar ModalCliente para modo edição com dados pré-preenchidos — Já estava implementado
+- [x] Adicionar validação de duplicidade ao atualizar cliente — Validação adicionada ao procedure atualizar
+- [x] Implementar botão Editar na página ClienteDetalhe — Já estava implementado
+- [x] Criar testes para edição de cliente — 7 testes criados e passando
+- [x] Testar fluxo completo — Todos os 56 testes passando (8 arquivos)
