@@ -286,3 +286,9 @@
 - [x] Fazer sidebar fechar ao clicar em um item de menu — Implementado para desktop e mobile
 - [x] Adicionar animação de transição — Já estava implementada (collapsible="icon")
 - [x] Testar fluxo completo — Funcionando corretamente
+
+
+## Correção de Exibição de Cartucho na Impressão
+- [x] Corrigir nome abreviado do cartucho na tabela de produtos da impressão do Reman Pedido — Prioriza descriptionSnapshot
+- [x] Exibir nome completo (modelo01) em vez de abreviado (modelo02) na tabela "Produto" — Implementado
+- [x] Validar que a tabela "Cartuchos Funcionando" continua exibindo corretamente — Usa modelo02 (código abreviado)
