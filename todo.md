@@ -298,3 +298,10 @@
 - [x] Manter pedidos não finalizados no topo da lista — Implementado com CASE WHEN
 - [x] Aplicar em Pedidos e Reman Pedidos — Ambas as funções modificadas
 - [x] Ordenar por status (aberto primeiro) depois por data — Pedidos "Aberto" aparecem primeiro, depois por ID desc
+
+
+## Destaque Visual de Pedidos Abertos (Nova Funcionalidade)
+- [x] Adicionar ícone para pedidos abertos — AlertCircle adicionado
+- [x] Adicionar cor de fundo ou borda para pedidos abertos — Fundo amber-50 com hover amber-100
+- [x] Aplicar em página Pedidos — Implementado
+- [x] Aplicar em página Reman - Pedidos — Implementado

@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Search, Trash2, ExternalLink } from "lucide-react";
+import { Plus, Search, Trash2, ExternalLink, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 const statusLabel: Record<string, string> = {
@@ -139,10 +139,19 @@ export default function RemanPedidos() {
                 pedidosFiltrados.map((p: any) => (
                   <tr
                     key={p.id}
-                    className="border-b hover:bg-muted/50 cursor-pointer"
+                    className={`border-b cursor-pointer ${
+                      p.status === "finalizado" || p.status === "cancelado"
+                        ? "hover:bg-muted/50"
+                        : "bg-amber-50 hover:bg-amber-100"
+                    }`}
                     onClick={() => setLocation(`/reman/pedidos/${p.id}`)}
                   >
-                    <td className="px-4 py-3 font-mono font-bold">{p.orderNumber}</td>
+                    <td className="px-4 py-3 font-mono font-bold flex items-center gap-2">
+                      {p.status !== "finalizado" && p.status !== "cancelado" && (
+                        <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                      )}
+                      {p.orderNumber}
+                    </td>
                     <td className="px-4 py-3">{p.clienteNome || "-"}</td>
                     <td className="px-4 py-3">
                       <span className={`text-xs px-2 py-1 rounded ${p.commercialProfileSnapshot === "REVENDA" ? "bg-purple-100 text-purple-800" : "bg-gray-100 text-gray-800"}`}>
