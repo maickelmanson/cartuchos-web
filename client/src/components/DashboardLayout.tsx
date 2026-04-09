@@ -198,7 +198,10 @@ function DashboardLayoutContent({
                       isActive={isActive}
                       onClick={() => {
                         setLocation(item.path);
-                        if (isMobile) toggleSidebar();
+                        // Fechar sidebar ao clicar em item de menu (mobile e desktop)
+                        if (isCollapsed === false) {
+                          toggleSidebar();
+                        }
                       }}
                       tooltip={item.label}
                       className={`h-10 transition-all font-normal`}

@@ -278,3 +278,11 @@
 - [x] Implementar botão Editar na página ClienteDetalhe — Já estava implementado
 - [x] Criar testes para edição de cliente — 7 testes criados e passando
 - [x] Testar fluxo completo — Todos os 56 testes passando (8 arquivos)
+
+
+## Sidebar Retrátil (Nova Funcionalidade)
+- [x] Adicionar estado de sidebar aberto/fechado — Já estava implementado no DashboardLayout
+- [x] Implementar botão toggle para abrir/fechar sidebar — Já estava implementado
+- [x] Fazer sidebar fechar ao clicar em um item de menu — Implementado para desktop e mobile
+- [x] Adicionar animação de transição — Já estava implementada (collapsible="icon")
+- [x] Testar fluxo completo — Funcionando corretamente
