@@ -1,5 +1,7 @@
 # Project TODO
 
+**Última Atualização:** 09/04/2026 - 11:43 | **Versão:** 1.0 | **Status:** 100% Funcional
+
 ## Banco de Dados
 - [x] Tabela users (auth)
 - [x] Tabela cartuchos_cadastro
@@ -305,3 +307,9 @@
 - [x] Adicionar cor de fundo ou borda para pedidos abertos — Fundo amber-50 com hover amber-100
 - [x] Aplicar em página Pedidos — Implementado
 - [x] Aplicar em página Reman - Pedidos — Implementado
+
+
+## Scripts de Automação
+- [x] update-timestamps.mjs - Atualiza automaticamente data/hora em README.md, próximas melhorias e todo.md
+  - Uso: `node update-timestamps.mjs`
+  - Formato: d/m/a - hh:mm
