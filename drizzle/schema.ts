@@ -33,6 +33,7 @@ export const clientes = mysqlTable("clientes", {
   id: int("id").autoincrement().primaryKey(),
   nome: text("nome").notNull(),
   telefone: varchar("telefone", { length: 20 }),
+  telefone2: varchar("telefone2", { length: 20 }),
   endereco: text("endereco"),
   cpf: varchar("cpf", { length: 14 }),
   cnpj: varchar("cnpj", { length: 18 }),

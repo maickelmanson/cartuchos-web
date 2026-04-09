@@ -28,7 +28,7 @@ export default function ClienteDetalhe({ params }: Props) {
 
   const handleSalvarPedido = async (clienteId: number, cartuchos?: any[]) => {
     try {
-      const pedido = await criarPedidoMutation.mutateAsync({ clienteId });
+      const pedido = await criarPedidoMutation.mutateAsync({ clienteId, cartuchos });
       setModalNovoPedidoAberto(false);
       // Navegar para o pedido criado
       if (pedido && pedido.id) {
@@ -38,6 +38,7 @@ export default function ClienteDetalhe({ params }: Props) {
       }
     } catch (error) {
       console.error("Erro ao criar pedido:", error);
+      alert("Erro ao criar pedido: " + (error instanceof Error ? error.message : "Erro desconhecido"));
     }
   };
 
@@ -64,12 +65,12 @@ export default function ClienteDetalhe({ params }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <Button variant="ghost" size="sm" onClick={() => setLocation("/clientes")}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div>
-            <h1 className="text-3xl font-bold">{cliente.nome}</h1>
+          <div className="min-w-0">
+            <h1 className="text-3xl font-bold break-words">{cliente.nome}</h1>
             <p className="text-muted-foreground">Cliente desde {new Date(cliente.criadoEm).toLocaleDateString()}</p>
           </div>
         </div>

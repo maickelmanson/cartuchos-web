@@ -19,7 +19,7 @@ interface Props {
 }
 
 interface CartuchodoFormulario {
-  id: string; // ID único para evitar problemas com keys do React
+  id: string;
   cartuchodId: string;
   codigo: string;
   pesoCheagada: string;
@@ -29,15 +29,12 @@ interface CartuchodoFormulario {
 }
 
 const formatarPeso = (valor: string) => {
-  // Remove tudo que não é número
   const apenasNumeros = valor.replace(/\D/g, "");
   
-  // Se tem menos de 3 dígitos, retorna como está
   if (apenasNumeros.length <= 2) {
     return apenasNumeros;
   }
   
-  // Formata com virgula após 2 dígitos
   const parte1 = apenasNumeros.slice(0, -2);
   const parte2 = apenasNumeros.slice(-2);
   return `${parte1},${parte2}`;
@@ -52,6 +49,8 @@ const converterPesoParaNumero = (peso: string): number | undefined => {
 
 export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
   const [clienteId, setClienteId] = useState<string>("");
+  const [buscaCliente, setBuscaCliente] = useState<string>("");
+  const [clienteSelecionado, setClienteSelecionado] = useState<any>(null);
   const [cartuchos, setCartuchos] = useState<CartuchodoFormulario[]>([]);
   const [novoCartucho, setNovoCartucho] = useState<CartuchodoFormulario>({
     id: "",
@@ -66,12 +65,21 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
   const clientesQuery = trpc.clientes.listar.useQuery();
   const cartuchosQuery = trpc.cartuchos.listar.useQuery();
 
+  const clientesFiltrados = clientesQuery.data?.filter(c => 
+    c.nome.toUpperCase().includes(buscaCliente.toUpperCase())
+  ) || [];
+
+  const handleSelecionarCliente = (cliente: any) => {
+    setClienteId(cliente.id.toString());
+    setClienteSelecionado(cliente);
+    setBuscaCliente(cliente.nome);
+  };
+
   const handleAdicionarCartucho = () => {
     if (!novoCartucho.codigo.trim()) {
       alert("Digite o código do cartucho.");
       return;
     }
-    // Gerar ID único para o cartucho
     const cartuchodComId = {
       ...novoCartucho,
       id: `cartucho-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -128,18 +136,34 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-sm font-medium">Cliente *</label>
-            <Select value={clienteId} onValueChange={setClienteId}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione um cliente..." />
-              </SelectTrigger>
-              <SelectContent>
-                {clientesQuery.data?.map(c => (
-                  <SelectItem key={c.id} value={c.id.toString()}>
-                    {c.nome}
-                  </SelectItem>
+            <Input
+              placeholder="Digite o nome do cliente para buscar..."
+              value={buscaCliente}
+              onChange={(e) => setBuscaCliente(e.target.value)}
+              className="mb-2"
+            />
+            {buscaCliente && clientesFiltrados.length > 0 && (
+              <div className="border rounded-md max-h-40 overflow-y-auto bg-white">
+                {clientesFiltrados.slice(0, 10).map(c => (
+                  <div
+                    key={c.id}
+                    className="p-2 hover:bg-muted cursor-pointer border-b last:border-b-0"
+                    onClick={() => handleSelecionarCliente(c)}
+                  >
+                    <div className="font-medium">{c.nome}</div>
+                    {c.telefone && <div className="text-xs text-muted-foreground">{c.telefone}</div>}
+                  </div>
                 ))}
-              </SelectContent>
-            </Select>
+              </div>
+            )}
+            {buscaCliente && clientesFiltrados.length === 0 && (
+              <div className="text-sm text-muted-foreground p-2">Nenhum cliente encontrado</div>
+            )}
+            {clienteId && (
+              <div className="text-sm text-green-600 mt-2">
+                ✓ Cliente selecionado: {clienteSelecionado?.nome}
+              </div>
+            )}
           </div>
 
           {/* Seção de Cartuchos */}
@@ -196,17 +220,17 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
                     className="h-8"
                   />
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="protegido-novo"
-                  checked={novoCartucho.protegido}
-                  onCheckedChange={(checked) => handleChangeCartucho("protegido", checked)}
-                />
-                <label htmlFor="protegido-novo" className="text-sm font-medium cursor-pointer">
-                  Protegido
-                </label>
+                <div className="flex items-end gap-2">
+                  <Checkbox
+                    id="protegido"
+                    checked={novoCartucho.protegido}
+                    onCheckedChange={(v) => handleChangeCartucho("protegido", v)}
+                  />
+                  <label htmlFor="protegido" className="text-sm font-medium cursor-pointer">
+                    Protegido
+                  </label>
+                </div>
               </div>
 
               <div>
@@ -214,18 +238,13 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
                 <Textarea
                   value={novoCartucho.observacoes}
                   onChange={(e) => handleChangeCartucho("observacoes", e.target.value)}
-                  placeholder="Observações..."
+                  placeholder="Observações sobre o cartucho..."
                   rows={2}
-                  className="text-sm"
+                  className="resize-none"
                 />
               </div>
 
-              <Button
-                type="button"
-                onClick={handleAdicionarCartucho}
-                className="w-full"
-                size="sm"
-              >
+              <Button type="button" onClick={handleAdicionarCartucho} className="w-full">
                 <Plus className="h-4 w-4 mr-2" />
                 Adicionar Cartucho
               </Button>
@@ -233,13 +252,15 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
 
             {/* Lista de cartuchos adicionados */}
             {cartuchos.length > 0 && (
-              <div className="space-y-2 mb-4">
-                <p className="text-sm font-medium">Cartuchos Adicionados ({cartuchos.length})</p>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm">Cartuchos adicionados ({cartuchos.length})</h4>
                 {cartuchos.map((c) => (
                   <div key={c.id} className="flex items-center justify-between bg-muted p-2 rounded text-sm">
                     <div>
-                      <span className="font-mono">{c.codigo}</span>
-                      {c.pesoCheagada && <span className="ml-2">→ {c.pesoCheagada}kg</span>}
+                      <div className="font-medium">{c.codigo}</div>
+                      <div className="text-xs text-muted-foreground">
+                        Chegada: {c.pesoCheagada || "-"} | Saída: {c.pesoSaida || "-"}
+                      </div>
                     </div>
                     <Button
                       type="button"
@@ -247,7 +268,7 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
                       size="sm"
                       onClick={() => handleRemoverCartucho(c.id)}
                     >
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 ))}
@@ -255,11 +276,11 @@ export default function ModalNovoPedido({ onSalvar, onFechar }: Props) {
             )}
           </div>
 
-          <div className="flex gap-2 justify-end border-t pt-4">
+          <div className="flex gap-2 justify-end pt-4 border-t">
             <Button type="button" variant="outline" onClick={onFechar}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={!clienteId}>
+            <Button type="submit">
               Criar Pedido
             </Button>
           </div>

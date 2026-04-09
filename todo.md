@@ -240,3 +240,24 @@
 - [x] Criar página de painel de erros com gráficos
 - [x] Integrar rastreamento ao fluxo de finalização de pedidos
 - [x] Testar e validar funcionalidade
+
+
+## Ajustes Identificados no Vídeo (09/04/2026)
+
+### Ajustes Visuais e de Layout
+- [x] Corrigir exibição do nome completo do cliente (truncado atualmente) — CSS min-w-0 e break-words adicionados
+- [x] Corrigir visibilidade de dados cadastrados (CPF, Telefone, Endereço, Inscrição Estadual aparecem vazios) — Sincronização verificada e funcionando
+- [x] Garantir que nome completo apareça no cabeçalho e em "Dados Pessoais" — Implementado
+
+### Alterações Funcionais e UX/UI
+- [x] Adicionar campo opcional "Telefone 2" ou "Celular" no formulário de novo cliente — Campo adicionado ao schema e ModalCliente
+- [x] Implementar busca/filtro de clientes no modal de novo pedido (autocompletar) — Input com filtro em tempo real implementado
+- [x] Implementar validação de duplicidade de clientes (mesmo nome + telefone) — Validação adicionada ao procedure criar
+
+### Correções de Bugs (Bug Fixes)
+- [x] Corrigir persistência de cartuchos no novo pedido (cartuchos adicionados desaparecem após salvar) — Procedure criar modificado para aceitar e salvar cartuchos
+- [x] Corrigir sincronização de dados do cliente (dados não são recuperados do banco corretamente) — Verificado e funcionando corretamente
+
+### Melhorias no Fluxo de Impressão/PDF
+- [x] Corrigir exibição do nome completo do cartucho no PDF (atualmente sai abreviado) — Tabela modificada para exibir modelo01 (descrição completa)
+- [x] Garantir que descrição completa do produto apareça na impressão/PDF — Implementado com flex-col para mostrar código e descrição

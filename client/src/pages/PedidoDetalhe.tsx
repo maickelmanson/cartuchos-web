@@ -307,7 +307,10 @@ export default function PedidoDetalhe({ params }: Props) {
                         className={`px-4 py-2 font-semibold ${!isFinalizado ? "cursor-pointer hover:underline" : ""}`}
                         onClick={() => { if (!isFinalizado) { setCartuchoditando(c); setModalAberto(true); } }}
                       >
-                        {c.modelo02 || "-"}
+                        <div className="flex flex-col">
+                          <span>{c.modelo02 || "-"}</span>
+                          <span className="text-xs text-muted-foreground">{c.modelo01 || ""}</span>
+                        </div>
                       </td>
                       <td className="px-4 py-2 font-mono">{c.codigo || "-"}</td>
                       <td className="px-4 py-2">

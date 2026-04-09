@@ -15,6 +15,13 @@
       "when": 1775683451936,
       "tag": "0001_reflective_spacker_dave",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1775704148176,
+      "tag": "0002_giant_miracleman",
+      "breakpoints": true
     }
   ]
 }

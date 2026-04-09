@@ -21,6 +21,7 @@ export default function ModalCliente({ cliente, onSalvar, onFechar }: Props) {
   const [form, setForm] = useState({
     nome: "",
     telefone: "",
+    telefone2: "",
     endereco: "",
     cpf: "",
     cnpj: "",
@@ -34,6 +35,7 @@ export default function ModalCliente({ cliente, onSalvar, onFechar }: Props) {
       setForm({
         nome: cliente.nome || "",
         telefone: cliente.telefone || "",
+        telefone2: cliente.telefone2 || "",
         endereco: cliente.endereco || "",
         cpf: cliente.cpf || "",
         cnpj: cliente.cnpj || "",
@@ -53,7 +55,7 @@ export default function ModalCliente({ cliente, onSalvar, onFechar }: Props) {
       valorFormatado = mascaraCPF(value);
     } else if (name === "cnpj") {
       valorFormatado = mascaraCNPJ(value);
-    } else if (name === "telefone") {
+    } else if (name === "telefone" || name === "telefone2") {
       valorFormatado = mascaraTelefone(value);
     } else if (name !== "observacoes") {
       // Maiúsculas para todos os campos exceto observações
@@ -117,7 +119,17 @@ export default function ModalCliente({ cliente, onSalvar, onFechar }: Props) {
                 name="telefone"
                 value={form.telefone}
                 onChange={handleChange}
-                placeholder="TELEFONE"
+                placeholder="(11) 99999-9999"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium">Celular / Telefone 2</label>
+              <Input
+                name="telefone2"
+                value={form.telefone2}
+                onChange={handleChange}
+                placeholder="(11) 99999-9999"
               />
             </div>
 

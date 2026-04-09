@@ -138,6 +138,7 @@ export const appRouter = router({
       .input(z.object({
         nome: z.string().min(1),
         telefone: z.string().optional(),
+        telefone2: z.string().optional(),
         endereco: z.string().optional(),
         cpf: z.string().optional(),
         cnpj: z.string().optional(),
@@ -146,6 +147,16 @@ export const appRouter = router({
         observacoes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
+        // Validar duplicidade: mesmo nome
+        const db = await getDb();
+        if (db && input.nome) {
+          const existente = await db.select().from(clientes)
+            .where(eq(clientes.nome, input.nome))
+            .limit(1);
+          if (existente.length > 0) {
+            throw new Error(`Cliente com nome "${input.nome}" já existe no sistema.`);
+          }
+        }
         return criarCliente(input);
       }),
 
@@ -154,6 +165,7 @@ export const appRouter = router({
         id: z.number(),
         nome: z.string().min(1),
         telefone: z.string().optional(),
+        telefone2: z.string().optional(),
         endereco: z.string().optional(),
         cpf: z.string().optional(),
         cnpj: z.string().optional(),
@@ -196,13 +208,38 @@ export const appRouter = router({
     criar: protectedProcedure
       .input(z.object({
         clienteId: z.number(),
+        cartuchos: z.array(z.object({
+          cartuchodId: z.string().optional(),
+          codigo: z.string(),
+          pesoCheagada: z.string().optional(),
+          pesoSaida: z.string().optional(),
+          protegido: z.boolean().optional(),
+          observacoes: z.string().optional(),
+        })).optional(),
       }))
       .mutation(async ({ input }) => {
         const numero = await obterProximoNumeroPedido();
-        return criarPedido({
+        const pedido = await criarPedido({
           numero,
           clienteId: input.clienteId,
         });
+        
+        // Salvar cartuchos do pedido se fornecidos
+        if (input.cartuchos && input.cartuchos.length > 0 && pedido.id) {
+          for (const cartucho of input.cartuchos) {
+            await adicionarCartucho({
+              pedidoId: pedido.id,
+              cartuchodId: cartucho.cartuchodId ? parseInt(cartucho.cartuchodId) : undefined,
+              codigo: cartucho.codigo,
+              pesoCheagada: cartucho.pesoCheagada,
+              pesoSaida: cartucho.pesoSaida,
+              protegido: cartucho.protegido ? 1 : 0,
+              observacoes: cartucho.observacoes,
+            });
+          }
+        }
+        
+        return pedido;
       }),
 
     finalizar: protectedProcedure
