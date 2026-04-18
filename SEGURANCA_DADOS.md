@@ -65,9 +65,6 @@ Horários de Backup (UTC):
 ```bash
 cd /home/ubuntu/cartuchos-web
 
-# Executar backup
-DATABASE_URL="mysql://5TMdM9oSN1dsoYb.root:IGy10eDUJjT9TuT7b2r6@gateway05.us-east-1.prod.aws.tidbcloud.com:4000/TEopnpqVFcFcEzDuX7X4dq?ssl={\"rejectUnauthorized\":true}" \
-node scripts/export-database.mjs
 
 # Arquivo será salvo como:
 # - database-backup-YYYYMMDDTHHMMSS.sql (com timestamp)
