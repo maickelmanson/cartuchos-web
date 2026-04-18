@@ -64,39 +64,6 @@ https://github.com/maickelmanson/cartuchos-web/blob/main/database-backup-latest.
 
 ---
 
-## 💾 Backup Manual
-
-### Opção 1: Via GitHub (Recomendado)
-
-```bash
-# Clonar repositório
-git clone https://github.com/maickelmanson/cartuchos-web.git
-
-# Acessar pasta
-cd cartuchos-web
-
-# Arquivo de backup está em:
-cat database-backup-latest.sql
-```
-
-### Opção 2: Via Script Local
-
-**Pré-requisitos:**
-- Node.js 22+
-- MySQL client instalado
-
-**Executar backup:**
-```bash
-cd /home/ubuntu/cartuchos-web
-
-# Definir variáveis de ambiente
-export DATABASE_URL="mysql://5TMdM9oSN1dsoYb.root:IGy10eDUJjT9TuT7b2r6@gateway05.us-east-1.prod.aws.tidbcloud.com:4000/TEopnpqVFcFcEzDuX7X4dq?ssl={\"rejectUnauthorized\":true}"
-
-# Executar script de backup
-node scripts/export-database.mjs
-
-# Arquivo será salvo como: database-backup-latest.sql
-```
 
 ### Opção 3: Via Manus Management UI
 
