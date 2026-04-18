@@ -1,3 +1,4 @@
+import { cloudflare } from "@cloudflare/vite-plugin";
 import { jsxLocPlugin } from "@builder.io/vite-plugin-jsx-loc";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
@@ -150,7 +151,7 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+const plugins = [cloudflare(), react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
 
 export default defineConfig({
   plugins,
@@ -174,8 +175,8 @@ export default defineConfig({
       ".manuspre.computer",
       ".manus.computer",
       ".manus-asia.computer",
-      ".manuscomputer.ai",
       ".manusvm.computer",
+      ".manuscomputer.ai",
       "localhost",
       "127.0.0.1",
     ],
