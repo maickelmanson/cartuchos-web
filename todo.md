@@ -1,7 +1,5 @@
 # Project TODO
 
-**Última Atualização:** 09/04/2026 - 11:43 | **Versão:** 1.0 | **Status:** 100% Funcional
-
 ## Banco de Dados
 - [x] Tabela users (auth)
 - [x] Tabela cartuchos_cadastro
@@ -288,28 +286,3 @@
 - [x] Fazer sidebar fechar ao clicar em um item de menu — Implementado para desktop e mobile
 - [x] Adicionar animação de transição — Já estava implementada (collapsible="icon")
 - [x] Testar fluxo completo — Funcionando corretamente
-
-
-## Correção de Exibição de Cartucho na Impressão
-- [x] Corrigir nome abreviado do cartucho na tabela de produtos da impressão do Reman Pedido — Prioriza descriptionSnapshot
-- [x] Exibir nome completo (modelo01) em vez de abreviado (modelo02) na tabela "Produto" — Implementado
-- [x] Validar que a tabela "Cartuchos Funcionando" continua exibindo corretamente — Usa modelo02 (código abreviado)
-
-
-## Ordenação de Pedidos (Nova Funcionalidade)
-- [x] Manter pedidos não finalizados no topo da lista — Implementado com CASE WHEN
-- [x] Aplicar em Pedidos e Reman Pedidos — Ambas as funções modificadas
-- [x] Ordenar por status (aberto primeiro) depois por data — Pedidos "Aberto" aparecem primeiro, depois por ID desc
-
-
-## Destaque Visual de Pedidos Abertos (Nova Funcionalidade)
-- [x] Adicionar ícone para pedidos abertos — AlertCircle adicionado
-- [x] Adicionar cor de fundo ou borda para pedidos abertos — Fundo amber-50 com hover amber-100
-- [x] Aplicar em página Pedidos — Implementado
-- [x] Aplicar em página Reman - Pedidos — Implementado
-
-
-## Scripts de Automação
-- [x] update-timestamps.mjs - Atualiza automaticamente data/hora em README.md, próximas melhorias e todo.md
-  - Uso: `node update-timestamps.mjs`
-  - Formato: d/m/a - hh:mm

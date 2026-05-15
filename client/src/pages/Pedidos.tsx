@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Plus, Search, Trash2, AlertCircle } from "lucide-react";
+import { Plus, Search, Trash2 } from "lucide-react";
 import ModalNovoPedido from "@/components/ModalNovoPedido";
 
 export default function Pedidos() {
@@ -110,19 +110,10 @@ export default function Pedidos() {
                 pedidosFiltrados.map(p => (
                   <tr 
                     key={p.id} 
-                    className={`border-b cursor-pointer ${
-                      p.status === "finalizado" 
-                        ? "hover:bg-muted/50" 
-                        : "bg-amber-50 hover:bg-amber-100"
-                    }`}
+                    className="border-b hover:bg-muted/50 cursor-pointer"
                     onClick={() => setLocation(`/pedidos/${p.id}`)}
                   >
-                    <td className="px-4 py-3 font-mono font-bold flex items-center gap-2">
-                      {p.status !== "finalizado" && (
-                        <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0" />
-                      )}
-                      #{p.numero}
-                    </td>
+                    <td className="px-4 py-3 font-mono font-bold">#{p.numero}</td>
                     <td className="px-4 py-3">{p.clienteNome || "-"}</td>
                     <td className="px-4 py-3 text-sm">{new Date(p.dataCriacao).toLocaleDateString()}</td>
                     <td className="px-4 py-3 text-sm">{p.dataFinalizacao ? new Date(p.dataFinalizacao).toLocaleDateString() : "-"}</td>

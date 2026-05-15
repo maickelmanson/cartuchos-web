@@ -52,16 +52,12 @@ export default function RemanPedidoImpressao() {
   // Agrupar produtos: apenas itens com quantidade > 0 (funcionando)
   const produtosAgrupados = (items || [])
     .filter(item => item.quantity > 0)
-    .map(item => {
-      // Priorizar descriptionSnapshot (nome completo), depois modelo01, depois fallback
-      const nomeCompleto = item.descriptionSnapshot || item.modelo01 || "SEM MODELO";
-      return {
-        modelo: nomeCompleto,
-        quantidade: item.quantity,
-        valorUnit: parseFloat(item.unitPrice || "0"),
-        total: parseFloat(item.lineTotal || "0"),
-      };
-    });
+    .map(item => ({
+      modelo: item.modelo01 || item.descriptionSnapshot || "SEM MODELO",
+      quantidade: item.quantity,
+      valorUnit: parseFloat(item.unitPrice || "0"),
+      total: parseFloat(item.lineTotal || "0"),
+    }));
 
   const handlePrint = () => {
     window.print();
