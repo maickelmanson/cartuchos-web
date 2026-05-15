@@ -61,7 +61,7 @@ jobs:
       
       - name: Upload backup as artifact
         if: steps.check_changes.outputs.changed == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: database-backups
           path: backups-*.tar.gz

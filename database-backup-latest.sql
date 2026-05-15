@@ -1,35 +1,18 @@
--- MySQL dump 10.13  Distrib 8.0.45, for Linux (x86_64)
---
--- Host: gateway05.us-east-1.prod.aws.tidbcloud.com    Database: TEopnpqVFcFcEzDuX7X4dq
--- ------------------------------------------------------
--- Server version	8.0.11-TiDB-v8.5.3-serverless
+-- ============================================================
+-- Database Backup: Cartuchos Web
+-- Generated: 2026-04-06T12:25:09.375Z
+-- ============================================================
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET FOREIGN_KEY_CHECKS=0;
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
---
--- Current Database: `TEopnpqVFcFcEzDuX7X4dq`
---
 
-CREATE DATABASE IF NOT EXISTS `TEopnpqVFcFcEzDuX7X4dq` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-
-USE `TEopnpqVFcFcEzDuX7X4dq`;
-
---
--- Table structure for table `__drizzle_migrations`
---
+-- ============================================================
+-- Table: __drizzle_migrations
+-- ============================================================
 
 DROP TABLE IF EXISTS `__drizzle_migrations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `__drizzle_migrations` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `hash` text NOT NULL,
@@ -37,25 +20,17 @@ CREATE TABLE `__drizzle_migrations` (
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=664871;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `__drizzle_migrations`
---
+-- Insert data
+INSERT INTO `__drizzle_migrations` (`id`, `hash`, `created_at`) VALUES (1, '814a08e40d7fc2bcfd458759d18319198ca8ae394f2fa15617a78678e9c9c93b', 1774458731025);
 
-LOCK TABLES `__drizzle_migrations` WRITE;
-/*!40000 ALTER TABLE `__drizzle_migrations` DISABLE KEYS */;
-INSERT INTO `__drizzle_migrations` VALUES (1,'814a08e40d7fc2bcfd458759d18319198ca8ae394f2fa15617a78678e9c9c93b',1774458731025);
-/*!40000 ALTER TABLE `__drizzle_migrations` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `cartridge_models`
---
+-- ============================================================
+-- Table: cartridge_models
+-- ============================================================
 
 DROP TABLE IF EXISTS `cartridge_models`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `cartridge_models` (
   `id` int NOT NULL AUTO_INCREMENT,
   `brand` varchar(100) NOT NULL,
@@ -72,25 +47,18 @@ CREATE TABLE `cartridge_models` (
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,
   UNIQUE KEY `cartridge_models_model_code_unique` (`model_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=30001;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `cartridge_models`
---
+-- Insert data
+INSERT INTO `cartridge_models` (`id`, `brand`, `model_code`, `description`, `color`, `active`, `price_final_customer`, `price_reseller`, `cost_price`, `notes`, `criado_em`, `atualizado_em`) VALUES (1, 'EPS', 'EPS 667 BK', 'EPS 667 BK REMANUFATURADO COM 14ML DE TINTA', 'PRETO', 1, '45.00', '28.00', NULL, NULL, Wed Mar 25 2026 18:16:21 GMT-0400 (Eastern Daylight Time), Wed Mar 25 2026 18:16:21 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `cartridge_models` (`id`, `brand`, `model_code`, `description`, `color`, `active`, `price_final_customer`, `price_reseller`, `cost_price`, `notes`, `criado_em`, `atualizado_em`) VALUES (2, 'EPS', 'EPS 667 CL', 'EPS 667 CL REMANUFATURADO COM 10ML DE TINTA', NULL, 1, '45.00', '28.00', NULL, NULL, Wed Mar 25 2026 18:17:18 GMT-0400 (Eastern Daylight Time), Wed Mar 25 2026 18:17:18 GMT-0400 (Eastern Daylight Time));
 
-LOCK TABLES `cartridge_models` WRITE;
-/*!40000 ALTER TABLE `cartridge_models` DISABLE KEYS */;
-INSERT INTO `cartridge_models` VALUES (1,'EPS','EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA','PRETO',1,45.00,28.00,NULL,NULL,'2026-03-25 18:16:21','2026-03-25 18:16:21'),(2,'EPS','EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',NULL,1,45.00,28.00,NULL,NULL,'2026-03-25 18:17:18','2026-03-25 18:17:18');
-/*!40000 ALTER TABLE `cartridge_models` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `cartuchos_cadastro`
---
+-- ============================================================
+-- Table: cartuchos_cadastro
+-- ============================================================
 
 DROP TABLE IF EXISTS `cartuchos_cadastro`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `cartuchos_cadastro` (
   `id` int NOT NULL AUTO_INCREMENT,
   `modelo_01` text NOT NULL,
@@ -99,26 +67,28 @@ CREATE TABLE `cartuchos_cadastro` (
   `price_final_customer` decimal(10,2) DEFAULT NULL,
   `price_reseller` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=420001;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=150001;
 
---
--- Dumping data for table `cartuchos_cadastro`
---
+-- Insert data
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (1, 'EPS 667 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS 667 BK', Wed Mar 25 2026 19:34:30 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (2, 'EPS 667 CL REMANUFATURADO COM 10ML DE TINTA', 'EPS 667 CL', Wed Mar 25 2026 19:34:51 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (30001, 'EPS 122 CL REMANUFATURADO COM 10ML DE TINTA', 'EPS 122 CL', Mon Mar 30 2026 12:50:32 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (30002, 'EPS 122 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS 122 BK', Mon Mar 30 2026 12:55:34 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (30003, 'EPS PG140 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS PG140 BK', Mon Mar 30 2026 13:02:26 GMT-0400 (Eastern Daylight Time), '55.00', '40.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (60001, 'EPS 664 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS 664 BK', Tue Mar 31 2026 14:20:45 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (90001, 'EPS 664 CL REMANUFATURADO COM 10ML DE TINTA', 'EPS 664 CL', Tue Mar 31 2026 16:00:14 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (90002, 'EPS 21 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS 21 BK', Tue Mar 31 2026 16:05:22 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (120001, 'EPS 22 CL REMANUFATURADO COM 10ML DE TINTA', 'EPS 22 CL', Thu Apr 02 2026 11:48:58 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (120002, 'EPS 662 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS 662 BK', Thu Apr 02 2026 11:52:19 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
+INSERT INTO `cartuchos_cadastro` (`id`, `modelo_01`, `modelo_02`, `criado_em`, `price_final_customer`, `price_reseller`) VALUES (120003, 'EPS 662 CL REMANUFATURADO COM 10ML DE TINTA', 'EPS 662 CL', Thu Apr 02 2026 12:04:32 GMT-0400 (Eastern Daylight Time), '45.00', '28.00');
 
-LOCK TABLES `cartuchos_cadastro` WRITE;
-/*!40000 ALTER TABLE `cartuchos_cadastro` DISABLE KEYS */;
-INSERT INTO `cartuchos_cadastro` VALUES (1,'EPS 667 BK REMANUFATURADO COM 14ML DE TINTA','EPS 667 BK','2026-03-25 19:34:30',45.00,28.00),(2,'EPS 667 CL REMANUFATURADO COM 10ML DE TINTA','EPS 667 CL','2026-03-25 19:34:51',45.00,28.00),(30001,'EPS 122 CL REMANUFATURADO COM 10ML DE TINTA','EPS 122 CL','2026-03-30 12:50:32',45.00,28.00),(30002,'EPS 122 BK REMANUFATURADO COM 14ML DE TINTA','EPS 122 BK','2026-03-30 12:55:34',45.00,28.00),(30003,'EPS PG140 BK REMANUFATURADO COM 14ML DE TINTA','EPS PG140 BK','2026-03-30 13:02:26',55.00,40.00),(60001,'EPS 664 BK REMANUFATURADO COM 14ML DE TINTA','EPS 664 BK','2026-03-31 14:20:45',45.00,28.00),(90001,'EPS 664 CL REMANUFATURADO COM 10ML DE TINTA','EPS 664 CL','2026-03-31 16:00:14',45.00,28.00),(90002,'EPS 21 BK REMANUFATURADO COM 14ML DE TINTA','EPS 21 BK','2026-03-31 16:05:22',45.00,28.00),(120001,'EPS 22 CL REMANUFATURADO COM 10ML DE TINTA','EPS 22 CL','2026-04-02 11:48:58',45.00,28.00),(120002,'EPS 662 BK REMANUFATURADO COM 14ML DE TINTA','EPS 662 BK','2026-04-02 11:52:19',45.00,28.00),(120003,'EPS 662 CL REMANUFATURADO COM 10ML DE TINTA','EPS 662 CL','2026-04-02 12:04:32',45.00,28.00),(150001,'EPS 122 CL REMANUFATURADO COM CARCAÇA E 10ML DE TINTA','EPS 122 CL C/ CARCAÇA','2026-04-08 18:25:12',90.00,70.00),(180001,'EPS 60 CL REMANUFATURADO COM 10ML DE TINTA','EPS 60 CL','2026-04-09 15:54:03',45.00,28.00),(180002,'EPS 60 BK REMANUFATURADO COM 10ML DE TINTA','EPS 60 BK','2026-04-09 15:54:25',45.00,28.00),(210001,'EPS CL146 CL REMANUFATURADO COM 10ML DE TINTA','EPS CL146 CL','2026-04-22 17:44:02',55.00,40.00),(210002,'HP 664 COLOR ORIGINAL 2ML','HP 664 COLOR ORIGINAL 2ML','2026-04-22 17:58:35',119.90,NULL),(240001,'HP 667 BLACK ORIGINAL 2ML DE TINTA','HP 667 BLACK ORIGINAL 2ML','2026-04-24 17:54:16',129.90,NULL),(300002,'EPS 122 BK COM CARCAÇA REMANUF. COM 14ML DE TINTA','EPS 122 BK COM CARCAÇA','2026-04-25 11:05:27',90.00,70.00),(330001,'EPS 664 BK C/ CARCAÇA REMANUF. COM 14ML DE TINTA','EPS 664 BK C/ CARCAÇA REMANUF.','2026-04-25 12:22:12',90.00,70.00),(360001,'EPS 75 BK REMANUF. COM 14ML DE TINTA','EPS 75 BK','2026-04-25 14:47:42',45.00,35.00),(360002,'EPS 75 CL REMANUF. COM 10ML DE TINTA','EPS 75 CL','2026-04-25 14:48:12',45.00,35.00),(390001,'EPS 668 BK REMANUF. COM 14ML DE TINTA','EPS 668 BK','2026-04-28 19:32:25',45.00,35.00),(390002,'EPS 668 CL REMANUF. COM 10ML DE TINTA','EPS 668 CL','2026-04-28 19:33:02',45.00,35.00);
-/*!40000 ALTER TABLE `cartuchos_cadastro` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `clientes`
---
+-- ============================================================
+-- Table: clientes
+-- ============================================================
 
 DROP TABLE IF EXISTS `clientes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `clientes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nome` text NOT NULL,
@@ -130,64 +100,29 @@ CREATE TABLE `clientes` (
   `observacoes` text DEFAULT NULL,
   `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `commercial_profile` enum('CLIENTE_FINAL','REVENDA') NOT NULL DEFAULT 'CLIENTE_FINAL',
-  `telefone2` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=1380001;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=180001;
 
---
--- Dumping data for table `clientes`
---
+-- Insert data
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (30001, 'MAICKEL', '', '', '', '', '', '', Wed Mar 25 2026 19:37:32 GMT-0400 (Eastern Daylight Time), 'CLIENTE_FINAL');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (60001, 'JULIANO CARDOSO', '(51) 99651-1459', '', '', '', '', '', Mon Mar 30 2026 12:49:21 GMT-0400 (Eastern Daylight Time), 'CLIENTE_FINAL');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (60002, 'GEPEL', '', '', '', '', '', '', Mon Mar 30 2026 12:50:46 GMT-0400 (Eastern Daylight Time), 'REVENDA');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (60003, 'RENÉSIO JAHNKE', '(51)997256342', '', '', '', '', '', Mon Mar 30 2026 13:00:46 GMT-0400 (Eastern Daylight Time), 'CLIENTE_FINAL');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (60004, 'ANDERSON GRAEBNER', '(51)999126142', '', '', '', '', '', Mon Mar 30 2026 13:05:57 GMT-0400 (Eastern Daylight Time), 'CLIENTE_FINAL');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (90001, 'AMANDA MACHADO DA SILVA', '(51) 99702-2106', 'RUA JULIO DE CASTILHOS, 380', '', '', '', '', Mon Mar 30 2026 18:07:37 GMT-0400 (Eastern Daylight Time), 'CLIENTE_FINAL');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (120001, 'JOSEANE ELIS SCHAEFERR', '(51) 998850919', 'RUA 7 DE SETEMBRO 327 APTO 403 - CENTRO - SANTA CRUZ DO SUL', '', '', '', '', Tue Mar 31 2026 14:19:11 GMT-0400 (Eastern Daylight Time), 'CLIENTE_FINAL');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (150001, 'SINDILOJAS', '(51)', '', '', '', '', '', Tue Mar 31 2026 15:56:01 GMT-0400 (Eastern Daylight Time), 'CLIENTE_FINAL');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (150002, 'SERGIO BAMPI', '(51)998377857', '', '', '', '', '', Tue Mar 31 2026 15:57:13 GMT-0400 (Eastern Daylight Time), 'CLIENTE_FINAL');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (150003, 'INFOCELL (EVANDRO)', '(51)999059723', '', '', '', '', '', Tue Mar 31 2026 16:02:32 GMT-0400 (Eastern Daylight Time), 'REVENDA');
+INSERT INTO `clientes` (`id`, `nome`, `telefone`, `endereco`, `cpf`, `cnpj`, `inscricao_estadual`, `observacoes`, `criado_em`, `commercial_profile`) VALUES (150004, 'RANGEL THOMAS', '999999999', '', '', '', '', '', Tue Mar 31 2026 16:13:03 GMT-0400 (Eastern Daylight Time), 'CLIENTE_FINAL');
 
-LOCK TABLES `clientes` WRITE;
-/*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (60001,'JULIANO CARDOSO','(51) 99651-1459','','','','','','2026-03-30 12:49:21','CLIENTE_FINAL',NULL),(60002,'GEPEL','','','','','','','2026-03-30 12:50:46','REVENDA',NULL),(60003,'RENÉSIO JAHNKE','(51)997256342','','','','','','2026-03-30 13:00:46','CLIENTE_FINAL',NULL),(60004,'ANDERSON GRAEBNER','(51)999126142','','','','','','2026-03-30 13:05:57','CLIENTE_FINAL',NULL),(90001,'AMANDA MACHADO DA SILVA','(51) 99702-2106','RUA JULIO DE CASTILHOS, 380','','','','','2026-03-30 18:07:37','CLIENTE_FINAL',NULL),(120001,'JOSEANE ELIS SCHAEFERR','(51) 998850919','RUA 7 DE SETEMBRO 327 APTO 403 - CENTRO - SANTA CRUZ DO SUL','','','','','2026-03-31 14:19:11','CLIENTE_FINAL',NULL),(150001,'SINDILOJAS','(51)','','','','','','2026-03-31 15:56:01','CLIENTE_FINAL',NULL),(150002,'SERGIO BAMPI','(51)998377857','','','','','','2026-03-31 15:57:13','CLIENTE_FINAL',NULL),(150003,'INFOCELL (EVANDRO)','(51)999059723','','','','','','2026-03-31 16:02:32','REVENDA',NULL),(150004,'RANGEL THOMAS','999999999','','','','','','2026-03-31 16:13:03','CLIENTE_FINAL',NULL),(180001,'MIDIS UNIFORMES - MIRIAM','(51) 99961-3632','','','','','DINI 51 981320966','2026-04-07 18:08:52','CLIENTE_FINAL',NULL),(180002,'ELTON BRITO','(51) 99546-2975','','','','','','2026-04-07 18:35:52','CLIENTE_FINAL',NULL),(210001,'CARLA MENEZES','(51) 98055-2593','','','','','','2026-04-08 18:57:08','CLIENTE_FINAL',NULL),(210002,'ROBERTO WEGNER','(51) 99684-9686','','','','','','2026-04-08 19:05:45','CLIENTE_FINAL',NULL),(240001,'MAICKEL CASSIEL FREDRICH','(51) 98141-0530','','006.995.310-47','','','','2026-04-09 02:58:00','CLIENTE_FINAL',NULL),(270050,'ASSOCIAÇÃO DE PAIS E AMIGOS APAE','','','','','','','2026-04-09 15:32:07','CLIENTE_FINAL',''),(270051,'ALINE - APAE','','','','','','','2026-04-09 15:32:18','CLIENTE_FINAL',''),(300001,'MARIELE DURE','(51) 99615-1079','','','','','eps 667 bk','2026-04-09 20:16:21','CLIENTE_FINAL',''),(330001,'ADAM&FRANCO LIBRAS LTDA','(51) 99325-2535','','','','','','2026-04-10 14:17:03','CLIENTE_FINAL',''),(360001,'DALVA THIMOTHEO','(51) 98122-8666','','','','','','2026-04-10 17:31:10','CLIENTE_FINAL',''),(360002,'DOUGLAS BENCKE','(51) 99675-8089','','','','','','2026-04-10 17:38:36','CLIENTE_FINAL',''),(390001,'SILVIO THOMAS','(51) 99198-0064','','','','','','2026-04-10 18:33:18','CLIENTE_FINAL',''),(420001,'CARINE METZ','(51) 99681-2857','RUA VENEZUELA, 641 ARROIO GRANDE SCS','','','','','2026-04-14 17:15:20','CLIENTE_FINAL',''),(450001,'MAURICIO MERGEN','(51) 99724-0999','','','','','','2026-04-14 17:35:07','CLIENTE_FINAL',''),(480001,'ANDRE LUIZ PEREIRA (TRANSVIDA TRANSPORTES LTDA)','(51) 99956-0584','','','10.785.930/0001-51','','','2026-04-14 17:51:43','CLIENTE_FINAL',''),(510001,'DANIEL EICK ','(51) 99834-8017','','','','','','2026-04-14 20:04:08','CLIENTE_FINAL',''),(540001,'SABRINA NETTO GOMES','','','','','','','2026-04-15 12:34:00','CLIENTE_FINAL',''),(570001,'FABIO DA ROSA','(51) 98199-1564','','','','','','2026-04-16 12:27:56','CLIENTE_FINAL',''),(600001,'SILVANA ROSA','(51) 99778-1730','','','','','','2026-04-16 12:53:40','CLIENTE_FINAL',''),(630001,'ALEXANDRA OLIVEIRA GOMES DA SILVA','(51) 99591-4689','','','','','','2026-04-17 13:20:57','CLIENTE_FINAL',''),(660001,'PEDRO CHABAT','(51) 99888-0159','','','','','Crédito de R$45,00 22/04/26','2026-04-17 14:14:30','CLIENTE_FINAL',''),(690001,'JOSÉ RONI GONÇALVES','(51) 99994-7010','','','','','','2026-04-17 14:45:52','CLIENTE_FINAL',''),(720001,'SERGIO BENCKE','(51) 98039-7151','','','','','','2026-04-17 19:23:18','CLIENTE_FINAL',''),(720002,'GILMAR ROWEDDER','(51) 99997-5540','','','','','','2026-04-17 19:27:57','CLIENTE_FINAL',''),(750001,'CASSIA SCHIRMER','(51) 99939-3321','','','','','','2026-04-22 12:52:42','CLIENTE_FINAL',''),(780001,'PADARIA KESSLER-FREDERICO','(51) 99955-0593','','','','','','2026-04-22 17:34:18','CLIENTE_FINAL',''),(780002,'SERGIO ANDRE OHLAND','(51) 99656-9119','','','','','','2026-04-22 17:41:26','CLIENTE_FINAL',''),(810001,'JÉSSICA SILVEIRA','(51) 99233-7935','','','','','','2026-04-22 19:14:21','CLIENTE_FINAL',''),(810002,'JESSICA SILVEIRA','(51) 99233-7935','','','','','','2026-04-22 19:14:58','CLIENTE_FINAL',''),(840001,'CENILDA SEHN','(51) 99878-6316','','','','','','2026-04-24 17:07:33','CLIENTE_FINAL',''),(870001,'JOÃO PAULO PETRY','(51) 99995-1021','','','','','','2026-04-24 17:45:06','CLIENTE_FINAL',''),(900001,'ADEMIR MACIEL','(51) 99341-4709','','','','','','2026-04-24 19:16:49','CLIENTE_FINAL',''),(900002,'NEW SODER - DIONATHAN','(51) 99691-9904','','','','','','2026-04-24 19:29:19','CLIENTE_FINAL',''),(930001,'ALISSON GELLER','(51) 99639-5849','','','','','','2026-04-25 09:43:23','CLIENTE_FINAL',''),(960002,'GABRIELA  BENCK','(51) 99905-0501','','','','','','2026-04-25 11:17:55','CLIENTE_FINAL',''),(990001,'KARINE KIPPER','(51) 98183-8926','','','','','','2026-04-25 12:20:37','CLIENTE_FINAL',''),(1020001,'CAROLINE F - ESCRITORIO FREY','(51) 99733-4405','','','','','','2026-04-25 14:46:44','CLIENTE_FINAL',''),(1050002,'TATIANA KAPPAUM','(51) 9904-8007','','','','','','2026-04-28 13:15:04','CLIENTE_FINAL',''),(1080001,'PAULO SÉRGIO PADILHA','(51) 99810-8503','','','','','','2026-04-28 18:19:13','CLIENTE_FINAL',''),(1110002,'MARCIO','(51) 99974-2145','','','','','','2026-04-28 19:30:57','CLIENTE_FINAL',''),(1110003,'FERNANDO VINICIUS CUNHA','(51) 99970-2488','','','','','','2026-04-28 19:36:17','CLIENTE_FINAL',''),(1140001,'SD COPIADORAS','(51) 99858-2616','','','','','','2026-04-29 14:45:10','REVENDA',''),(1170001,'ANGELICA ROSANA BACKES','(51) 99924-6512','RUA SANTO ANTONIO 370 - GOIAS - SCS','','','','','2026-04-30 13:18:48','CLIENTE_FINAL',''),(1200001,'PLINIO','','','','','','','2026-05-04 13:27:25','CLIENTE_FINAL',''),(1200002,'FERNANDO MELLO','(51) 99911-9455','','','','','','2026-05-04 13:29:35','CLIENTE_FINAL',''),(1200003,'MARCOS AURÉLIO','(51) 99689-4859','','','','','','2026-05-04 13:38:07','CLIENTE_FINAL',''),(1230001,'AIRTON BAUER','(51) 99866-5062','','','','','','2026-05-05 17:47:34','CLIENTE_FINAL',''),(1260001,'MAIKEL BUBOLTZ','(51) 99821-1956','','','','','','2026-05-05 17:59:18','CLIENTE_FINAL',''),(1290001,'ECTOR MOTOBOY (TRAUMATOS)','(51) 99543-6369','','','','','','2026-05-05 18:13:27','CLIENTE_FINAL',''),(1290002,'ROSELI LOPES GIACON','(51) 99863-3883','RUA ROMA, 169 - JARDIM EUROPA- SCS','','','','','2026-05-05 18:23:15','CLIENTE_FINAL',''),(1320001,'CHIMA&ENCANTOS - WILSON','(51) 99838-3443','','','','','','2026-05-05 18:37:35','CLIENTE_FINAL',''),(1350001,'CAINÃ MACIEL','(51) 99615-8935','','','','','','2026-05-05 19:27:43','CLIENTE_FINAL','');
-/*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `clients`
---
-
-DROP TABLE IF EXISTS `clients`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `clients` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `clientType` enum('PF','PJ') NOT NULL DEFAULT 'PF',
-  `priority` enum('1','2','3') NOT NULL DEFAULT '3',
-  `cpfCnpj` varchar(18) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `email` varchar(320) DEFAULT NULL,
-  `address` text DEFAULT NULL,
-  `city` varchar(100) DEFAULT NULL,
-  `state` varchar(2) DEFAULT NULL,
-  `zipCode` varchar(10) DEFAULT NULL,
-  `notes` text DEFAULT NULL,
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=30001;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `clients`
---
-
-LOCK TABLES `clients` WRITE;
-/*!40000 ALTER TABLE `clients` DISABLE KEYS */;
-INSERT INTO `clients` VALUES (1,'JULIANO CARDOSO','PF','3',NULL,'(51) 99651-1459',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:31','2026-04-21 08:43:31'),(2,'GEPEL','PF','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(3,'RENÉSIO JAHNKE','PF','3',NULL,'(51)997256342',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(4,'ANDERSON GRAEBNER','PF','3',NULL,'(51)999126142',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(5,'AMANDA MACHADO DA SILVA','PF','3',NULL,'(51) 99702-2106',NULL,'RUA JULIO DE CASTILHOS, 380',NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(6,'JOSEANE ELIS SCHAEFERR','PF','3',NULL,'(51) 998850919',NULL,'RUA 7 DE SETEMBRO 327 APTO 403 - CENTRO - SANTA CRUZ DO SUL',NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(7,'SINDILOJAS','PF','3',NULL,'(51)',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(8,'SERGIO BAMPI','PF','3',NULL,'(51)998377857',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(9,'INFOCELL (EVANDRO)','PF','3',NULL,'(51)999059723',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(10,'RANGEL THOMAS','PF','3',NULL,'999999999',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(11,'MIDIS UNIFORMES - MIRIAM','PF','3',NULL,'(51) 99961-3632',NULL,NULL,NULL,NULL,NULL,'DINI 51 981320966','2026-04-21 08:43:32','2026-04-21 08:43:32'),(12,'ELTON BRITO','PF','3',NULL,'(51) 99546-2975',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(13,'CARLA MENEZES','PF','3',NULL,'(51) 98055-2593',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(14,'ROBERTO WEGNER','PF','3',NULL,'(51) 99684-9686',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:32','2026-04-21 08:43:32'),(15,'MAICKEL CASSIEL FREDRICH','PF','3','006.995.310-47','(51) 98141-0530',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(16,'ASSOCIAÇÃO DE PAIS E AMIGOS APAE','PF','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(17,'ALINE - APAE','PF','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(18,'MARIELE DURE','PF','3',NULL,'(51) 99615-1079',NULL,NULL,NULL,NULL,NULL,'eps 667 bk','2026-04-21 08:43:33','2026-04-21 08:43:33'),(19,'ADAM&FRANCO LIBRAS LTDA','PF','3',NULL,'(51) 99325-2535',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(20,'DALVA THIMOTHEO','PF','3',NULL,'(51) 98122-8666',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(21,'DOUGLAS BENCKE','PF','3',NULL,'(51) 99675-8089',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(22,'SILVIO THOMAS','PF','3',NULL,'(51) 99198-0064',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(23,'CARINE METZ','PF','3',NULL,'(51) 99681-2857',NULL,'RUA VENEZUELA, 641 ARROIO GRANDE SCS',NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(24,'MAURICIO MERGEN','PF','3',NULL,'(51) 99724-0999',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(25,'ANDRE LUIZ PEREIRA (TRANSVIDA TRANSPORTES LTDA)','PJ','3','10.785.930/0001-51','(51) 99956-0584',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(26,'DANIEL EICK ','PF','3',NULL,'(51) 99834-8017',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:33','2026-04-21 08:43:33'),(27,'SABRINA NETTO GOMES','PF','3',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:34','2026-04-21 08:43:34'),(28,'FABIO DA ROSA','PF','3',NULL,'(51) 98199-1564',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:34','2026-04-21 08:43:34'),(29,'SILVANA ROSA','PF','3',NULL,'(51) 99778-1730',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:34','2026-04-21 08:43:34'),(30,'ALEXANDRA OLIVEIRA GOMES DA SILVA','PF','3',NULL,'(51) 99591-4689',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:34','2026-04-21 08:43:34'),(31,'PEDRO CHABAT','PF','3',NULL,'(51) 99888-0159',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:34','2026-04-21 08:43:34'),(32,'JOSÉ RONI GONÇALVES','PF','3',NULL,'(51) 99994-7010',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:34','2026-04-21 08:43:34'),(33,'SERGIO BENCKE','PF','3',NULL,'(51) 98039-7151',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:34','2026-04-21 08:43:34'),(34,'GILMAR ROWEDDER','PF','3',NULL,'(51) 99997-5540',NULL,NULL,NULL,NULL,NULL,NULL,'2026-04-21 08:43:34','2026-04-21 08:43:34');
-/*!40000 ALTER TABLE `clients` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `empresa_dados`
---
+-- ============================================================
+-- Table: empresa_dados
+-- ============================================================
 
 DROP TABLE IF EXISTS `empresa_dados`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `empresa_dados` (
   `id` int NOT NULL AUTO_INCREMENT,
   `empresa` text DEFAULT NULL,
@@ -206,25 +141,17 @@ CREATE TABLE `empresa_dados` (
   `atualizado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=30001;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `empresa_dados`
---
+-- Insert data
+INSERT INTO `empresa_dados` (`id`, `empresa`, `cep`, `endereco`, `numero`, `bairro`, `cidade`, `estado`, `cnpj_cpf`, `telefone`, `celular`, `email`, `nome`, `logo_url`, `atualizado_em`) VALUES (1, 'espsoluções em impressoras, especializada em epson e bulkink', '96845035', 'Rua Felipe Jacobus Filho', '91', 'Senai', 'Santa Cruz do Sul', 'RS', '45956776000118', '51981964544', '(51)981964544', '', 'maickel', '', Wed Mar 25 2026 20:14:04 GMT-0400 (Eastern Daylight Time));
 
-LOCK TABLES `empresa_dados` WRITE;
-/*!40000 ALTER TABLE `empresa_dados` DISABLE KEYS */;
-INSERT INTO `empresa_dados` VALUES (1,'epsoluções em impressoras, especializada em epson e bulkink','96845035','Rua Felipe Jacobus Filho','91','Senai','Santa Cruz do Sul','RS','45956776000118','(51) 98116-1239','(51) 98116-1239','','maickel','https://d2xsxph8kpxj0f.cloudfront.net/310519663476114435/TEopnpqVFcFcEzDuX7X4dq/logos/1775560818023-0n4p3g.png','2026-04-16 13:54:20');
-/*!40000 ALTER TABLE `empresa_dados` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `pedido_cartuchos`
---
+-- ============================================================
+-- Table: pedido_cartuchos
+-- ============================================================
 
 DROP TABLE IF EXISTS `pedido_cartuchos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `pedido_cartuchos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `pedido_id` int NOT NULL,
@@ -237,26 +164,27 @@ CREATE TABLE `pedido_cartuchos` (
   `observacoes` text DEFAULT NULL,
   `data_inclusao` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=1620001;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=210001;
 
---
--- Dumping data for table `pedido_cartuchos`
---
+-- Insert data
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (120001, 150001, 30001, '2694524237647149', '24.8', '32.9', 0, 'funcionando', 'está falhando um pouco no rascunho', Mon Mar 30 2026 12:56:57 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (120002, 150001, 30002, '2383508243014226', '22.1', '37', 0, 'funcionando', '', Mon Mar 30 2026 12:57:23 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (120003, 150002, 30003, '06657591L05F33', '28.1', '40.5', 0, 'funcionando', '', Mon Mar 30 2026 13:03:40 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (120004, 150003, 1, '5844517231435444', '23.2', '36.6', 0, 'funcionando', '', Mon Mar 30 2026 13:09:23 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (150001, 180001, 60001, '5091505769805283', '21.9', '35.8', 1, 'funcionando', '', Tue Mar 31 2026 15:25:48 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (150002, 180001, 60001, '5092502173821251', '19.4', '34.5', 1, 'funcionando', '', Tue Mar 31 2026 15:26:16 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (150003, 210002, 90001, '3985514229513642', '27.2', '33.6', 0, 'funcionando', '+ impr5essora', Tue Mar 31 2026 16:01:34 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (150004, 210003, 90002, '1492505384390625', '25.5', NULL, 0, 'em_espera', '', Tue Mar 31 2026 16:07:03 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (150005, 210001, 2, '5873514257701756', '26.1', '33.3', 0, 'funcionando', '', Tue Mar 31 2026 16:10:08 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedido_cartuchos` (`id`, `pedido_id`, `cartucho_id`, `codigo`, `peso_chegada`, `peso_saida`, `protegido`, `status`, `observacoes`, `data_inclusao`) VALUES (150006, 210004, 1, '5844515210815131', '22.8', '37.1', 0, 'funcionando', '', Tue Mar 31 2026 16:12:31 GMT-0400 (Eastern Daylight Time));
 
-LOCK TABLES `pedido_cartuchos` WRITE;
-/*!40000 ALTER TABLE `pedido_cartuchos` DISABLE KEYS */;
-INSERT INTO `pedido_cartuchos` VALUES (120001,150001,30001,'2694524237647149','24.8','32.9',0,'funcionando','está falhando um pouco no rascunho','2026-03-30 12:56:57'),(120002,150001,30002,'2383508243014226','22.1','37',0,'funcionando','','2026-03-30 12:57:23'),(120003,150002,30003,'06657591L05F33','28.1','40.5',0,'funcionando','','2026-03-30 13:03:40'),(120004,150003,1,'5844517231435444','23.2','36.6',0,'funcionando','','2026-03-30 13:09:23'),(150001,180001,60001,'5091505769805283','21.9','35.8',1,'funcionando','','2026-03-31 15:25:48'),(150002,180001,60001,'5092502173821251','19.4','34.5',1,'funcionando','','2026-03-31 15:26:16'),(150003,210002,90001,'3985514229513642','27.2','33.6',0,'funcionando','+ impr5essora','2026-03-31 16:01:34'),(150004,210003,90002,'1492505384390625','25.5','37.4',0,'funcionando','','2026-03-31 16:07:03'),(150005,210001,2,'5873514257701756','26.1','33.3',0,'funcionando','','2026-03-31 16:10:08'),(150006,210004,1,'5844515210815131','22.8','37.1',0,'funcionando','','2026-03-31 16:12:31'),(210001,270001,60001,'5092502160650335','24.74','36.5',0,'funcionando','','2026-04-07 18:10:21'),(210002,270002,30001,'2694521014756670','32.3',NULL,0,'funcionando','','2026-04-07 18:38:19'),(210003,270002,30002,'2383515151473430','23.4','36.4',0,'funcionando','','2026-04-07 18:38:51'),(240001,270002,150001,'2694524227594639','28','33.2',0,'funcionando','','2026-04-08 18:28:44'),(270001,330001,1,'509203163892100','25.07','35.8',0,'funcionando','','2026-04-08 19:02:07'),(270002,330001,60001,'5092502175075579','37',NULL,0,'circuito_queimado','defeito parte eletrônica','2026-04-08 19:04:00'),(270003,330002,2,'5873514231891830','26.3','33.1',0,'funcionando','','2026-04-08 19:07:42'),(270004,330002,1,'5844517191359393','25.3','36.2',0,'funcionando','','2026-04-08 19:07:42'),(330001,390001,180001,'2474518861941466','','27.6',0,'funcionando','NATHÁLIA - RECEPÇÃO','2026-04-09 15:52:40'),(330002,390002,60001,'5092502221004828','26.4','25.4',0,'funcionando','','2026-04-09 16:13:40'),(360001,390001,180002,'1737581726505034','13.4','37',0,'funcionando','Nathalia- eps 60 bk','2026-04-09 20:08:59'),(360002,390001,180001,'2474518261118493',NULL,'31.5',0,'funcionando','aline - eps 60 cl','2026-04-09 20:13:21'),(360003,420001,2,'5873514241901350','25.2','34.3',0,'funcionando','','2026-04-09 20:22:02'),(360004,420002,1,'5844517219594185','22.8','36.9',0,'funcionando','','2026-04-09 20:25:02'),(390001,450001,2,'5873514197964485','25.5','34.9',0,'funcionando','CAIXA DE ACRÍLICO','2026-04-10 14:19:07'),(390002,450001,1,'5844517162815727','28.7','36',0,'funcionando','','2026-04-10 14:19:07'),(420001,480001,90002,'2040505389100446','25','37.4',0,'funcionando','','2026-04-10 17:33:23'),(420002,480001,120001,'2690519468663085','32.1','42.3',0,'funcionando','','2026-04-10 17:33:23'),(420003,480002,2,'5873526198983616','25.1','34.7',0,'funcionando','CAIXA DE ACRÍLICO','2026-04-10 17:39:27'),(450001,510001,30001,'2694524210155576','27.3','35',0,'funcionando','UTILIZAR NA QUALIDADE DE IMPRESSÃO NORMAL.','2026-04-10 18:34:26'),(480001,540001,1,'5844515213420429','25.1','36.7',0,'funcionando','cabeça de impressão apresentando falhas','2026-04-14 17:16:32'),(510001,570001,1,'5444517191367746','27.5','36.8',0,'funcionando','','2026-04-14 17:46:12'),(510002,570001,2,'5873514231244229','27.4','33.5',0,'funcionando','','2026-04-14 17:46:12'),(510003,570002,180002,'1737581727295371','30.9','36.8',0,'funcionando','','2026-04-14 17:52:27'),(540001,600001,90002,'1492505402181393','22.4','36.9',0,'funcionando','','2026-04-14 20:05:25'),(600001,660001,2,'5873514264463179','27.3','33',0,'funcionando','','2026-04-16 12:30:06'),(600002,660001,1,'5844517223382291','23.2','36.6',0,'funcionando','','2026-04-16 12:30:06'),(630001,690001,1,'5844517219575284','35.3','36.8',0,'funcionando','','2026-04-16 12:54:27'),(660001,720001,60001,'5092603157599395','25.3','36.6',0,'funcionando','','2026-04-17 13:22:17'),(690001,750001,60001,'5091554061707534','25.2','35.1',0,'funcionando','','2026-04-17 14:17:04'),(690002,750001,90001,'3985521127508145','25.5','33.7',0,'funcionando','','2026-04-17 14:17:04'),(720001,780001,120003,'2694524210113128','25.5','33.2',0,'funcionando','','2026-04-17 14:47:44'),(720002,780001,120002,'2383508234135193','26.1','37',0,'funcionando','','2026-04-17 14:47:44'),(750001,810001,30002,'2383554016583656',NULL,'37',0,'funcionando','','2026-04-17 19:24:09'),(750002,810002,90002,'3573481020','33.9','36.6',0,'funcionando','','2026-04-17 19:36:57'),(780001,840001,120002,'2383508244098486','23.4',NULL,0,'funcionando','','2026-04-22 12:55:36'),(810001,870001,60001,'5091554063616016','22.5',NULL,0,'defeito_cabeca','664 xl bk','2026-04-22 17:37:52'),(810002,870001,60001,'5092502238207278','24','36.6',0,'funcionando','','2026-04-22 17:37:52'),(810003,870002,210001,'16482BIG27NIA7','28.4','37.1',0,'funcionando','','2026-04-22 17:47:42'),(810004,870003,210002,'ORIGINAL',NULL,NULL,0,'funcionando','','2026-04-22 17:59:50'),(840001,900001,120002,'2383508220675305',NULL,'36.7',0,'funcionando','','2026-04-22 19:39:22'),(840002,900001,120003,'2694524232137054',NULL,NULL,0,'circuito_queimado','defeito eletrônico','2026-04-22 19:43:49'),(870001,930001,1,'5844515208302311','28.8',NULL,0,'defeito_cabeca','','2026-04-24 17:12:56'),(870002,930001,2,'5873526224001148','25.1','33.2',0,'funcionando','','2026-04-24 17:12:56'),(900001,960001,60001,'5092502244210604','25.5','37.1',0,'funcionando','','2026-04-24 17:47:09'),(930001,930001,240001,'ORIGINAL',NULL,NULL,0,'funcionando','','2026-04-24 18:48:01'),(960001,990001,1,'5844517224191139','23.2','35.9',0,'funcionando','','2026-04-24 19:26:25'),(960002,990001,2,'5873514264585790','26.6','33.5',0,'funcionando','','2026-04-24 19:26:25'),(960003,990002,120003,'2995524230108947','29.7','34.3',0,'funcionando','ciano apresenta falhas','2026-04-24 19:34:06'),(1020005,1050001,300002,'5092502244210604',NULL,'37.1',0,'funcionando','','2026-04-25 11:02:58'),(1020006,1050004,60001,'5092502219901720','23','36.8',0,'funcionando','','2026-04-25 11:19:33'),(1050001,1080001,330001,'5092502240417312',NULL,'37',0,'funcionando','','2026-04-25 12:25:34'),(1080001,1080001,60001,'5092502238210846','36.6',NULL,0,'circuito_queimado','CARTUCHO ESTÁ COM O CIRCUITO QUEIMADO','2026-04-25 13:31:57'),(1110001,1110001,360001,'1717512203829134',NULL,'35.8',0,'funcionando','','2026-04-25 14:49:50'),(1110002,1110001,360002,'2611519463471556',NULL,'32.7',0,'funcionando','','2026-04-25 14:49:51'),(1140001,1140001,120001,'2690519468663085',NULL,'41.3',0,'defeito_cabeca','NÃO ESTAVA RECONHECENDO E NÃO ESTAVA SAÍNDO TINTA AMARELA, FOI RETIRADA A ESPONJA E REFEITO A CARGA DO AMARELO. ','2026-04-27 18:07:25'),(1170001,1170001,120002,'2384505779263726','25.4','34.3',0,'funcionando','','2026-04-28 12:59:11'),(1200001,1200001,1,'5844525182992516','23.7','36.2',0,'funcionando','','2026-04-28 13:22:25'),(1200002,1200001,2,'5873514208700682','27.1','32.7',0,'funcionando','','2026-04-28 13:22:26'),(1230001,1230001,1,'5844517190466215','21.9','33.2',0,'funcionando','','2026-04-28 18:20:41'),(1230002,1230001,2,'5873514224159434','24.7','36.1',0,'funcionando','','2026-04-28 18:20:42'),(1260001,1260001,390002,'6968512107998308',NULL,'37',0,'funcionando','','2026-04-28 19:34:46'),(1260002,1260001,390001,'6922555009271861',NULL,'32.7',0,'funcionando','','2026-04-28 19:34:46'),(1260003,1260002,30002,'2383515120342597','23.7','36.3',0,'funcionando','','2026-04-28 19:36:57'),(1290001,1290001,90001,'3985514166572671',NULL,'33.5',1,'funcionando','','2026-04-29 14:46:34'),(1290002,1290001,1,'5091525143419342','20.6',NULL,0,'defeito_cabeca','cabeça de impressão danificada','2026-04-29 14:47:41'),(1320001,1320001,2,'5873518253093382','25.2','35.8',0,'funcionando','','2026-04-30 13:20:28'),(1320002,1320001,2,'5844515206210423','27','33.1',0,'funcionando','','2026-04-30 13:20:28'),(1350001,1350001,1,'5844515206175872','23.2','36.1',0,'funcionando','','2026-05-04 13:29:07'),(1350003,1350002,60001,'5092502250696358','24.3','35.2',0,'funcionando','','2026-05-04 13:30:25'),(1350004,1350003,30001,'2694521066044496','27.4','33.2',0,'funcionando','','2026-05-04 13:40:37'),(1350005,1350003,30001,'2694521066045442','25.3','33.1',0,'funcionando','','2026-05-04 13:40:37'),(1380001,1350003,300002,'2383508246721213','23','36',0,'funcionando','','2026-05-04 14:48:14'),(1410001,1380001,30002,'2383554043354780','23.6','36',0,'funcionando','','2026-05-05 17:48:28'),(1440001,1410001,1,'5091505336304846','21.4',NULL,0,'circuito_queimado','','2026-05-05 18:00:09'),(1470001,1440001,1,'5897525201909325','26.3',NULL,0,'circuito_queimado','traumatos - cartucho queimado','2026-05-05 18:17:59'),(1470002,1440002,90001,'3985521073223000','33.8','33',0,'funcionando','','2026-05-05 18:24:20'),(1500001,1470001,60001,'5092502252994462','23.3','36.4',1,'funcionando','','2026-05-05 18:40:45'),(1500002,1470001,90001,'3985521088527877','30.8','33.3',1,'funcionando','','2026-05-05 18:40:45'),(1530001,1500001,120002,'7383508220602797','24.4','36.8',0,'funcionando','','2026-05-05 19:30:55'),(1560001,1410001,330001,'5092502247558231','23.8','36.1',0,'funcionando','','2026-05-06 12:41:38'),(1590001,1530001,90002,'3573481020','35.9','35.9',0,'funcionando','teste impressão ok!!!','2026-05-06 12:54:04'),(1590002,1530001,120001,'2690519445475488','29.9','29.9',0,'circuito_queimado','circuito queimado','2026-05-06 12:54:04');
-/*!40000 ALTER TABLE `pedido_cartuchos` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `pedidos`
---
+-- ============================================================
+-- Table: pedidos
+-- ============================================================
 
 DROP TABLE IF EXISTS `pedidos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `pedidos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `numero` varchar(10) NOT NULL,
@@ -266,26 +194,25 @@ CREATE TABLE `pedidos` (
   `data_finalizacao` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,
   UNIQUE KEY `pedidos_numero_unique` (`numero`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=1560001;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=270001;
 
---
--- Dumping data for table `pedidos`
---
+-- Insert data
+INSERT INTO `pedidos` (`id`, `numero`, `cliente_id`, `status`, `data_criacao`, `data_finalizacao`) VALUES (150001, '001', 60001, 'finalizado', Mon Mar 30 2026 12:51:38 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:51:12 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedidos` (`id`, `numero`, `cliente_id`, `status`, `data_criacao`, `data_finalizacao`) VALUES (150002, '002', 60003, 'finalizado', Mon Mar 30 2026 13:01:02 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:30:13 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedidos` (`id`, `numero`, `cliente_id`, `status`, `data_criacao`, `data_finalizacao`) VALUES (150003, '003', 60004, 'finalizado', Mon Mar 30 2026 13:07:47 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:25:04 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedidos` (`id`, `numero`, `cliente_id`, `status`, `data_criacao`, `data_finalizacao`) VALUES (180001, '004', 120001, 'finalizado', Tue Mar 31 2026 14:19:18 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 15:44:18 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedidos` (`id`, `numero`, `cliente_id`, `status`, `data_criacao`, `data_finalizacao`) VALUES (210001, '005', 150001, 'finalizado', Tue Mar 31 2026 15:58:19 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 19:23:00 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedidos` (`id`, `numero`, `cliente_id`, `status`, `data_criacao`, `data_finalizacao`) VALUES (210002, '006', 150002, 'finalizado', Tue Mar 31 2026 15:59:21 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 19:23:32 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `pedidos` (`id`, `numero`, `cliente_id`, `status`, `data_criacao`, `data_finalizacao`) VALUES (210003, '007', 150003, 'aberto', Tue Mar 31 2026 16:06:13 GMT-0400 (Eastern Daylight Time), NULL);
+INSERT INTO `pedidos` (`id`, `numero`, `cliente_id`, `status`, `data_criacao`, `data_finalizacao`) VALUES (210004, '008', 90001, 'finalizado', Tue Mar 31 2026 16:11:08 GMT-0400 (Eastern Daylight Time), Wed Apr 01 2026 09:00:23 GMT-0400 (Eastern Daylight Time));
 
-LOCK TABLES `pedidos` WRITE;
-/*!40000 ALTER TABLE `pedidos` DISABLE KEYS */;
-INSERT INTO `pedidos` VALUES (150001,'001',60001,'finalizado','2026-03-30 12:51:38','2026-03-30 15:51:12'),(150002,'002',60003,'finalizado','2026-03-30 13:01:02','2026-03-30 15:30:13'),(150003,'003',60004,'finalizado','2026-03-30 13:07:47','2026-03-30 15:25:04'),(180001,'004',120001,'finalizado','2026-03-31 14:19:18','2026-03-31 15:44:18'),(210001,'005',150001,'finalizado','2026-03-31 15:58:19','2026-03-31 19:23:00'),(210002,'006',150002,'finalizado','2026-03-31 15:59:21','2026-03-31 19:23:32'),(210003,'007',150003,'finalizado','2026-03-31 16:06:13','2026-04-07 18:24:15'),(210004,'008',90001,'finalizado','2026-03-31 16:11:08','2026-04-01 09:00:23'),(270001,'009',180001,'finalizado','2026-04-07 18:10:21','2026-04-07 19:16:00'),(270002,'010',180002,'finalizado','2026-04-07 18:37:03','2026-04-08 18:32:22'),(330001,'013',210001,'finalizado','2026-04-08 19:01:35','2026-04-08 20:18:57'),(330002,'014',210002,'finalizado','2026-04-08 19:07:42','2026-04-08 20:24:56'),(390001,'015',270050,'finalizado','2026-04-09 15:52:40','2026-04-09 21:03:43'),(390002,'016',270051,'finalizado','2026-04-09 16:13:40','2026-04-10 14:08:24'),(420001,'017',90001,'finalizado','2026-04-09 20:22:02','2026-04-10 19:21:44'),(420002,'018',300001,'finalizado','2026-04-09 20:25:02','2026-04-10 13:55:29'),(450001,'019',330001,'finalizado','2026-04-10 14:19:07','2026-04-10 19:20:59'),(480001,'020',360001,'finalizado','2026-04-10 17:33:22','2026-04-10 20:21:09'),(480002,'021',360002,'finalizado','2026-04-10 17:39:27','2026-04-10 19:22:33'),(510001,'022',390001,'finalizado','2026-04-10 18:34:25','2026-04-10 20:33:25'),(540001,'023',420001,'finalizado','2026-04-14 17:16:31','2026-04-14 19:37:07'),(570001,'024',450001,'finalizado','2026-04-14 17:46:11','2026-04-14 19:27:41'),(570002,'025',480001,'finalizado','2026-04-14 17:52:27','2026-04-14 19:26:12'),(600001,'026',510001,'finalizado','2026-04-14 20:05:25','2026-04-14 20:05:34'),(660001,'027',570001,'finalizado','2026-04-16 12:30:06','2026-04-16 13:45:47'),(690001,'028',600001,'finalizado','2026-04-16 12:54:27','2026-04-16 13:47:02'),(720001,'029',630001,'finalizado','2026-04-17 13:22:17','2026-04-17 15:17:13'),(750001,'030',660001,'finalizado','2026-04-17 14:17:03','2026-04-17 15:18:00'),(780001,'031',690001,'finalizado','2026-04-17 14:47:44','2026-04-17 18:04:05'),(810001,'032',720001,'finalizado','2026-04-17 19:24:08','2026-04-17 19:50:45'),(810002,'033',720002,'finalizado','2026-04-17 19:36:57','2026-04-17 20:09:50'),(840001,'034',750001,'finalizado','2026-04-22 12:55:36','2026-04-22 13:20:37'),(870001,'035',780001,'finalizado','2026-04-22 17:37:52','2026-04-22 19:45:35'),(870002,'036',780002,'finalizado','2026-04-22 17:47:41','2026-04-22 19:46:27'),(870003,'037',660001,'finalizado','2026-04-22 17:59:50','2026-04-22 18:00:06'),(900001,'038',810002,'finalizado','2026-04-22 19:15:54','2026-04-22 19:44:05'),(930001,'039',840001,'finalizado','2026-04-24 17:12:56','2026-04-24 18:48:27'),(960001,'040',870001,'finalizado','2026-04-24 17:47:09','2026-04-25 10:33:48'),(990001,'041',900001,'finalizado','2026-04-24 19:26:25','2026-04-25 10:19:26'),(990002,'042',900002,'finalizado','2026-04-24 19:34:06','2026-04-25 10:47:04'),(1050001,'043',930001,'finalizado','2026-04-25 10:52:40','2026-04-25 11:06:30'),(1050004,'044',960002,'finalizado','2026-04-25 11:19:32','2026-04-25 12:07:52'),(1080001,'045',990001,'finalizado','2026-04-25 12:25:34','2026-04-25 13:35:33'),(1110001,'046',1020001,'finalizado','2026-04-25 14:49:50','2026-04-25 14:50:18'),(1140001,'047',360001,'finalizado','2026-04-27 18:07:25','2026-04-27 18:37:15'),(1170001,'048',900002,'finalizado','2026-04-28 12:59:11','2026-04-28 14:35:56'),(1200001,'049',1050002,'finalizado','2026-04-28 13:22:25','2026-04-28 14:36:36'),(1230001,'050',1080001,'finalizado','2026-04-28 18:20:41','2026-04-28 20:03:34'),(1260001,'051',1110002,'finalizado','2026-04-28 19:34:46','2026-04-28 19:35:25'),(1260002,'052',1110003,'finalizado','2026-04-28 19:36:57','2026-04-28 20:03:57'),(1290001,'053',1140001,'finalizado','2026-04-29 14:46:34','2026-04-29 14:47:48'),(1320001,'054',1170001,'finalizado','2026-04-30 13:20:28','2026-04-30 19:42:05'),(1350001,'055',1200001,'finalizado','2026-05-04 13:29:06','2026-05-04 18:50:49'),(1350002,'056',1200002,'finalizado','2026-05-04 13:30:25','2026-05-04 18:51:26'),(1350003,'057',1200003,'finalizado','2026-05-04 13:40:37','2026-05-04 18:21:18'),(1380001,'058',1230001,'finalizado','2026-05-05 17:48:27','2026-05-05 19:52:22'),(1410001,'059',1260001,'finalizado','2026-05-05 18:00:09','2026-05-06 13:48:38'),(1440001,'060',1290001,'finalizado','2026-05-05 18:17:59','2026-05-05 18:22:31'),(1440002,'061',1290002,'finalizado','2026-05-05 18:24:20','2026-05-05 20:12:08'),(1470001,'062',1320001,'finalizado','2026-05-05 18:40:45','2026-05-05 20:19:24'),(1500001,'063',1350001,'finalizado','2026-05-05 19:30:55','2026-05-05 20:23:13'),(1530001,'064',720002,'finalizado','2026-05-06 12:54:04','2026-05-06 13:01:43');
-/*!40000 ALTER TABLE `pedidos` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `reman_order_items`
---
+-- ============================================================
+-- Table: reman_order_items
+-- ============================================================
 
 DROP TABLE IF EXISTS `reman_order_items`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `reman_order_items` (
   `id` int NOT NULL AUTO_INCREMENT,
   `order_id` int NOT NULL,
@@ -299,26 +226,25 @@ CREATE TABLE `reman_order_items` (
   `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `atualizado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=1350001;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=270001;
 
---
--- Dumping data for table `reman_order_items`
---
+-- Insert data
+INSERT INTO `reman_order_items` (`id`, `order_id`, `cartucho_id`, `description_snapshot`, `model_code_snapshot`, `quantity`, `unit_price`, `price_source`, `line_total`, `criado_em`, `atualizado_em`) VALUES (120001, 150001, 1, 'EPS 667 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS 667 BK', 1, '45.00', 'CLIENTE_FINAL', '45.00', Mon Mar 30 2026 15:25:04 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 22:01:41 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_items` (`id`, `order_id`, `cartucho_id`, `description_snapshot`, `model_code_snapshot`, `quantity`, `unit_price`, `price_source`, `line_total`, `criado_em`, `atualizado_em`) VALUES (120002, 150002, 30003, 'EPS PG140 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS PG140 BK', 1, '55.00', 'CLIENTE_FINAL', '55.00', Mon Mar 30 2026 15:30:13 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 22:01:41 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_items` (`id`, `order_id`, `cartucho_id`, `description_snapshot`, `model_code_snapshot`, `quantity`, `unit_price`, `price_source`, `line_total`, `criado_em`, `atualizado_em`) VALUES (150001, 180001, 30001, 'EPS 122 CL REMANUFATURADO COM 10ML DE TINTA', 'EPS 122 CL', 1, '45.00', 'CLIENTE_FINAL', '45.00', Mon Mar 30 2026 15:51:11 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 22:01:41 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_items` (`id`, `order_id`, `cartucho_id`, `description_snapshot`, `model_code_snapshot`, `quantity`, `unit_price`, `price_source`, `line_total`, `criado_em`, `atualizado_em`) VALUES (150002, 180001, 30002, 'EPS 122 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS 122 BK', 1, '45.00', 'CLIENTE_FINAL', '45.00', Mon Mar 30 2026 15:51:11 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 22:01:41 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_items` (`id`, `order_id`, `cartucho_id`, `description_snapshot`, `model_code_snapshot`, `quantity`, `unit_price`, `price_source`, `line_total`, `criado_em`, `atualizado_em`) VALUES (180001, 210001, 60001, 'EPS 664 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS 664 BK', 2, '45.00', 'CLIENTE_FINAL', '90.00', Tue Mar 31 2026 15:44:18 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 22:01:41 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_items` (`id`, `order_id`, `cartucho_id`, `description_snapshot`, `model_code_snapshot`, `quantity`, `unit_price`, `price_source`, `line_total`, `criado_em`, `atualizado_em`) VALUES (210001, 240001, 2, 'EPS 667 CL REMANUFATURADO COM 10ML DE TINTA', 'EPS 667 CL', 1, '45.00', 'CLIENTE_FINAL', '45.00', Tue Mar 31 2026 19:23:00 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 22:01:41 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_items` (`id`, `order_id`, `cartucho_id`, `description_snapshot`, `model_code_snapshot`, `quantity`, `unit_price`, `price_source`, `line_total`, `criado_em`, `atualizado_em`) VALUES (210002, 240002, 90001, 'EPS 664 CL REMANUFATURADO COM 10ML DE TINTA', 'EPS 664 CL', 1, '45.00', 'CLIENTE_FINAL', '45.00', Tue Mar 31 2026 19:23:32 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 22:01:41 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_items` (`id`, `order_id`, `cartucho_id`, `description_snapshot`, `model_code_snapshot`, `quantity`, `unit_price`, `price_source`, `line_total`, `criado_em`, `atualizado_em`) VALUES (240001, 240003, 1, 'EPS 667 BK REMANUFATURADO COM 14ML DE TINTA', 'EPS 667 BK', 1, '45.00', 'CLIENTE_FINAL', '45.00', Wed Apr 01 2026 09:00:23 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 22:01:41 GMT-0400 (Eastern Daylight Time));
 
-LOCK TABLES `reman_order_items` WRITE;
-/*!40000 ALTER TABLE `reman_order_items` DISABLE KEYS */;
-INSERT INTO `reman_order_items` VALUES (120001,150001,1,'EPS 667 BK REMANUFATURADO COM 14ML DE TINTA','EPS 667 BK',1,45.00,'CLIENTE_FINAL',45.00,'2026-03-30 15:25:04','2026-04-02 22:01:41'),(120002,150002,30003,'EPS PG140 BK REMANUFATURADO COM 14ML DE TINTA','EPS PG140 BK',1,55.00,'CLIENTE_FINAL',55.00,'2026-03-30 15:30:13','2026-04-02 22:01:41'),(150001,180001,30001,'EPS 122 CL REMANUFATURADO COM 10ML DE TINTA','EPS 122 CL',1,45.00,'CLIENTE_FINAL',45.00,'2026-03-30 15:51:11','2026-04-02 22:01:41'),(150002,180001,30002,'EPS 122 BK REMANUFATURADO COM 14ML DE TINTA','EPS 122 BK',1,45.00,'CLIENTE_FINAL',45.00,'2026-03-30 15:51:11','2026-04-02 22:01:41'),(180001,210001,60001,'EPS 664 BK REMANUFATURADO COM 14ML DE TINTA','EPS 664 BK',2,45.00,'CLIENTE_FINAL',90.00,'2026-03-31 15:44:18','2026-04-02 22:01:41'),(210001,240001,2,'EPS 667 CL REMANUFATURADO COM 10ML DE TINTA','EPS 667 CL',1,45.00,'CLIENTE_FINAL',45.00,'2026-03-31 19:23:00','2026-04-02 22:01:41'),(210002,240002,90001,'EPS 664 CL REMANUFATURADO COM 10ML DE TINTA','EPS 664 CL',1,45.00,'CLIENTE_FINAL',45.00,'2026-03-31 19:23:32','2026-04-02 22:01:41'),(240001,240003,1,'EPS 667 BK REMANUFATURADO COM 14ML DE TINTA','EPS 667 BK',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-01 09:00:23','2026-04-02 22:01:41'),(270001,270001,90002,'EPS 21 BK','EPS 21 BK REMANUFATURADO COM 14ML DE TINTA',1,28.00,'REVENDA',28.00,'2026-04-07 18:24:15','2026-04-07 18:24:15'),(300001,300001,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-07 19:15:59','2026-04-07 19:15:59'),(330003,330001,30001,'EPS 122 CL','EPS 122 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-08 18:32:22','2026-04-08 18:32:22'),(330004,330001,30002,'EPS 122 BK','EPS 122 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-08 18:32:22','2026-04-08 18:32:22'),(360001,360001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-08 20:18:57','2026-04-08 20:18:57'),(360002,360001,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',0,0.00,'CLIENTE_FINAL',0.00,'2026-04-08 20:18:57','2026-04-08 20:18:57'),(360003,360002,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-08 20:24:56','2026-04-08 20:24:56'),(360004,360002,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-08 20:24:56','2026-04-08 20:24:56'),(390001,390001,180001,'EPS 60 CL','EPS 60 CL REMANUFATURADO COM 10ML DE TINTA',2,45.00,'CLIENTE_FINAL',90.00,'2026-04-09 21:03:43','2026-04-09 21:03:43'),(390002,390001,180002,'EPS 60 BK','EPS 60 BK REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-09 21:03:43','2026-04-09 21:03:43'),(420001,420001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-10 13:55:28','2026-04-10 13:55:28'),(420002,420002,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-10 14:08:24','2026-04-10 14:08:24'),(450001,450001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-10 19:20:59','2026-04-10 19:20:59'),(450002,450001,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-10 19:20:59','2026-04-10 19:20:59'),(450003,450002,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-10 19:21:43','2026-04-10 19:21:43'),(450004,450003,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-10 19:22:32','2026-04-10 19:22:32'),(480001,480001,90002,'EPS 21 BK','EPS 21 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-10 20:21:08','2026-04-10 20:21:08'),(480002,480001,120001,'EPS 22 CL','EPS 22 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-10 20:21:08','2026-04-10 20:21:08'),(480003,480002,30001,'EPS 122 CL','EPS 122 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-10 20:33:25','2026-04-10 20:33:25'),(510001,510001,180002,'EPS 60 BK','EPS 60 BK REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-14 19:26:11','2026-04-14 19:26:11'),(510002,510002,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-14 19:27:40','2026-04-14 19:27:40'),(510003,510002,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-14 19:27:40','2026-04-14 19:27:40'),(510004,510003,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-14 19:37:06','2026-04-14 19:37:06'),(540001,540001,90002,'EPS 21 BK','EPS 21 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-14 20:05:33','2026-04-14 20:05:33'),(570001,570001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-16 13:45:46','2026-04-16 13:45:46'),(570002,570001,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-16 13:45:46','2026-04-16 13:45:46'),(570003,570002,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-16 13:47:01','2026-04-16 13:47:01'),(600001,600001,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-17 15:17:12','2026-04-17 15:17:12'),(600002,600002,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-17 15:17:59','2026-04-17 15:17:59'),(600003,600002,90001,'EPS 664 CL','EPS 664 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-17 15:17:59','2026-04-17 15:17:59'),(630001,630001,120002,'EPS 662 BK','EPS 662 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-17 18:04:05','2026-04-17 18:04:05'),(630002,630001,120003,'EPS 662 CL','EPS 662 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-17 18:04:05','2026-04-17 18:04:05'),(660001,660001,30002,'EPS 122 BK','EPS 122 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-17 19:50:44','2026-04-17 19:50:44'),(690001,690001,90002,'EPS 21 BK','EPS 21 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-17 20:09:49','2026-04-17 20:09:49'),(720001,720001,120002,'EPS 662 BK','EPS 662 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-22 13:20:37','2026-04-22 13:20:37'),(750001,750001,210002,'HP 664 COLOR ORIGINAL 2ML','HP 664 COLOR ORIGINAL 2ML',1,119.90,'CLIENTE_FINAL',119.90,'2026-04-22 18:00:05','2026-04-22 18:00:05'),(780001,780001,120002,'EPS 662 BK','EPS 662 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-22 19:44:05','2026-04-22 19:44:05'),(780002,780001,120003,'EPS 662 CL','EPS 662 CL REMANUFATURADO COM 10ML DE TINTA',0,0.00,'CLIENTE_FINAL',0.00,'2026-04-22 19:44:05','2026-04-22 19:44:05'),(780003,780002,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-22 19:45:35','2026-04-22 19:45:35'),(780004,780003,210001,'EPS CL146 CL','EPS CL146 CL REMANUFATURADO COM 10ML DE TINTA',1,55.00,'CLIENTE_FINAL',55.00,'2026-04-22 19:46:27','2026-04-22 19:46:27'),(810001,810001,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-24 18:48:27','2026-04-24 18:48:27'),(810002,810001,240001,'HP 667 BLACK ORIGINAL 2ML','HP 667 BLACK ORIGINAL 2ML DE TINTA',1,129.90,'CLIENTE_FINAL',129.90,'2026-04-24 18:48:27','2026-04-24 18:48:27'),(810003,810001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',0,0.00,'CLIENTE_FINAL',0.00,'2026-04-24 18:48:27','2026-04-24 18:48:27'),(840001,840001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-25 10:19:26','2026-04-25 10:19:26'),(840002,840001,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-25 10:19:26','2026-04-25 10:19:26'),(840003,840002,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-25 10:33:48','2026-04-25 10:33:48'),(840004,840004,120003,'EPS 662 CL','EPS 662 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-25 10:47:04','2026-04-25 10:47:04'),(840007,840003,300002,'EPS 122 BK COM CARCAÇA','EPS 122 BK COM CARCAÇA REMANUF. COM 14ML DE TINTA',1,90.00,'CLIENTE_FINAL',90.00,'2026-04-25 11:06:29','2026-04-25 11:06:29'),(870001,870001,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-25 12:07:52','2026-04-25 12:07:52'),(930007,900002,330001,'EPS 664 BK C/ CARCAÇA REMANUF.','EPS 664 BK C/ CARCAÇA REMANUF. COM 14ML DE TINTA',1,90.00,'CLIENTE_FINAL',90.00,'2026-04-25 13:35:33','2026-04-25 13:35:33'),(930008,900002,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',0,0.00,'CLIENTE_FINAL',0.00,'2026-04-25 13:35:33','2026-04-25 13:35:33'),(960001,930001,360001,'EPS 75 BK','EPS 75 BK REMANUF. COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-25 14:50:18','2026-04-25 14:50:18'),(960002,930001,360002,'EPS 75 CL','EPS 75 CL REMANUF. COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-25 14:50:18','2026-04-25 14:50:18'),(990001,960001,120001,'EPS 22 CL','EPS 22 CL REMANUFATURADO COM 10ML DE TINTA',0,0.00,'CLIENTE_FINAL',0.00,'2026-04-27 18:37:15','2026-04-27 18:37:15'),(1020001,990001,120002,'EPS 662 BK','EPS 662 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-28 14:35:56','2026-04-28 14:35:56'),(1020002,990002,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-28 14:36:35','2026-04-28 14:36:35'),(1020003,990002,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-28 14:36:35','2026-04-28 14:36:35'),(1050001,1020001,390001,'EPS 668 BK','EPS 668 BK REMANUF. COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-28 19:35:24','2026-04-28 19:35:24'),(1050002,1020001,390002,'EPS 668 CL','EPS 668 CL REMANUF. COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-28 19:35:24','2026-04-28 19:35:24'),(1080001,1050001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-28 20:03:33','2026-04-28 20:03:33'),(1080002,1050001,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-28 20:03:34','2026-04-28 20:03:34'),(1080003,1050002,30002,'EPS 122 BK','EPS 122 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-04-28 20:03:57','2026-04-28 20:03:57'),(1110002,1080001,90001,'EPS 664 CL','EPS 664 CL REMANUFATURADO COM 10ML DE TINTA',1,28.00,'REVENDA',28.00,'2026-04-29 14:47:48','2026-04-29 14:47:48'),(1110003,1080001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',0,0.00,'REVENDA',0.00,'2026-04-29 14:47:48','2026-04-29 14:47:48'),(1140001,1110001,2,'EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',2,45.00,'CLIENTE_FINAL',90.00,'2026-04-30 19:42:04','2026-04-30 19:42:04'),(1170001,1140003,30001,'EPS 122 CL','EPS 122 CL REMANUFATURADO COM 10ML DE TINTA',2,45.00,'CLIENTE_FINAL',90.00,'2026-05-04 18:21:18','2026-05-04 18:21:18'),(1170002,1140003,300002,'EPS 122 BK COM CARCAÇA','EPS 122 BK COM CARCAÇA REMANUF. COM 14ML DE TINTA',1,90.00,'CLIENTE_FINAL',90.00,'2026-05-04 18:21:18','2026-05-04 18:21:18'),(1200001,1140001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-05-04 18:50:49','2026-05-04 18:50:49'),(1200002,1140002,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-05-04 18:51:26','2026-05-04 18:51:26'),(1230001,1170001,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',0,0.00,'CLIENTE_FINAL',0.00,'2026-05-05 18:22:30','2026-05-05 18:22:30'),(1260001,1200001,30002,'EPS 122 BK','EPS 122 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-05-05 19:52:22','2026-05-05 19:52:22'),(1260002,1200002,90001,'EPS 664 CL','EPS 664 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-05-05 20:12:07','2026-05-05 20:12:07'),(1260003,1200003,60001,'EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-05-05 20:19:23','2026-05-05 20:19:23'),(1260004,1200003,90001,'EPS 664 CL','EPS 664 CL REMANUFATURADO COM 10ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-05-05 20:19:24','2026-05-05 20:19:24'),(1260006,1200004,120002,'EPS 662 BK','EPS 662 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-05-05 20:23:13','2026-05-05 20:23:13'),(1290001,1230001,90002,'EPS 21 BK','EPS 21 BK REMANUFATURADO COM 14ML DE TINTA',1,45.00,'CLIENTE_FINAL',45.00,'2026-05-06 13:01:43','2026-05-06 13:01:43'),(1290002,1230001,120001,'EPS 22 CL','EPS 22 CL REMANUFATURADO COM 10ML DE TINTA',0,0.00,'CLIENTE_FINAL',0.00,'2026-05-06 13:01:43','2026-05-06 13:01:43'),(1320001,1200005,330001,'EPS 664 BK C/ CARCAÇA REMANUF.','EPS 664 BK C/ CARCAÇA REMANUF. COM 14ML DE TINTA',1,90.00,'CLIENTE_FINAL',90.00,'2026-05-06 13:48:38','2026-05-06 13:48:38'),(1320002,1200005,1,'EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',0,0.00,'CLIENTE_FINAL',0.00,'2026-05-06 13:48:38','2026-05-06 13:48:38');
-/*!40000 ALTER TABLE `reman_order_items` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `reman_order_units`
---
+-- ============================================================
+-- Table: reman_order_units
+-- ============================================================
 
 DROP TABLE IF EXISTS `reman_order_units`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `reman_order_units` (
   `id` int NOT NULL AUTO_INCREMENT,
   `order_item_id` int NOT NULL,
@@ -331,26 +257,26 @@ CREATE TABLE `reman_order_units` (
   `criado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `atualizado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=1320001;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=240001;
 
---
--- Dumping data for table `reman_order_units`
---
+-- Insert data
+INSERT INTO `reman_order_units` (`id`, `order_item_id`, `cartucho_id`, `unit_code`, `status`, `defect_type`, `output_weight`, `notes`, `criado_em`, `atualizado_em`) VALUES (90001, 120001, 1, '5844517231435444', 'FUNCIONANDO', NULL, '36.60', NULL, Mon Mar 30 2026 15:25:04 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:25:04 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_units` (`id`, `order_item_id`, `cartucho_id`, `unit_code`, `status`, `defect_type`, `output_weight`, `notes`, `criado_em`, `atualizado_em`) VALUES (90002, 120002, 30003, '06657591L05F33', 'FUNCIONANDO', NULL, '40.50', NULL, Mon Mar 30 2026 15:30:13 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:30:13 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_units` (`id`, `order_item_id`, `cartucho_id`, `unit_code`, `status`, `defect_type`, `output_weight`, `notes`, `criado_em`, `atualizado_em`) VALUES (120001, 150001, 30001, '2694524237647149', 'FUNCIONANDO', NULL, '32.90', NULL, Mon Mar 30 2026 15:51:11 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:51:11 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_units` (`id`, `order_item_id`, `cartucho_id`, `unit_code`, `status`, `defect_type`, `output_weight`, `notes`, `criado_em`, `atualizado_em`) VALUES (120002, 150002, 30002, '2383508243014226', 'FUNCIONANDO', NULL, '37.00', NULL, Mon Mar 30 2026 15:51:11 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:51:11 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_units` (`id`, `order_item_id`, `cartucho_id`, `unit_code`, `status`, `defect_type`, `output_weight`, `notes`, `criado_em`, `atualizado_em`) VALUES (150001, 180001, 60001, '5092502173821251', 'FUNCIONANDO', NULL, '34.50', NULL, Tue Mar 31 2026 15:44:18 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 15:44:18 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_units` (`id`, `order_item_id`, `cartucho_id`, `unit_code`, `status`, `defect_type`, `output_weight`, `notes`, `criado_em`, `atualizado_em`) VALUES (150002, 180001, 60001, '5091505769805283', 'FUNCIONANDO', NULL, '35.80', NULL, Tue Mar 31 2026 15:44:18 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 15:44:18 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_units` (`id`, `order_item_id`, `cartucho_id`, `unit_code`, `status`, `defect_type`, `output_weight`, `notes`, `criado_em`, `atualizado_em`) VALUES (180001, 210001, 2, '5873514257701756', 'FUNCIONANDO', NULL, '33.30', NULL, Tue Mar 31 2026 19:23:00 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 19:23:00 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_units` (`id`, `order_item_id`, `cartucho_id`, `unit_code`, `status`, `defect_type`, `output_weight`, `notes`, `criado_em`, `atualizado_em`) VALUES (180002, 210002, 90001, '3985514229513642', 'FUNCIONANDO', NULL, '33.60', NULL, Tue Mar 31 2026 19:23:32 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 19:23:32 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_order_units` (`id`, `order_item_id`, `cartucho_id`, `unit_code`, `status`, `defect_type`, `output_weight`, `notes`, `criado_em`, `atualizado_em`) VALUES (210001, 240001, 1, '5844515210815131', 'FUNCIONANDO', NULL, '37.10', NULL, Wed Apr 01 2026 09:00:23 GMT-0400 (Eastern Daylight Time), Wed Apr 01 2026 09:00:23 GMT-0400 (Eastern Daylight Time));
 
-LOCK TABLES `reman_order_units` WRITE;
-/*!40000 ALTER TABLE `reman_order_units` DISABLE KEYS */;
-INSERT INTO `reman_order_units` VALUES (90001,120001,1,'5844517231435444','FUNCIONANDO',NULL,36.60,NULL,'2026-03-30 15:25:04','2026-03-30 15:25:04'),(90002,120002,30003,'06657591L05F33','FUNCIONANDO',NULL,40.50,NULL,'2026-03-30 15:30:13','2026-03-30 15:30:13'),(120001,150001,30001,'2694524237647149','FUNCIONANDO',NULL,32.90,NULL,'2026-03-30 15:51:11','2026-03-30 15:51:11'),(120002,150002,30002,'2383508243014226','FUNCIONANDO',NULL,37.00,NULL,'2026-03-30 15:51:11','2026-03-30 15:51:11'),(150001,180001,60001,'5092502173821251','FUNCIONANDO',NULL,34.50,NULL,'2026-03-31 15:44:18','2026-03-31 15:44:18'),(150002,180001,60001,'5091505769805283','FUNCIONANDO',NULL,35.80,NULL,'2026-03-31 15:44:18','2026-03-31 15:44:18'),(180001,210001,2,'5873514257701756','FUNCIONANDO',NULL,33.30,NULL,'2026-03-31 19:23:00','2026-03-31 19:23:00'),(180002,210002,90001,'3985514229513642','FUNCIONANDO',NULL,33.60,NULL,'2026-03-31 19:23:32','2026-03-31 19:23:32'),(210001,240001,1,'5844515210815131','FUNCIONANDO',NULL,37.10,NULL,'2026-04-01 09:00:23','2026-04-01 09:00:23'),(240001,270001,90002,'1492505384390625','FUNCIONANDO',NULL,37.40,NULL,'2026-04-07 18:24:15','2026-04-07 18:24:15'),(270001,300001,60001,'5092502160650335','FUNCIONANDO',NULL,36.50,NULL,'2026-04-07 19:15:59','2026-04-07 19:15:59'),(300003,330003,30001,'2694521014756670','FUNCIONANDO',NULL,NULL,NULL,'2026-04-08 18:32:22','2026-04-08 18:32:22'),(300004,330004,30002,'2383515151473430','FUNCIONANDO',NULL,36.40,NULL,'2026-04-08 18:32:22','2026-04-08 18:32:22'),(330001,360001,1,'509203163892100','FUNCIONANDO',NULL,35.80,NULL,'2026-04-08 20:18:57','2026-04-08 20:18:57'),(330002,360002,60001,'5092502175075579','COM_PROBLEMA','CIRCUITO QUEIMADO',NULL,NULL,'2026-04-08 20:18:57','2026-04-08 20:18:57'),(330003,360003,1,'5844517191359393','FUNCIONANDO',NULL,36.20,NULL,'2026-04-08 20:24:56','2026-04-08 20:24:56'),(330004,360004,2,'5873514231891830','FUNCIONANDO',NULL,33.10,NULL,'2026-04-08 20:24:56','2026-04-08 20:24:56'),(360001,390001,180001,'2474518261118493','FUNCIONANDO',NULL,31.50,NULL,'2026-04-09 21:03:43','2026-04-09 21:03:43'),(360002,390001,180001,'2474518861941466','FUNCIONANDO',NULL,27.60,NULL,'2026-04-09 21:03:43','2026-04-09 21:03:43'),(360003,390002,180002,'1737581726505034','FUNCIONANDO',NULL,37.00,NULL,'2026-04-09 21:03:43','2026-04-09 21:03:43'),(390001,420001,1,'5844517219594185','FUNCIONANDO',NULL,36.90,NULL,'2026-04-10 13:55:28','2026-04-10 13:55:28'),(390002,420002,60001,'5092502221004828','FUNCIONANDO',NULL,25.40,NULL,'2026-04-10 14:08:24','2026-04-10 14:08:24'),(420001,450001,1,'5844517162815727','FUNCIONANDO',NULL,36.00,NULL,'2026-04-10 19:20:59','2026-04-10 19:20:59'),(420002,450002,2,'5873514197964485','FUNCIONANDO',NULL,34.90,NULL,'2026-04-10 19:20:59','2026-04-10 19:20:59'),(420003,450003,2,'5873514241901350','FUNCIONANDO',NULL,34.30,NULL,'2026-04-10 19:21:44','2026-04-10 19:21:44'),(420004,450004,2,'5873526198983616','FUNCIONANDO',NULL,34.70,NULL,'2026-04-10 19:22:32','2026-04-10 19:22:32'),(450001,480001,90002,'2040505389100446','FUNCIONANDO',NULL,37.40,NULL,'2026-04-10 20:21:08','2026-04-10 20:21:08'),(450002,480002,120001,'2690519468663085','FUNCIONANDO',NULL,42.30,NULL,'2026-04-10 20:21:08','2026-04-10 20:21:08'),(450003,480003,30001,'2694524210155576','FUNCIONANDO',NULL,35.00,NULL,'2026-04-10 20:33:25','2026-04-10 20:33:25'),(480001,510001,180002,'1737581727295371','FUNCIONANDO',NULL,36.80,NULL,'2026-04-14 19:26:12','2026-04-14 19:26:12'),(480002,510002,1,'5444517191367746','FUNCIONANDO',NULL,36.80,NULL,'2026-04-14 19:27:40','2026-04-14 19:27:40'),(480003,510003,2,'5873514231244229','FUNCIONANDO',NULL,33.50,NULL,'2026-04-14 19:27:40','2026-04-14 19:27:40'),(480004,510004,1,'5844515213420429','FUNCIONANDO',NULL,36.70,NULL,'2026-04-14 19:37:06','2026-04-14 19:37:06'),(510001,540001,90002,'1492505402181393','FUNCIONANDO',NULL,36.90,NULL,'2026-04-14 20:05:33','2026-04-14 20:05:33'),(540001,570001,1,'5844517223382291','FUNCIONANDO',NULL,36.60,NULL,'2026-04-16 13:45:46','2026-04-16 13:45:46'),(540002,570002,2,'5873514264463179','FUNCIONANDO',NULL,33.00,NULL,'2026-04-16 13:45:46','2026-04-16 13:45:46'),(540003,570003,1,'5844517219575284','FUNCIONANDO',NULL,36.80,NULL,'2026-04-16 13:47:01','2026-04-16 13:47:01'),(570001,600001,60001,'5092603157599395','FUNCIONANDO',NULL,36.60,NULL,'2026-04-17 15:17:12','2026-04-17 15:17:12'),(570002,600002,60001,'5091554061707534','FUNCIONANDO',NULL,35.10,NULL,'2026-04-17 15:17:59','2026-04-17 15:17:59'),(570003,600003,90001,'3985521127508145','FUNCIONANDO',NULL,33.70,NULL,'2026-04-17 15:17:59','2026-04-17 15:17:59'),(600001,630001,120002,'2383508234135193','FUNCIONANDO',NULL,37.00,NULL,'2026-04-17 18:04:05','2026-04-17 18:04:05'),(600002,630002,120003,'2694524210113128','FUNCIONANDO',NULL,33.20,NULL,'2026-04-17 18:04:05','2026-04-17 18:04:05'),(630001,660001,30002,'2383554016583656','FUNCIONANDO',NULL,37.00,NULL,'2026-04-17 19:50:44','2026-04-17 19:50:44'),(660001,690001,90002,'3573481020','FUNCIONANDO',NULL,36.60,NULL,'2026-04-17 20:09:49','2026-04-17 20:09:49'),(690001,720001,120002,'2383508244098486','FUNCIONANDO',NULL,NULL,NULL,'2026-04-22 13:20:37','2026-04-22 13:20:37'),(720001,750001,210002,'ORIGINAL','FUNCIONANDO',NULL,NULL,NULL,'2026-04-22 18:00:05','2026-04-22 18:00:05'),(750001,780001,120002,'2383508220675305','FUNCIONANDO',NULL,36.70,NULL,'2026-04-22 19:44:05','2026-04-22 19:44:05'),(750002,780002,120003,'2694524232137054','COM_PROBLEMA','CIRCUITO QUEIMADO',NULL,NULL,'2026-04-22 19:44:05','2026-04-22 19:44:05'),(750003,780003,60001,'5092502238207278','FUNCIONANDO',NULL,36.60,NULL,'2026-04-22 19:45:35','2026-04-22 19:45:35'),(750004,780003,60001,'5091554063616016','COM_PROBLEMA','DEFEITO NA CABEÇA',NULL,NULL,'2026-04-22 19:45:35','2026-04-22 19:45:35'),(750005,780004,210001,'16482BIG27NIA7','FUNCIONANDO',NULL,37.10,NULL,'2026-04-22 19:46:27','2026-04-22 19:46:27'),(780001,810001,2,'5873526224001148','FUNCIONANDO',NULL,33.20,NULL,'2026-04-24 18:48:27','2026-04-24 18:48:27'),(780002,810002,240001,'ORIGINAL','FUNCIONANDO',NULL,NULL,NULL,'2026-04-24 18:48:27','2026-04-24 18:48:27'),(780003,810003,1,'5844515208302311','COM_PROBLEMA','DEFEITO NA CABEÇA',NULL,NULL,'2026-04-24 18:48:27','2026-04-24 18:48:27'),(810001,840001,1,'5844517224191139','FUNCIONANDO',NULL,35.90,NULL,'2026-04-25 10:19:26','2026-04-25 10:19:26'),(810002,840002,2,'5873514264585790','FUNCIONANDO',NULL,33.50,NULL,'2026-04-25 10:19:26','2026-04-25 10:19:26'),(810003,840003,60001,'5092502244210604','FUNCIONANDO',NULL,37.10,NULL,'2026-04-25 10:33:48','2026-04-25 10:33:48'),(810004,840004,120003,'2995524230108947','FUNCIONANDO',NULL,34.30,NULL,'2026-04-25 10:47:04','2026-04-25 10:47:04'),(810007,840007,300002,'5092502244210604','FUNCIONANDO',NULL,37.10,NULL,'2026-04-25 11:06:29','2026-04-25 11:06:29'),(840001,870001,60001,'5092502219901720','FUNCIONANDO',NULL,36.80,NULL,'2026-04-25 12:07:52','2026-04-25 12:07:52'),(900006,930007,330001,'5092502240417312','FUNCIONANDO',NULL,37.00,NULL,'2026-04-25 13:35:33','2026-04-25 13:35:33'),(900007,930008,60001,'5092502238210846','COM_PROBLEMA','CIRCUITO QUEIMADO',NULL,NULL,'2026-04-25 13:35:33','2026-04-25 13:35:33'),(930001,960001,360001,'1717512203829134','FUNCIONANDO',NULL,35.80,NULL,'2026-04-25 14:50:18','2026-04-25 14:50:18'),(930002,960002,360002,'2611519463471556','FUNCIONANDO',NULL,32.70,NULL,'2026-04-25 14:50:18','2026-04-25 14:50:18'),(960001,990001,120001,'2690519468663085','COM_PROBLEMA','DEFEITO NA CABEÇA',NULL,NULL,'2026-04-27 18:37:15','2026-04-27 18:37:15'),(990001,1020001,120002,'2384505779263726','FUNCIONANDO',NULL,34.30,NULL,'2026-04-28 14:35:56','2026-04-28 14:35:56'),(990002,1020002,1,'5844525182992516','FUNCIONANDO',NULL,36.20,NULL,'2026-04-28 14:36:35','2026-04-28 14:36:35'),(990003,1020003,2,'5873514208700682','FUNCIONANDO',NULL,32.70,NULL,'2026-04-28 14:36:35','2026-04-28 14:36:35'),(1020001,1050001,390001,'6922555009271861','FUNCIONANDO',NULL,32.70,NULL,'2026-04-28 19:35:24','2026-04-28 19:35:24'),(1020002,1050002,390002,'6968512107998308','FUNCIONANDO',NULL,37.00,NULL,'2026-04-28 19:35:24','2026-04-28 19:35:24'),(1050001,1080001,1,'5844517190466215','FUNCIONANDO',NULL,33.20,NULL,'2026-04-28 20:03:33','2026-04-28 20:03:33'),(1050002,1080002,2,'5873514224159434','FUNCIONANDO',NULL,36.10,NULL,'2026-04-28 20:03:34','2026-04-28 20:03:34'),(1050003,1080003,30002,'2383515120342597','FUNCIONANDO',NULL,36.30,NULL,'2026-04-28 20:03:57','2026-04-28 20:03:57'),(1080002,1110002,90001,'3985514166572671','FUNCIONANDO',NULL,33.50,NULL,'2026-04-29 14:47:48','2026-04-29 14:47:48'),(1080003,1110003,1,'5091525143419342','COM_PROBLEMA','DEFEITO NA CABEÇA',NULL,NULL,'2026-04-29 14:47:48','2026-04-29 14:47:48'),(1110001,1140001,2,'5844515206210423','FUNCIONANDO',NULL,33.10,NULL,'2026-04-30 19:42:05','2026-04-30 19:42:05'),(1110002,1140001,2,'5873518253093382','FUNCIONANDO',NULL,35.80,NULL,'2026-04-30 19:42:05','2026-04-30 19:42:05'),(1140001,1170001,30001,'2694521066045442','FUNCIONANDO',NULL,33.10,NULL,'2026-05-04 18:21:18','2026-05-04 18:21:18'),(1140002,1170001,30001,'2694521066044496','FUNCIONANDO',NULL,33.20,NULL,'2026-05-04 18:21:18','2026-05-04 18:21:18'),(1140003,1170002,300002,'2383508246721213','FUNCIONANDO',NULL,36.00,NULL,'2026-05-04 18:21:18','2026-05-04 18:21:18'),(1170001,1200001,1,'5844515206175872','FUNCIONANDO',NULL,36.10,NULL,'2026-05-04 18:50:49','2026-05-04 18:50:49'),(1170002,1200002,60001,'5092502250696358','FUNCIONANDO',NULL,35.20,NULL,'2026-05-04 18:51:26','2026-05-04 18:51:26'),(1200001,1230001,1,'5897525201909325','COM_PROBLEMA','CIRCUITO QUEIMADO',NULL,NULL,'2026-05-05 18:22:30','2026-05-05 18:22:30'),(1230001,1260001,30002,'2383554043354780','FUNCIONANDO',NULL,36.00,NULL,'2026-05-05 19:52:22','2026-05-05 19:52:22'),(1230002,1260002,90001,'3985521073223000','FUNCIONANDO',NULL,33.00,NULL,'2026-05-05 20:12:07','2026-05-05 20:12:07'),(1230003,1260003,60001,'5092502252994462','FUNCIONANDO',NULL,36.40,NULL,'2026-05-05 20:19:24','2026-05-05 20:19:24'),(1230004,1260004,90001,'3985521088527877','FUNCIONANDO',NULL,33.30,NULL,'2026-05-05 20:19:24','2026-05-05 20:19:24'),(1230006,1260006,120002,'7383508220602797','FUNCIONANDO',NULL,36.80,NULL,'2026-05-05 20:23:13','2026-05-05 20:23:13'),(1260001,1290001,90002,'3573481020','FUNCIONANDO',NULL,35.90,NULL,'2026-05-06 13:01:43','2026-05-06 13:01:43'),(1260002,1290002,120001,'2690519445475488','COM_PROBLEMA','CIRCUITO QUEIMADO',NULL,NULL,'2026-05-06 13:01:43','2026-05-06 13:01:43'),(1290001,1320001,330001,'5092502247558231','FUNCIONANDO',NULL,36.10,NULL,'2026-05-06 13:48:38','2026-05-06 13:48:38'),(1290002,1320002,1,'5091505336304846','COM_PROBLEMA','CIRCUITO QUEIMADO',NULL,NULL,'2026-05-06 13:48:38','2026-05-06 13:48:38');
-/*!40000 ALTER TABLE `reman_order_units` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `reman_orders`
---
+-- ============================================================
+-- Table: reman_orders
+-- ============================================================
 
 DROP TABLE IF EXISTS `reman_orders`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `reman_orders` (
   `id` int NOT NULL AUTO_INCREMENT,
   `order_number` varchar(20) NOT NULL,
@@ -365,55 +291,24 @@ CREATE TABLE `reman_orders` (
   `atualizado_em` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,
   UNIQUE KEY `reman_orders_order_number_unique` (`order_number`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=1260001;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=270001;
 
---
--- Dumping data for table `reman_orders`
---
+-- Insert data
+INSERT INTO `reman_orders` (`id`, `order_number`, `cliente_id`, `commercial_profile_snapshot`, `status`, `subtotal`, `discount`, `total`, `notes`, `criado_em`, `atualizado_em`) VALUES (150001, 'REM-003', 60004, 'CLIENTE_FINAL', 'finalizado', '45.00', '0.00', '45.00', 'Gerado automaticamente a partir do Pedido #003', Mon Mar 30 2026 15:25:04 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:25:04 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_orders` (`id`, `order_number`, `cliente_id`, `commercial_profile_snapshot`, `status`, `subtotal`, `discount`, `total`, `notes`, `criado_em`, `atualizado_em`) VALUES (150002, 'REM-002', 60003, 'CLIENTE_FINAL', 'finalizado', '55.00', '0.00', '55.00', 'Gerado automaticamente a partir do Pedido #002', Mon Mar 30 2026 15:30:13 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:30:13 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_orders` (`id`, `order_number`, `cliente_id`, `commercial_profile_snapshot`, `status`, `subtotal`, `discount`, `total`, `notes`, `criado_em`, `atualizado_em`) VALUES (180001, 'REM-001', 60001, 'CLIENTE_FINAL', 'finalizado', '90.00', '0.00', '90.00', 'Gerado automaticamente a partir do Pedido #001', Mon Mar 30 2026 15:51:11 GMT-0400 (Eastern Daylight Time), Mon Mar 30 2026 15:51:11 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_orders` (`id`, `order_number`, `cliente_id`, `commercial_profile_snapshot`, `status`, `subtotal`, `discount`, `total`, `notes`, `criado_em`, `atualizado_em`) VALUES (210001, 'REM-004', 120001, 'CLIENTE_FINAL', 'finalizado', '90.00', '0.00', '90.00', 'Gerado automaticamente a partir do Pedido #004', Tue Mar 31 2026 15:44:18 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 15:44:18 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_orders` (`id`, `order_number`, `cliente_id`, `commercial_profile_snapshot`, `status`, `subtotal`, `discount`, `total`, `notes`, `criado_em`, `atualizado_em`) VALUES (240001, 'REM-005', 150001, 'CLIENTE_FINAL', 'finalizado', '45.00', '0.00', '45.00', 'Gerado automaticamente a partir do Pedido #005', Tue Mar 31 2026 19:23:00 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 19:23:00 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_orders` (`id`, `order_number`, `cliente_id`, `commercial_profile_snapshot`, `status`, `subtotal`, `discount`, `total`, `notes`, `criado_em`, `atualizado_em`) VALUES (240002, 'REM-006', 150002, 'CLIENTE_FINAL', 'finalizado', '45.00', '0.00', '45.00', 'Gerado automaticamente a partir do Pedido #006', Tue Mar 31 2026 19:23:32 GMT-0400 (Eastern Daylight Time), Tue Mar 31 2026 19:23:32 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `reman_orders` (`id`, `order_number`, `cliente_id`, `commercial_profile_snapshot`, `status`, `subtotal`, `discount`, `total`, `notes`, `criado_em`, `atualizado_em`) VALUES (240003, 'REM-008', 90001, 'CLIENTE_FINAL', 'finalizado', '45.00', '0.00', '45.00', 'Gerado automaticamente a partir do Pedido #008', Tue Mar 31 2026 19:24:59 GMT-0400 (Eastern Daylight Time), Wed Apr 01 2026 09:00:23 GMT-0400 (Eastern Daylight Time));
 
-LOCK TABLES `reman_orders` WRITE;
-/*!40000 ALTER TABLE `reman_orders` DISABLE KEYS */;
-INSERT INTO `reman_orders` VALUES (150001,'REM-003',60004,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #003','2026-03-30 15:25:04','2026-03-30 15:25:04'),(150002,'REM-002',60003,'CLIENTE_FINAL','finalizado',55.00,0.00,55.00,'Gerado automaticamente a partir do Pedido #002','2026-03-30 15:30:13','2026-03-30 15:30:13'),(180001,'REM-001',60001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #001','2026-03-30 15:51:11','2026-03-30 15:51:11'),(210001,'REM-004',120001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #004','2026-03-31 15:44:18','2026-03-31 15:44:18'),(240001,'REM-005',150001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #005','2026-03-31 19:23:00','2026-03-31 19:23:00'),(240002,'REM-006',150002,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #006','2026-03-31 19:23:32','2026-03-31 19:23:32'),(240003,'REM-008',90001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #008','2026-03-31 19:24:59','2026-04-01 09:00:23'),(270001,'REM-007',150003,'REVENDA','finalizado',28.00,0.00,28.00,'Gerado automaticamente a partir do Pedido #007','2026-04-07 18:24:15','2026-04-07 18:24:15'),(300001,'REM-009',180001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #009','2026-04-07 19:11:28','2026-04-09 15:50:24'),(330001,'REM-010',180002,'CLIENTE_FINAL','finalizado',0.00,0.00,0.00,'Gerado automaticamente a partir do Pedido #010','2026-04-08 18:29:11','2026-04-08 18:31:38'),(360001,'REM-013',210001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #013','2026-04-08 20:18:57','2026-04-08 20:18:57'),(360002,'REM-014',210002,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #014','2026-04-08 20:24:56','2026-04-08 20:24:56'),(390001,'REM-015',270050,'CLIENTE_FINAL','finalizado',135.00,0.00,135.00,'Gerado automaticamente a partir do Pedido #015','2026-04-09 21:03:43','2026-04-09 21:03:43'),(420001,'REM-018',300001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #018','2026-04-10 13:55:28','2026-04-10 13:55:28'),(420002,'REM-016',270051,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #016','2026-04-10 14:08:24','2026-04-10 14:08:24'),(450001,'REM-019',330001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #019','2026-04-10 19:20:59','2026-04-10 19:20:59'),(450002,'REM-017',90001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #017','2026-04-10 19:21:43','2026-04-10 19:21:44'),(450003,'REM-021',360002,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #021','2026-04-10 19:22:32','2026-04-10 19:22:32'),(480001,'REM-020',360001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #020','2026-04-10 20:21:08','2026-04-10 20:21:08'),(480002,'REM-022',390001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #022','2026-04-10 20:33:25','2026-04-10 20:33:25'),(510001,'REM-025',480001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #025','2026-04-14 19:26:11','2026-04-14 19:26:12'),(510002,'REM-024',450001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #024','2026-04-14 19:27:40','2026-04-14 19:27:40'),(510003,'REM-023',420001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #023','2026-04-14 19:37:06','2026-04-14 19:37:06'),(540001,'REM-026',510001,'CLIENTE_FINAL','finalizado',45.00,45.00,0.00,'Gerado automaticamente a partir do Pedido #026','2026-04-14 20:05:33','2026-04-14 20:20:54'),(570001,'REM-027',570001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #027','2026-04-16 13:45:46','2026-04-16 13:45:46'),(570002,'REM-028',600001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #028','2026-04-16 13:47:01','2026-04-16 13:47:01'),(600001,'REM-029',630001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #029','2026-04-17 15:17:12','2026-04-17 15:17:12'),(600002,'REM-030',660001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #030','2026-04-17 15:17:59','2026-04-17 15:17:59'),(630001,'REM-031',690001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #031','2026-04-17 18:04:05','2026-04-17 18:04:05'),(660001,'REM-032',720001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #032','2026-04-17 19:50:44','2026-04-17 19:50:44'),(690001,'REM-033',720002,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #033','2026-04-17 20:09:49','2026-04-17 20:09:49'),(720001,'REM-034',750001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #034','2026-04-22 13:20:37','2026-04-22 13:20:37'),(750001,'REM-037',660001,'CLIENTE_FINAL','finalizado',119.90,0.00,119.90,'Gerado automaticamente a partir do Pedido #037','2026-04-22 18:00:05','2026-04-22 18:00:05'),(780001,'REM-038',810002,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #038','2026-04-22 19:44:05','2026-04-22 19:44:05'),(780002,'REM-035',780001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #035','2026-04-22 19:45:35','2026-04-22 19:45:35'),(780003,'REM-036',780002,'CLIENTE_FINAL','finalizado',55.00,0.00,55.00,'Gerado automaticamente a partir do Pedido #036','2026-04-22 19:46:27','2026-04-22 19:46:27'),(810001,'REM-039',840001,'CLIENTE_FINAL','finalizado',174.90,0.00,174.90,'Gerado automaticamente a partir do Pedido #039','2026-04-24 18:48:27','2026-04-24 18:48:27'),(840001,'REM-041',900001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #041','2026-04-25 10:19:26','2026-04-25 10:19:26'),(840002,'REM-040',870001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #040','2026-04-25 10:33:48','2026-04-25 10:33:48'),(840003,'REM-043',930001,'CLIENTE_FINAL','finalizado',90.00,45.00,45.00,'Gerado automaticamente a partir do Pedido #043','2026-04-25 10:44:58','2026-04-25 15:13:59'),(840004,'REM-042',900002,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #042','2026-04-25 10:47:04','2026-04-25 10:47:04'),(870001,'REM-044',960002,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #044','2026-04-25 12:07:52','2026-04-25 12:07:52'),(900002,'REM-045',990001,'CLIENTE_FINAL','finalizado',90.00,45.00,45.00,'Gerado automaticamente a partir do Pedido #045','2026-04-25 13:35:33','2026-04-25 13:35:46'),(930001,'REM-046',1020001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #046','2026-04-25 14:50:18','2026-04-25 14:50:18'),(960001,'REM-047',360001,'CLIENTE_FINAL','finalizado',0.00,0.00,0.00,'Gerado automaticamente a partir do Pedido #047','2026-04-27 18:37:15','2026-04-27 18:37:43'),(990001,'REM-048',900002,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #048','2026-04-28 14:35:56','2026-04-28 14:35:56'),(990002,'REM-049',1050002,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #049','2026-04-28 14:36:35','2026-04-28 14:36:35'),(1020001,'REM-051',1110002,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #051','2026-04-28 19:35:24','2026-04-28 19:35:24'),(1050001,'REM-050',1080001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #050','2026-04-28 20:03:33','2026-04-28 20:03:34'),(1050002,'REM-052',1110003,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #052','2026-04-28 20:03:57','2026-04-28 20:03:57'),(1080001,'REM-053',1140001,'REVENDA','aberto',28.00,0.00,28.00,'Gerado automaticamente a partir do Pedido #053','2026-04-29 14:46:45','2026-04-29 14:46:52'),(1110001,'REM-054',1170001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #054','2026-04-30 19:42:04','2026-04-30 19:42:05'),(1140001,'REM-055',1200001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #055','2026-05-04 18:05:01','2026-05-04 18:50:49'),(1140002,'REM-056',1200002,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #056','2026-05-04 18:05:20','2026-05-04 18:51:26'),(1140003,'REM-057',1200003,'CLIENTE_FINAL','finalizado',180.00,0.00,180.00,'Gerado automaticamente a partir do Pedido #057','2026-05-04 18:21:18','2026-05-04 18:21:18'),(1170001,'REM-060',1290001,'CLIENTE_FINAL','finalizado',0.00,0.00,0.00,'Gerado automaticamente a partir do Pedido #060','2026-05-05 18:22:30','2026-05-05 18:22:30'),(1200001,'REM-058',1230001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #058','2026-05-05 19:52:22','2026-05-05 19:52:22'),(1200002,'REM-061',1290002,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #061','2026-05-05 20:12:07','2026-05-05 20:12:07'),(1200003,'REM-062',1320001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #062','2026-05-05 20:19:23','2026-05-05 20:19:24'),(1200004,'REM-063',1350001,'CLIENTE_FINAL','finalizado',45.00,0.00,45.00,'Gerado automaticamente a partir do Pedido #063','2026-05-05 20:21:36','2026-05-05 20:21:36'),(1200005,'REM-059',1260001,'CLIENTE_FINAL','finalizado',90.00,0.00,90.00,'Gerado automaticamente a partir do Pedido #059','2026-05-05 20:28:49','2026-05-06 13:49:19'),(1230001,'REM-064',720002,'CLIENTE_FINAL','finalizado',45.00,45.00,0.00,'Gerado automaticamente a partir do Pedido #064','2026-05-06 13:01:43','2026-05-06 13:01:59');
-/*!40000 ALTER TABLE `reman_orders` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `settings`
---
-
-DROP TABLE IF EXISTS `settings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `settings` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `category` varchar(50) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `label` varchar(255) NOT NULL,
-  `sortOrder` int NOT NULL DEFAULT '0',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=30001;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `settings`
---
-
-LOCK TABLES `settings` WRITE;
-/*!40000 ALTER TABLE `settings` DISABLE KEYS */;
-INSERT INTO `settings` VALUES (1,'EQUIPMENT_MODEL','EPS 667 BK','EPS 667 BK REMANUFATURADO COM 14ML DE TINTA',0,1,'2026-04-21 08:43:34'),(2,'EQUIPMENT_MODEL','EPS 667 CL','EPS 667 CL REMANUFATURADO COM 10ML DE TINTA',0,1,'2026-04-21 08:43:34'),(3,'EQUIPMENT_MODEL','EPS 122 CL','EPS 122 CL REMANUFATURADO COM 10ML DE TINTA',0,1,'2026-04-21 08:43:34'),(4,'EQUIPMENT_MODEL','EPS 122 BK','EPS 122 BK REMANUFATURADO COM 14ML DE TINTA',0,1,'2026-04-21 08:43:34'),(5,'EQUIPMENT_MODEL','EPS PG140 BK','EPS PG140 BK REMANUFATURADO COM 14ML DE TINTA',0,1,'2026-04-21 08:43:35'),(6,'EQUIPMENT_MODEL','EPS 664 BK','EPS 664 BK REMANUFATURADO COM 14ML DE TINTA',0,1,'2026-04-21 08:43:35'),(7,'EQUIPMENT_MODEL','EPS 664 CL','EPS 664 CL REMANUFATURADO COM 10ML DE TINTA',0,1,'2026-04-21 08:43:35'),(8,'EQUIPMENT_MODEL','EPS 21 BK','EPS 21 BK REMANUFATURADO COM 14ML DE TINTA',0,1,'2026-04-21 08:43:35'),(9,'EQUIPMENT_MODEL','EPS 22 CL','EPS 22 CL REMANUFATURADO COM 10ML DE TINTA',0,1,'2026-04-21 08:43:35'),(10,'EQUIPMENT_MODEL','EPS 662 BK','EPS 662 BK REMANUFATURADO COM 14ML DE TINTA',0,1,'2026-04-21 08:43:35'),(11,'EQUIPMENT_MODEL','EPS 662 CL','EPS 662 CL REMANUFATURADO COM 10ML DE TINTA',0,1,'2026-04-21 08:43:35'),(12,'EQUIPMENT_MODEL','EPS 122 CL C/ CARCAÇA','EPS 122 CL REMANUFATURADO COM CARCAÇA E 10ML DE TINTA',0,1,'2026-04-21 08:43:35'),(13,'EQUIPMENT_MODEL','EPS 60 CL','EPS 60 CL REMANUFATURADO COM 10ML DE TINTA',0,1,'2026-04-21 08:43:35'),(14,'EQUIPMENT_MODEL','EPS 60 BK','EPS 60 BK REMANUFATURADO COM 10ML DE TINTA',0,1,'2026-04-21 08:43:35');
-/*!40000 ALTER TABLE `settings` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `users`
---
+-- ============================================================
+-- Table: users
+-- ============================================================
 
 DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `openId` varchar(64) NOT NULL,
@@ -426,26 +321,17 @@ CREATE TABLE `users` (
   `lastSignedIn` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,
   UNIQUE KEY `users_openId_unique` (`openId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=7230001;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin AUTO_INCREMENT=1560001;
 
---
--- Dumping data for table `users`
---
+-- Insert data
+INSERT INTO `users` (`id`, `openId`, `name`, `email`, `loginMethod`, `role`, `createdAt`, `updatedAt`, `lastSignedIn`) VALUES (1, 'jp8XBSAUpmpkXYKBnawhFF', 'rosislei', 'rosislei@construirs.shop', 'email', 'admin', Wed Mar 25 2026 17:32:59 GMT-0400 (Eastern Daylight Time), Mon Apr 06 2026 12:25:04 GMT-0400 (Eastern Daylight Time), Mon Apr 06 2026 12:25:05 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `users` (`id`, `openId`, `name`, `email`, `loginMethod`, `role`, `createdAt`, `updatedAt`, `lastSignedIn`) VALUES (210001, 'nBXrVpYw7fuPYCJD8nHwPD', 'MAICKEL CASSIEL FREDRICH', 'epsolucoesemimpressoras@gmail.com', 'google', 'user', Sat Mar 28 2026 20:51:37 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 17:42:32 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 17:42:32 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `users` (`id`, `openId`, `name`, `email`, `loginMethod`, `role`, `createdAt`, `updatedAt`, `lastSignedIn`) VALUES (390002, 'CuM6zNKpBRWxRXm28iQmjW', 'mAICKEL mANSON', 'maickelmanson@gmail.com', 'google', 'user', Mon Mar 30 2026 15:22:49 GMT-0400 (Eastern Daylight Time), Wed Apr 01 2026 13:59:35 GMT-0400 (Eastern Daylight Time), Wed Apr 01 2026 13:59:34 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `users` (`id`, `openId`, `name`, `email`, `loginMethod`, `role`, `createdAt`, `updatedAt`, `lastSignedIn`) VALUES (810043, '4Uqhfe4TkMNuBTGRoSLhrc', 'MAICKEL CASSIEL FREDRICH', 'msassistenciaepson@gmail.com', 'google', 'user', Wed Apr 01 2026 09:01:52 GMT-0400 (Eastern Daylight Time), Fri Apr 03 2026 22:55:28 GMT-0400 (Eastern Daylight Time), Fri Apr 03 2026 22:55:29 GMT-0400 (Eastern Daylight Time));
+INSERT INTO `users` (`id`, `openId`, `name`, `email`, `loginMethod`, `role`, `createdAt`, `updatedAt`, `lastSignedIn`) VALUES (960004, '8yPBBciGw3FPUdQTtKLFGE', 'EPS SOLUÇÕES EM IMPRESSORAS', 'mstonerecartucho@gmail.com', 'google', 'user', Wed Apr 01 2026 12:27:01 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 17:41:18 GMT-0400 (Eastern Daylight Time), Thu Apr 02 2026 17:41:19 GMT-0400 (Eastern Daylight Time));
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'jp8XBSAUpmpkXYKBnawhFF','rosislei','rosislei@construirs.shop','email','admin','2026-03-25 17:32:59','2026-04-17 21:46:19','2026-04-17 21:46:20'),(210001,'nBXrVpYw7fuPYCJD8nHwPD','MAICKEL CASSIEL FREDRICH','epsolucoesemimpressoras@gmail.com','google','user','2026-03-28 20:51:37','2026-04-29 13:26:48','2026-04-29 13:26:48'),(390002,'CuM6zNKpBRWxRXm28iQmjW','mAICKEL mANSON','maickelmanson@gmail.com','google','user','2026-03-30 15:22:49','2026-05-07 04:31:02','2026-05-07 04:31:03'),(810043,'4Uqhfe4TkMNuBTGRoSLhrc','MAICKEL CASSIEL FREDRICH','msassistenciaepson@gmail.com','google','user','2026-04-01 09:01:52','2026-04-17 22:00:36','2026-04-17 22:00:37'),(960004,'8yPBBciGw3FPUdQTtKLFGE','EPS SOLUÇÕES EM IMPRESSORAS','mstonerecartucho@gmail.com','google','user','2026-04-01 12:27:01','2026-05-06 21:18:24','2026-05-06 21:18:23'),(4230025,'k2ihGDdu56WV2HP6ggHdnA','Maickel Impressoras Epson','smkhkfnqsdsncxnn8tlazx@onmanus.ai',NULL,'user','2026-04-17 22:41:32','2026-04-18 01:46:34','2026-04-18 01:46:34');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-05-07  0:32:46
+-- ============================================================
+-- End of backup
+-- ============================================================
+SET FOREIGN_KEY_CHECKS=1;

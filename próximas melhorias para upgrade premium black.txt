@@ -2,35 +2,13 @@
 CARTUCHOS WEB - PRÓXIMAS MELHORIAS PARA UPGRADE PREMIUM BLACK
 ================================================================================
 
-Status: 09/04/2026 - 11:45
+Status: 09/04/2026 - 11:43
 Versão Atual: 1.0 (100% Funcional)
 Desenvolvedor: Manus AI
 
 ================================================================================
 1. NOTIFICAÇÕES E ALERTAS (ALTA PRIORIDADE)
 ================================================================================
-
-verificar e testar Fluxo Finalização → Reman → Impressão/PDF:
-## Melhorias Solicitadas
-- [x] Dashboard: Dados da Empresa (empresa, CEP, endereço, nº, bairro, cidade, estado, CNPJ/CPF, celular/WhatsApp, email, nome, logo)
-- [x] Dashboard: Botões salvar/fechar e editável
-- [x] Impressão do Pedido Reman: Cabeçalho com logo + dados empresa
-- [x] Impressão do Pedido Reman: Tabela Produtos (agrupados por modelo com a descrição do modelo01, qtd, valor, total) - só funcionando
-- [x] Impressão do Pedido Reman: Tabela Cartuchos com Problema (modelo02, código, defeito)
-- [x] Impressão do Pedido Reman: Tabela Cartuchos Funcionando (modelo02, código, peso de saída)
-- [x] Botão Editar em pedido finalizado (reabrir para edição)
-- [x] Scroll de deslizamento em todo o sistema (modais com scroll para ver botões)
-- [x] Todos os campos digitados em LETRAS MAIÚSCULAS (uppercase)
-- [x] Busca sem diferenciar acentuação (normalizar acentos)
-
-## Fluxo Finalização → Reman → Impressão/PDF
-- [x] Backend: procedure gerarRemanAPartirDoPedido - cria pedido reman ao finalizar pedido normal
-- [x] Backend: agrupar cartuchos funcionando por modelo01 (produtos com qtd, preço, total)
-- [x] Backend: listar cartuchos funcionando individualmente (modelo02, código, peso de saída)
-- [x] Backend: listar cartuchos com defeito (modelo02, código, tipo defeito)
-- [x] Frontend: ao finalizar pedido, redireciona para página de impressão do reman
-- [x] Frontend: página de impressão conforme esboço (dados empresa, cliente, produtos, funcionando, com problema)
-- [x] Frontend: botão Imprimir/PDF na página de impressão
 
 1.1 Notificações em Tempo Real
    - Implementar WebSocket para notificações ao vivo
