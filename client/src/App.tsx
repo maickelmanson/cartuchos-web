@@ -18,6 +18,7 @@ import DadosEmpresa from "./pages/DadosEmpresa";
 import BuscaAvancada from "./pages/BuscaAvancada";
 import DashboardAnalise from "./pages/DashboardAnalise";
 import PainelErros from "./pages/PainelErros";
+import TestBuscadorCartuchos from "./pages/TestBuscadorCartuchos";
 
 function DashboardRoutes() {
   return (
@@ -33,6 +34,7 @@ function DashboardRoutes() {
         <Route path={"/analise"} component={DashboardAnalise} />
         <Route path={"/erros"} component={PainelErros} />
         <Route path={"/busca"} component={BuscaAvancada} />
+        <Route path={"/teste/buscador-cartuchos"} component={TestBuscadorCartuchos} />
         <Route path={"/reman/pedidos"} component={RemanPedidos} />
         <Route path={"/reman/pedidos/:id"} component={RemanPedidoDetalhe} />
         <Route path={"/404"} component={NotFound} />

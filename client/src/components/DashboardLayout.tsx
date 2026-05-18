@@ -167,7 +167,7 @@ function DashboardLayoutContent({
         <Sidebar
           collapsible="icon"
           className="border-r-0"
-          disableTransition={isResizing}
+          disableTransition={true}
         >
           <SidebarHeader className="h-16 justify-center">
             <div className="flex items-center gap-3 px-2 transition-all w-full">
@@ -197,10 +197,14 @@ function DashboardLayoutContent({
                     <SidebarMenuButton
                       isActive={isActive}
                       onClick={() => {
+                        // Navegar primeiro
                         setLocation(item.path);
-                        // Fechar sidebar ao clicar em item de menu (mobile e desktop)
-                        if (isCollapsed === false) {
-                          toggleSidebar();
+                        // Fechar sidebar apenas em mobile (evita conflito de timing com portals Radix)
+                        if (isMobile && !isCollapsed) {
+                          // Usar setTimeout para separar navegação do colapso (evita removeChild error)
+                          setTimeout(() => {
+                            toggleSidebar();
+                          }, 0);
                         }
                       }}
                       tooltip={item.label}

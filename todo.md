@@ -286,3 +286,22 @@
 - [x] Fazer sidebar fechar ao clicar em um item de menu — Implementado para desktop e mobile
 - [x] Adicionar animação de transição — Já estava implementada (collapsible="icon")
 - [x] Testar fluxo completo — Funcionando corretamente
+
+
+## Módulo de Teste - Buscador de Cartuchos por Período (Isolado)
+- [ ] Criar página de teste isolada (TestBuscadorCartuchos.tsx)
+- [ ] Implementar procedure tRPC para buscar cartuchos funcionando por período
+- [ ] Criar interface com calendário para seleção de data inicial e final
+- [ ] Exibir resultados: lista de cartuchos, quantidade total e valor total
+- [ ] Criar testes automatizados (vitest)
+- [ ] Documentar funcionalidade
+- [ ] Após aprovação: integrar ao sistema principal
+
+
+## Bugs Reportados (Corrigidos - removeChild Error)
+- [x] Erro NotFoundError: Failed to execute 'removeChild' on 'Node' ao navegar entre páginas
+  - Causa: Conflito de timing entre navegação (wouter), colapso de sidebar e portals Radix (Select, Dropdown, Tooltip)
+  - Solução 1: Fechar sidebar apenas em mobile com setTimeout para separar timing de navegação
+  - Solução 2: Desabilitar transições do Sidebar (disableTransition={true}) para evitar conflitos com portals
+  - Resultado: Navegação funcionando perfeitamente em todas as páginas
+  - Testes: Dashboard → Pedidos → Clientes → Reman - Pedidos → Dashboard (sucesso)

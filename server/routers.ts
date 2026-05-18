@@ -1,4 +1,4 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME } from "./_core/cookies";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
@@ -49,74 +49,60 @@ export const appRouter = router({
         empresa: z.string().optional(),
         cep: z.string().optional(),
         endereco: z.string().optional(),
-        numero: z.string().optional(),
-        bairro: z.string().optional(),
-        cidade: z.string().optional(),
-        estado: z.string().optional(),
-        cnpjCpf: z.string().optional(),
         telefone: z.string().optional(),
-        celular: z.string().optional(),
         email: z.string().optional(),
-        nome: z.string().optional(),
-        logoUrl: z.string().optional(),
+        cnpj: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        await salvarDadosEmpresa(input);
-        return obterDadosEmpresa();
+        return salvarDadosEmpresa(input);
       }),
   }),
 
   // ============================================================
-  // Cartuchos Cadastro (tabela unificada)
+  // Cartuchos
   // ============================================================
   cartuchos: router({
     listar: protectedProcedure.query(async () => {
       return listarCartuchos();
     }),
 
-    buscar: protectedProcedure
-      .input(z.number())
+    buscarPorId: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+      }))
       .query(async ({ input }) => {
-        return buscarCartuchoPorId(input);
+        return buscarCartuchoPorId(input.id);
       }),
 
     criar: protectedProcedure
       .input(z.object({
-        modelo01: z.string().min(1),
-        modelo02: z.string().min(1),
-        priceFinalCustomer: z.string().optional(),
-        priceReseller: z.string().optional(),
+        modelo01: z.string(),
+        modelo02: z.string(),
+        priceFinalCustomer: z.number().optional(),
+        priceReseller: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return criarCartucho({
-          modelo01: input.modelo01,
-          modelo02: input.modelo02,
-          priceFinalCustomer: input.priceFinalCustomer && input.priceFinalCustomer.trim() !== '' ? input.priceFinalCustomer : null,
-          priceReseller: input.priceReseller && input.priceReseller.trim() !== '' ? input.priceReseller : null,
-        });
+        return criarCartucho(input);
       }),
 
     atualizar: protectedProcedure
       .input(z.object({
         id: z.number(),
-        modelo01: z.string().min(1),
-        modelo02: z.string().min(1),
-        priceFinalCustomer: z.string().optional(),
-        priceReseller: z.string().optional(),
+        modelo01: z.string().optional(),
+        modelo02: z.string().optional(),
+        priceFinalCustomer: z.number().optional(),
+        priceReseller: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return atualizarCartucho(input.id, {
-          modelo01: input.modelo01,
-          modelo02: input.modelo02,
-          priceFinalCustomer: input.priceFinalCustomer && input.priceFinalCustomer.trim() !== '' ? input.priceFinalCustomer : null,
-          priceReseller: input.priceReseller && input.priceReseller.trim() !== '' ? input.priceReseller : null,
-        });
+        return atualizarCartucho(input);
       }),
 
     deletar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .mutation(async ({ input }) => {
-        return deletarCartucho(input);
+        return deletarCartucho(input.id);
       }),
   }),
 
@@ -129,41 +115,46 @@ export const appRouter = router({
     }),
 
     buscar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .query(async ({ input }) => {
-        return buscarCliente(input);
+        return buscarCliente(input.id);
       }),
 
     criar: protectedProcedure
       .input(z.object({
-        nome: z.string().min(1),
+        nome: z.string(),
         telefone: z.string().optional(),
         telefone2: z.string().optional(),
         endereco: z.string().optional(),
         cpf: z.string().optional(),
         cnpj: z.string().optional(),
         inscricaoEstadual: z.string().optional(),
-        commercialProfile: z.enum(["CLIENTE_FINAL", "REVENDA"]).optional().default("CLIENTE_FINAL"),
+        commercialProfile: z.enum(["CLIENTE_FINAL", "REVENDA"]).optional(),
         observacoes: z.string().optional(),
       }))
-      .mutation(async ({ input }) => {
-        // Validar duplicidade: mesmo nome
-        const db = await getDb();
-        if (db && input.nome) {
-          const existente = await db.select().from(clientes)
-            .where(eq(clientes.nome, input.nome))
-            .limit(1);
-          if (existente.length > 0) {
-            throw new Error(`Cliente com nome "${input.nome}" já existe no sistema.`);
-          }
+      .mutation(async ({ input, ctx }) => {
+        // Validar duplicidade
+        const clienteExistente = await getDb().query.clientes.findFirst({
+          where: (c, { eq, and }) =>
+            and(
+              eq(c.nome, input.nome),
+              input.telefone ? eq(c.telefone, input.telefone) : undefined
+            ),
+        });
+
+        if (clienteExistente) {
+          throw new Error(`Cliente com nome "${input.nome}" e telefone "${input.telefone}" já existe`);
         }
+
         return criarCliente(input);
       }),
 
     atualizar: protectedProcedure
       .input(z.object({
         id: z.number(),
-        nome: z.string().min(1),
+        nome: z.string().optional(),
         telefone: z.string().optional(),
         telefone2: z.string().optional(),
         endereco: z.string().optional(),
@@ -174,28 +165,31 @@ export const appRouter = router({
         observacoes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const { id, ...data } = input;
-        
-        // Validar duplicidade: verificar se novo nome ja existe em outro cliente
-        const db = await getDb();
-        if (db && data.nome) {
-          const existente = await db.select().from(clientes)
-            .where(eq(clientes.nome, data.nome))
-            .limit(1);
-          
-          // Se existe e o ID eh diferente, eh duplicado
-          if (existente.length > 0 && existente[0].id !== id) {
-            throw new Error(`Cliente com nome "${data.nome}" ja existe no sistema.`);
+        // Validar duplicidade ao atualizar
+        if (input.nome || input.telefone) {
+          const clienteExistente = await getDb().query.clientes.findFirst({
+            where: (c, { eq, and, ne }) =>
+              and(
+                ne(c.id, input.id),
+                eq(c.nome, input.nome || ''),
+                input.telefone ? eq(c.telefone, input.telefone) : undefined
+              ),
+          });
+
+          if (clienteExistente) {
+            throw new Error(`Cliente com nome "${input.nome}" e telefone "${input.telefone}" já existe`);
           }
         }
-        
-        return atualizarCliente(id, data);
+
+        return atualizarCliente(input);
       }),
 
     deletar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .mutation(async ({ input }) => {
-        return deletarCliente(input);
+        return deletarCliente(input.id);
       }),
   }),
 
@@ -208,147 +202,128 @@ export const appRouter = router({
     }),
 
     buscar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .query(async ({ input }) => {
-        return buscarPedido(input);
+        return buscarPedido(input.id);
       }),
 
-    porCliente: protectedProcedure
-      .input(z.number())
+    listarPorCliente: protectedProcedure
+      .input(z.object({
+        clienteId: z.number(),
+      }))
       .query(async ({ input }) => {
-        return listarPedidosPorCliente(input);
+        return listarPedidosPorCliente(input.clienteId);
       }),
+
+    obterProximoNumero: protectedProcedure.query(async () => {
+      return obterProximoNumeroPedido();
+    }),
 
     criar: protectedProcedure
       .input(z.object({
+        numero: z.string(),
         clienteId: z.number(),
         cartuchos: z.array(z.object({
-          cartuchodId: z.string().optional(),
-          codigo: z.string(),
+          cartuchodId: z.number(),
+          codigo: z.string().optional(),
           pesoCheagada: z.string().optional(),
           pesoSaida: z.string().optional(),
-          protegido: z.boolean().optional(),
+          protegido: z.number().optional(),
+          status: z.enum(["em_espera", "em_andamento", "processo", "funcionando", "circuito_queimado", "defeito_cabeca"]).optional(),
           observacoes: z.string().optional(),
         })).optional(),
       }))
       .mutation(async ({ input }) => {
-        const numero = await obterProximoNumeroPedido();
         const pedido = await criarPedido({
-          numero,
+          numero: input.numero,
           clienteId: input.clienteId,
         });
-        
-        // Salvar cartuchos do pedido se fornecidos
-        if (input.cartuchos && input.cartuchos.length > 0 && pedido.id) {
+
+        if (input.cartuchos && input.cartuchos.length > 0) {
           for (const cartucho of input.cartuchos) {
             await adicionarCartucho({
               pedidoId: pedido.id,
-              cartuchodId: cartucho.cartuchodId ? parseInt(cartucho.cartuchodId) : undefined,
-              codigo: cartucho.codigo,
-              pesoCheagada: cartucho.pesoCheagada,
-              pesoSaida: cartucho.pesoSaida,
-              protegido: cartucho.protegido ? 1 : 0,
-              observacoes: cartucho.observacoes,
+              ...cartucho,
             });
           }
         }
-        
+
         return pedido;
       }),
 
     finalizar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .mutation(async ({ input }) => {
-        // 1. Finalizar o pedido normal
-        await finalizarPedido(input);
-        // 2. Gerar automaticamente o pedido de remanufatura
-        const result = await gerarRemanAPartirDoPedido(input);
-        return { success: true, remanOrderId: result.remanOrderId, orderNumber: result.orderNumber };
-      }),
-
-    reabrir: protectedProcedure
-      .input(z.number())
-      .mutation(async ({ input }) => {
-        const db = await getDb();
-        if (!db) throw new Error("Database not available");
-        const { pedidos: pedidosTable } = await import("../drizzle/schema");
-        return db.update(pedidosTable).set({ status: "aberto", dataFinalizacao: null }).where(eq(pedidosTable.id, input));
+        return finalizarPedido(input.id);
       }),
 
     deletar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .mutation(async ({ input }) => {
-        return deletarPedido(input);
+        return deletarPedido(input.id);
       }),
 
     duplicar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .mutation(async ({ input }) => {
-        const numero = await obterProximoNumeroPedido();
-        return duplicarPedido(input, numero);
+        return duplicarPedido(input.id);
       }),
   }),
 
   // ============================================================
-  // Pedido Cartuchos
+  // Cartuchos do Pedido
   // ============================================================
   pedidoCartuchos: router({
     listar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        pedidoId: z.number(),
+      }))
       .query(async ({ input }) => {
-        return listarCartuchosDoPedido(input);
+        return listarCartuchosDoPedido(input.pedidoId);
       }),
 
     adicionar: protectedProcedure
       .input(z.object({
         pedidoId: z.number(),
-        cartuchodId: z.number().nullable(),
+        cartuchodId: z.number(),
         codigo: z.string().optional(),
-        pesoCheagada: z.number().optional(),
-        pesoSaida: z.number().optional(),
-        protegido: z.boolean().default(false),
+        pesoCheagada: z.string().optional(),
+        pesoSaida: z.string().optional(),
+        protegido: z.number().optional(),
+        status: z.enum(["em_espera", "em_andamento", "processo", "funcionando", "circuito_queimado", "defeito_cabeca"]).optional(),
         observacoes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        return adicionarCartucho({
-          pedidoId: input.pedidoId,
-          cartuchodId: input.cartuchodId,
-          codigo: input.codigo,
-          pesoCheagada: input.pesoCheagada ? input.pesoCheagada.toString() : undefined,
-          pesoSaida: input.pesoSaida ? input.pesoSaida.toString() : undefined,
-          protegido: input.protegido ? 1 : 0,
-          observacoes: input.observacoes,
-        });
+        return adicionarCartucho(input);
       }),
 
     atualizar: protectedProcedure
       .input(z.object({
         id: z.number(),
-        cartuchodId: z.number().nullable(),
-        codigo: z.string().optional(),
-        pesoCheagada: z.number().optional(),
-        pesoSaida: z.number().optional(),
-        protegido: z.boolean().default(false),
-        observacoes: z.string().optional(),
+        pesoCheagada: z.string().optional(),
+        pesoSaida: z.string().optional(),
+        protegido: z.number().optional(),
         status: z.enum(["em_espera", "em_andamento", "processo", "funcionando", "circuito_queimado", "defeito_cabeca"]).optional(),
+        observacoes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const { id, ...data } = input;
-        return atualizarCartuchodoPedido(id, {
-          cartuchodId: data.cartuchodId,
-          codigo: data.codigo,
-          pesoCheagada: data.pesoCheagada ? data.pesoCheagada.toString() : undefined,
-          pesoSaida: data.pesoSaida ? data.pesoSaida.toString() : undefined,
-          protegido: data.protegido ? 1 : 0,
-          observacoes: data.observacoes,
-          status: data.status,
-        });
+        return atualizarCartuchodoPedido(input);
       }),
 
     remover: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .mutation(async ({ input }) => {
-        return removerCartuchodoPedido(input);
+        return removerCartuchodoPedido(input.id);
       }),
   }),
 
@@ -358,265 +333,155 @@ export const appRouter = router({
   busca: router({
     avancada: protectedProcedure
       .input(z.object({
-        tipo: z.enum(["geral", "codigo", "cliente", "telefone", "cpf", "cnpj", "pedido"]),
         termo: z.string(),
       }))
       .query(async ({ input }) => {
-        return buscaAvancada(input.tipo, input.termo);
+        return buscaAvancada(input.termo);
       }),
   }),
 
   // ============================================================
-  // Módulo de Remanufatura - Pedidos Reman
+  // Reman Orders
   // ============================================================
   remanOrders: router({
+    obterProximoNumero: protectedProcedure.query(async () => {
+      return obterProximoNumeroRemanOrder();
+    }),
+
     listar: protectedProcedure.query(async () => {
       return listarRemanOrders();
     }),
 
     buscar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .query(async ({ input }) => {
-        return buscarRemanOrder(input);
+        return buscarRemanOrder(input.id);
       }),
 
     criar: protectedProcedure
       .input(z.object({
+        numero: z.string(),
         clienteId: z.number(),
-        notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const db = await getDb();
-        if (!db) throw new Error("Database not available");
-
-        // Buscar o cliente para copiar o commercialProfile
-        const clienteResult = await db
-          .select({ commercialProfile: clientes.commercialProfile })
-          .from(clientes)
-          .where(eq(clientes.id, input.clienteId))
-          .limit(1);
-
-        if (clienteResult.length === 0) throw new Error("Cliente não encontrado");
-        const commercialProfileSnapshot = clienteResult[0].commercialProfile;
-
-        const orderNumber = await obterProximoNumeroRemanOrder();
-        const result = await criarRemanOrder({
-          orderNumber,
-          clienteId: input.clienteId,
-          commercialProfileSnapshot,
-          notes: input.notes,
-        });
-        return result;
+        return criarRemanOrder(input);
       }),
 
     atualizar: protectedProcedure
       .input(z.object({
         id: z.number(),
-        status: z.enum(["aberto", "em_processamento", "finalizado", "cancelado"]).optional(),
-        discount: z.string().optional(),
-        notes: z.string().optional(),
+        numero: z.string().optional(),
+        clienteId: z.number().optional(),
+        status: z.enum(["aberto", "finalizado"]).optional(),
       }))
       .mutation(async ({ input }) => {
-        const { id, ...data } = input;
-        // Se discount foi alterado, recalcular total
-        if (data.discount !== undefined) {
-          const db = await getDb();
-          if (!db) throw new Error("Database not available");
-          const order = await buscarRemanOrder(id);
-          if (order) {
-            const subtotal = parseFloat(order.subtotal || "0");
-            const discount = parseFloat(data.discount || "0");
-            const total = Math.max(0, subtotal - discount).toFixed(2);
-            await atualizarRemanOrder(id, { ...data, total });
-            return buscarRemanOrder(id);
-          }
-        }
-        return atualizarRemanOrder(id, data);
+        return atualizarRemanOrder(input);
       }),
 
     deletar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .mutation(async ({ input }) => {
-        return deletarRemanOrder(input);
-      }),
-
-    reabrir: protectedProcedure
-      .input(z.number())
-      .mutation(async ({ input }) => {
-        const db = await getDb();
-        if (!db) throw new Error("Database not available");
-        const { remanOrders: remanOrdersTable } = await import("../drizzle/schema");
-        await db.update(remanOrdersTable).set({ status: "aberto" }).where(eq(remanOrdersTable.id, input));
-        return buscarRemanOrder(input);
-      }),
-
-    relatorio: protectedProcedure
-      .input(z.number())
-      .query(async ({ input }) => {
-        return obterRelatorioRemanOrder(input);
+        return deletarRemanOrder(input.id);
       }),
   }),
 
   // ============================================================
-  // Módulo de Remanufatura - Itens do Pedido
+  // Reman Order Items
   // ============================================================
   remanOrderItems: router({
     listar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        remanOrderId: z.number(),
+      }))
       .query(async ({ input }) => {
-        return listarRemanOrderItems(input);
+        return listarRemanOrderItems(input.remanOrderId);
       }),
 
     criar: protectedProcedure
       .input(z.object({
-        orderId: z.number(),
-        cartuchoId: z.number(),
-        quantity: z.number().min(1),
+        remanOrderId: z.number(),
+        cartuchodId: z.number(),
+        preco: z.number(),
       }))
       .mutation(async ({ input }) => {
-        const db = await getDb();
-        if (!db) throw new Error("Database not available");
-
-        // Buscar o pedido para saber o perfil comercial
-        const order = await buscarRemanOrder(input.orderId);
-        if (!order) throw new Error("Pedido não encontrado");
-
-        // Buscar o modelo de cartucho na tabela unificada
-        const modelo = await buscarCartuchoPorId(input.cartuchoId);
-        if (!modelo) throw new Error("Modelo de cartucho não encontrado");
-
-        // Determinar preço baseado no perfil comercial
-        const priceSource = order.commercialProfileSnapshot === "REVENDA" ? "REVENDA" : "CLIENTE_FINAL";
-        const unitPrice = priceSource === "REVENDA"
-          ? (modelo.priceReseller || "0")
-          : (modelo.priceFinalCustomer || "0");
-
-        const lineTotal = (parseFloat(unitPrice) * input.quantity).toFixed(2);
-
-        await criarRemanOrderItem({
-          orderId: input.orderId,
-          cartuchoId: input.cartuchoId,
-          descriptionSnapshot: modelo.modelo01,
-          modelCodeSnapshot: modelo.modelo02,
-          quantity: input.quantity,
-          unitPrice,
-          priceSource,
-          lineTotal,
-        });
-
-        return listarRemanOrderItems(input.orderId);
+        return criarRemanOrderItem(input);
       }),
 
     atualizar: protectedProcedure
       .input(z.object({
         id: z.number(),
-        orderId: z.number(),
-        quantity: z.number().min(1),
-        unitPrice: z.string().optional(),
+        preco: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        const db = await getDb();
-        if (!db) throw new Error("Database not available");
-
-        // Buscar item atual
-        const items = await listarRemanOrderItems(input.orderId);
-        const item = items.find(i => i.id === input.id);
-        if (!item) throw new Error("Item não encontrado");
-
-        const unitPrice = input.unitPrice || item.unitPrice;
-        const lineTotal = (parseFloat(unitPrice) * input.quantity).toFixed(2);
-
-        await atualizarRemanOrderItem(input.id, {
-          quantity: input.quantity,
-          unitPrice,
-          lineTotal,
-        });
-
-        return listarRemanOrderItems(input.orderId);
+        return atualizarRemanOrderItem(input);
       }),
 
     deletar: protectedProcedure
       .input(z.object({
         id: z.number(),
-        orderId: z.number(),
       }))
       .mutation(async ({ input }) => {
-        await deletarRemanOrderItem(input.id);
-        return listarRemanOrderItems(input.orderId);
+        return deletarRemanOrderItem(input.id);
       }),
   }),
 
   // ============================================================
-  // Módulo de Remanufatura - Unidades Físicas
+  // Reman Order Units
   // ============================================================
   remanOrderUnits: router({
     listar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        remanOrderItemId: z.number(),
+      }))
       .query(async ({ input }) => {
-        return listarRemanOrderUnits(input);
+        return listarRemanOrderUnits(input.remanOrderItemId);
       }),
 
     criar: protectedProcedure
       .input(z.object({
-        orderItemId: z.number(),
-        cartuchoId: z.number(),
-        unitCode: z.string().min(1),
-        status: z.enum(["FUNCIONANDO", "COM_PROBLEMA"]),
-        defectType: z.string().optional(),
-        outputWeight: z.string().optional(),
-        notes: z.string().optional(),
+        remanOrderItemId: z.number(),
+        numeroSerie: z.string(),
+        status: z.enum(["funcionando", "defeito"]).optional(),
       }))
       .mutation(async ({ input }) => {
-        // Validações condicionais
-        if (input.status === "FUNCIONANDO" && !input.outputWeight) {
-          throw new Error("Peso de saída é obrigatório para cartuchos FUNCIONANDO");
-        }
-        if (input.status === "COM_PROBLEMA" && !input.defectType) {
-          throw new Error("Tipo de defeito é obrigatório para cartuchos COM_PROBLEMA");
-        }
-
-        return criarRemanOrderUnit({
-          orderItemId: input.orderItemId,
-          cartuchoId: input.cartuchoId,
-          unitCode: input.unitCode,
-          status: input.status,
-          defectType: input.defectType,
-          outputWeight: input.outputWeight,
-          notes: input.notes,
-        });
+        return criarRemanOrderUnit(input);
       }),
 
     atualizar: protectedProcedure
       .input(z.object({
         id: z.number(),
-        unitCode: z.string().min(1).optional(),
-        status: z.enum(["FUNCIONANDO", "COM_PROBLEMA"]).optional(),
-        defectType: z.string().optional(),
-        outputWeight: z.string().optional(),
-        notes: z.string().optional(),
+        numeroSerie: z.string().optional(),
+        status: z.enum(["funcionando", "defeito"]).optional(),
       }))
       .mutation(async ({ input }) => {
-        const { id, ...data } = input;
-
-        // Validações condicionais
-        if (data.status === "FUNCIONANDO" && !data.outputWeight) {
-          throw new Error("Peso de saída é obrigatório para cartuchos FUNCIONANDO");
-        }
-        if (data.status === "COM_PROBLEMA" && !data.defectType) {
-          throw new Error("Tipo de defeito é obrigatório para cartuchos COM_PROBLEMA");
-        }
-
-        return atualizarRemanOrderUnit(id, data);
+        return atualizarRemanOrderUnit(input);
       }),
 
     deletar: protectedProcedure
-      .input(z.number())
+      .input(z.object({
+        id: z.number(),
+      }))
       .mutation(async ({ input }) => {
-        return deletarRemanOrderUnit(input);
+        return deletarRemanOrderUnit(input.id);
       }),
   }),
 
-  analise: router({
+  // ============================================================
+  // Relatórios
+  // ============================================================
+  relatorios: router({
+    remanOrder: protectedProcedure
+      .input(z.object({
+        remanOrderId: z.number(),
+      }))
+      .query(async ({ input }) => {
+        return obterRelatorioRemanOrder(input.remanOrderId);
+      }),
+
     pedidosPorPeriodo: protectedProcedure
       .input(z.object({
         dataInicio: z.date(),
@@ -626,26 +491,17 @@ export const appRouter = router({
         return obterPedidosPorPeriodo(input.dataInicio, input.dataFim);
       }),
 
-    clientesMaisAtivos: protectedProcedure
-      .input(z.object({
-        limite: z.number().default(10),
-      }))
-      .query(async ({ input }) => {
-        return obterClientesMaisAtivos(input.limite);
-      }),
+    clientesMaisAtivos: protectedProcedure.query(async () => {
+      return obterClientesMaisAtivos();
+    }),
 
-    modelosMaisSolicitados: protectedProcedure
-      .input(z.object({
-        limite: z.number().default(10),
-      }))
-      .query(async ({ input }) => {
-        return obterModelosMaisSolicitados(input.limite);
-      }),
+    modelosMaisSolicitados: protectedProcedure.query(async () => {
+      return obterModelosMaisSolicitados();
+    }),
 
-    statusPedidos: protectedProcedure
-      .query(async () => {
-        return obterStatusPedidos();
-      }),
+    statusPedidos: protectedProcedure.query(async () => {
+      return obterStatusPedidos();
+    }),
 
     receitaPorPeriodo: protectedProcedure
       .input(z.object({
@@ -656,30 +512,26 @@ export const appRouter = router({
         return obterReceitaPorPeriodo(input.dataInicio, input.dataFim);
       }),
 
-    resumoGeral: protectedProcedure
-      .query(async () => {
-        return obterResumoGeral();
-      }),
+    resumoGeral: protectedProcedure.query(async () => {
+      return obterResumoGeral();
+    }),
   }),
 
   // ============================================================
-  // Rastreamento de Erros
+  // Painel de Erros
   // ============================================================
   erros: router({
-    obterResumo: protectedProcedure
-      .query(async () => {
-        return obterResumoErros();
-      }),
+    obterResumo: protectedProcedure.query(async () => {
+      return obterResumoErros();
+    }),
 
-    obterEstatisticas: protectedProcedure
-      .query(async () => {
-        return obterEstatisticasErros();
-      }),
+    obterEstatisticas: protectedProcedure.query(async () => {
+      return obterEstatisticasErros();
+    }),
 
-    obterNaoResolvidos: protectedProcedure
-      .query(async () => {
-        return obterErrosNaoResolvidos();
-      }),
+    obterNaoResolvidos: protectedProcedure.query(async () => {
+      return obterErrosNaoResolvidos();
+    }),
 
     obterRecentes: protectedProcedure
       .input(z.object({
@@ -698,4 +550,52 @@ export const appRouter = router({
         return marcarErroResolvido(input.erroId, ctx.user.id, input.notes);
       }),
   }),
+
+  // ============================================================
+  // Buscador de Cartuchos por Período (Módulo de Teste)
+  // ============================================================
+  buscadorCartuchos: router({
+    listar: protectedProcedure
+      .input(z.object({
+        dataInicio: z.date(),
+        dataFim: z.date(),
+      }))
+      .query(async ({ input }) => {
+        const db = getDb();
+
+        // Buscar cartuchos com status 'funcionando' no período
+        const result = await db.query.pedidoCartuchos.findMany({
+          where: (pc: any, { and, gte, lte, eq }: any) =>
+            and(
+              gte(pc.dataInclusao, input.dataInicio),
+              lte(pc.dataInclusao, input.dataFim),
+              eq(pc.status, 'funcionando')
+            ),
+          with: {
+            cartucho: true,
+          },
+        });
+
+        const cartuchosFormatados = result.map((pc: any) => ({
+          id: pc.id,
+          modelo01: pc.cartucho?.modelo01 ?? 'N/A',
+          modelo02: pc.cartucho?.modelo02 ?? 'N/A',
+          preco: parseFloat((pc.cartucho?.priceFinalCustomer ?? '0').toString()),
+          dataFuncionando: pc.dataInclusao,
+          status: pc.status,
+        }));
+
+        const valorTotal = cartuchosFormatados.reduce((sum: number, c: any) => sum + (c.preco ?? 0), 0);
+
+        return {
+          cartuchos: cartuchosFormatados,
+          quantidade: cartuchosFormatados.length,
+          valorTotal,
+          dataInicio: input.dataInicio,
+          dataFim: input.dataFim,
+        };
+      }),
+  }),
 });
+
+export type AppRouter = typeof appRouter;
