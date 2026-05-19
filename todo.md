@@ -315,3 +315,9 @@
 - [x] Criar testes automatizados (8 testes passando)
 - [ ] Validar funcionamento em produção (página retorna 404 - possível cache)
 - [ ] Investigar por que o menu não mostra o novo item após reload
+
+
+## Erros Corrigidos (Maio 19, 2026)
+- [x] Error 1: Corrigido db.query undefined na procedure buscadorCartuchos - usar db.select().from() do Drizzle
+- [x] Error 2-6: Implementadas procedures analise (resumoGeral, pedidosPorPeriodo, clientesMaisAtivos, modelosMaisSolicitados, statusPedidos)
+- [x] Corrigido import duplicado de eq em routers.ts

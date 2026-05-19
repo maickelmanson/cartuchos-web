@@ -18,10 +18,10 @@ import {
   gerarRemanAPartirDoPedido,
   obterPedidosPorPeriodo, obterClientesMaisAtivos, obterModelosMaisSolicitados, obterStatusPedidos, obterReceitaPorPeriodo, obterResumoGeral,
 } from "./db";
+import { and, gte, lte, eq } from "drizzle-orm";
+import { pedidoCartuchos, clientes } from "../drizzle/schema";
 import { obterResumoErros, obterEstatisticasErros, obterErrosNaoResolvidos, obterErrosRecentes, marcarErroResolvido } from "./errorLogs";
 import { getDb } from "./db";
-import { clientes } from "../drizzle/schema";
-import { eq } from "drizzle-orm";
 
 export const appRouter = router({
   system: systemRouter,
@@ -561,40 +561,73 @@ export const appRouter = router({
         dataFim: z.date(),
       }))
       .query(async ({ input }) => {
-        const db = getDb();
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
 
         // Buscar cartuchos com status 'funcionando' no período
-        const result = await db.query.pedidoCartuchos.findMany({
-          where: (pc: any, { and, gte, lte, eq }: any) =>
+        const result = await db
+          .select()
+          .from(pedidoCartuchos)
+          .where(
             and(
-              gte(pc.dataInclusao, input.dataInicio),
-              lte(pc.dataInclusao, input.dataFim),
-              eq(pc.status, 'funcionando')
-            ),
-          with: {
-            cartucho: true,
-          },
-        });
+              gte(pedidoCartuchos.dataInclusao, input.dataInicio),
+              lte(pedidoCartuchos.dataInclusao, input.dataFim),
+              eq(pedidoCartuchos.status, 'funcionando')
+            )
+          );
 
-        const cartuchosFormatados = result.map((pc: any) => ({
-          id: pc.id,
-          modelo01: pc.cartucho?.modelo01 ?? 'N/A',
-          modelo02: pc.cartucho?.modelo02 ?? 'N/A',
-          preco: parseFloat((pc.cartucho?.priceFinalCustomer ?? '0').toString()),
-          dataFuncionando: pc.dataInclusao,
-          status: pc.status,
-        }));
+        // Buscar dados dos cartuchos
+        const cartuchosComDetalhes = await Promise.all(
+          result.map(async (pc: any) => {
+            const cartucho = await buscarCartuchoPorId(pc.cartuchoId);
+            return {
+              id: pc.id,
+              modelo01: cartucho?.modelo01 ?? 'N/A',
+              modelo02: cartucho?.modelo02 ?? 'N/A',
+              preco: parseFloat((cartucho?.priceFinalCustomer ?? '0').toString()),
+              dataFuncionando: pc.dataInclusao,
+              status: pc.status,
+            };
+          })
+        );
 
-        const valorTotal = cartuchosFormatados.reduce((sum: number, c: any) => sum + (c.preco ?? 0), 0);
+        const valorTotal = cartuchosComDetalhes.reduce((sum: number, c: any) => sum + (c.preco ?? 0), 0);
 
         return {
-          cartuchos: cartuchosFormatados,
-          quantidade: cartuchosFormatados.length,
+          cartuchos: cartuchosComDetalhes,
+          quantidade: cartuchosComDetalhes.length,
           valorTotal,
           dataInicio: input.dataInicio,
           dataFim: input.dataFim,
         };
       }),
+  }),
+
+  analise: router({
+    resumoGeral: protectedProcedure.query(async () => {
+      return await obterResumoGeral();
+    }),
+
+    pedidosPorPeriodo: protectedProcedure
+      .input(z.object({
+        dataInicio: z.date(),
+        dataFim: z.date(),
+      }))
+      .query(async ({ input }) => {
+        return await obterPedidosPorPeriodo(input.dataInicio, input.dataFim);
+      }),
+
+    clientesMaisAtivos: protectedProcedure.query(async () => {
+      return await obterClientesMaisAtivos();
+    }),
+
+    modelosMaisSolicitados: protectedProcedure.query(async () => {
+      return await obterModelosMaisSolicitados();
+    }),
+
+    statusPedidos: protectedProcedure.query(async () => {
+      return await obterStatusPedidos();
+    }),
   }),
 });
 
