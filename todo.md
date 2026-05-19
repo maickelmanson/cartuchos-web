@@ -305,3 +305,13 @@
   - Solução 2: Desabilitar transições do Sidebar (disableTransition={true}) para evitar conflitos com portals
   - Resultado: Navegação funcionando perfeitamente em todas as páginas
   - Testes: Dashboard → Pedidos → Clientes → Reman - Pedidos → Dashboard (sucesso)
+
+
+## Buscador de Cartuchos por Período (Implementação)
+- [x] Criar página BuscadorCartuchos.tsx com interface de busca por período
+- [x] Adicionar rota /buscador-cartuchos no App.tsx
+- [x] Adicionar item de menu no DashboardLayout
+- [x] Implementar exportação para CSV
+- [x] Criar testes automatizados (8 testes passando)
+- [ ] Validar funcionamento em produção (página retorna 404 - possível cache)
+- [ ] Investigar por que o menu não mostra o novo item após reload

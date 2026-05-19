@@ -36,6 +36,7 @@ const menuItems = [
   { icon: BarChart3, label: "Análise de Pedidos", path: "/analise" },
   { icon: AlertCircle, label: "Painel de Erros", path: "/erros" },
   { icon: Search, label: "Busca", path: "/busca" },
+  { icon: Search, label: "Buscador de Cartuchos", path: "/buscador-cartuchos" },
   { icon: ShoppingCart, label: "Reman - Pedidos", path: "/reman/pedidos" },
 ];
 
