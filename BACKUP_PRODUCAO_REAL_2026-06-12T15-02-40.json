@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "timestamp": "2026-06-12T15:02:40.467Z",
+    "version": "3.0",
+    "type": "REAL_PRODUCTION_BACKUP",
+    "database": "cartuchos_web",
+    "totalTables": 13,
+    "totalRecords": 1095,
+    "status": "COMPLETED",
+    "backupType": "PRODUCTION_SNAPSHOT",
+    "generatedAt": "12/06/2026, 12:02:41",
+    "integrityStatus": "VALID",
+    "orphanRecords": 0
+  },
+  "tables": {
+    "__drizzle_migrations": {
+      "recordCount": 1
+    },
+    "cartridge_models": {
+      "recordCount": 2
+    },
+    "cartuchos_cadastro": {
+      "recordCount": 34
+    },
+    "clientes": {
+      "recordCount": 133
+    },
+    "clients": {
+      "recordCount": 34
+    },
+    "empresa_dados": {
+      "recordCount": 1
+    },
+    "pedido_cartuchos": {
+      "recordCount": 211
+    },
+    "pedidos": {
+      "recordCount": 130
+    },
+    "reman_order_items": {
+      "recordCount": 189
+    },
+    "reman_order_units": {
+      "recordCount": 209
+    },
+    "reman_orders": {
+      "recordCount": 130
+    },
+    "settings": {
+      "recordCount": 14
+    },
+    "users": {
+      "recordCount": 7
+    }
+  },
+  "summary": {
+    "message": "Backup completo de produção - Sincronizado com GitHub e Google Drive",
+    "date": "2026-06-12T15:12:06.253Z",
+    "nextBackup": "2026-06-19T15:12:06.253Z"
+  }
+}
