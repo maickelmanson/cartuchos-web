@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowLeft, Plus, Trash2, Pencil, CheckCircle, AlertCircle, Printer, RotateCcw } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Pencil, CheckCircle, AlertCircle, Printer } from "lucide-react";
 import { toast } from "sonner";
 
 interface Props {
