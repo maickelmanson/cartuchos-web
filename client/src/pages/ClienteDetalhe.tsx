@@ -18,7 +18,7 @@ export default function ClienteDetalhe({ params }: Props) {
   const [modalNovoPedidoAberto, setModalNovoPedidoAberto] = useState(false);
 
   const clienteQuery = trpc.clientes.buscar.useQuery(id);
-  const pedidosQuery = trpc.pedidos.porCliente.useQuery(id);
+  const pedidosQuery = trpc.pedidos.listarPorCliente.useQuery({ clienteId: id });
   const criarPedidoMutation = trpc.pedidos.criar.useMutation();
   const atualizarMutation = trpc.clientes.atualizar.useMutation();
 
@@ -28,7 +28,14 @@ export default function ClienteDetalhe({ params }: Props) {
 
   const handleSalvarPedido = async (clienteId: number, cartuchos?: any[]) => {
     try {
-      const pedido = await criarPedidoMutation.mutateAsync({ clienteId, cartuchos });
+      // Gerar número do pedido
+      const proximoNumero = await trpc.pedidos.obterProximoNumero.query();
+      
+      const pedido = await criarPedidoMutation.mutateAsync({ 
+        numero: proximoNumero,
+        clienteId, 
+        cartuchos 
+      });
       setModalNovoPedidoAberto(false);
       // Navegar para o pedido criado
       if (pedido && pedido.id) {

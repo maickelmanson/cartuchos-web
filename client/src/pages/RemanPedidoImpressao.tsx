@@ -24,7 +24,7 @@ export default function RemanPedidoImpressao() {
 
   const { data: order, isLoading: loadingOrder } = trpc.remanOrders.buscar.useQuery(orderId, { enabled: orderId > 0 });
   const { data: items, isLoading: loadingItems } = trpc.remanOrderItems.listar.useQuery(orderId, { enabled: orderId > 0 });
-  const { data: relatorio, isLoading: loadingRelatorio } = trpc.remanOrders.relatorio.useQuery(orderId, { enabled: orderId > 0 });
+  const { data: relatorio, isLoading: loadingRelatorio } = trpc.relatorios.remanOrder.useQuery({ remanOrderId: orderId }, { enabled: orderId > 0 });
   const { data: empresa } = trpc.empresa.obter.useQuery();
 
   // Todos os hooks DEVEM vir antes de qualquer return condicional (Regras dos Hooks)
@@ -271,13 +271,15 @@ export default function RemanPedidoImpressao() {
       </div>
 
       {/* Estilos de impressão */}
-      <style>{`
+      <style>{
+        `
         @media print {
           body { margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .print\\:hidden { display: none !important; }
           @page { margin: 10mm; size: A4; }
         }
-      `}</style>
+      `}
+      </style>
     </div>
   );
 }
